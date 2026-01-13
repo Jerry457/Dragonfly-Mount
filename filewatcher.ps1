@@ -27,3 +27,15 @@ foreach ($prefabFile in $prefabFiles) {
 }
 $prefabString = "PrefabFiles = {`n" + ($prefabs -join ",`n") + "`n}"
 $prefabString | Out-String | ForEach-Object { [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot "main/prefab_files.lua"), $_, [System.Text.UTF8Encoding]::new($false)) }
+
+$animFolder = Join-Path $PSScriptRoot "anim"
+$animFiles = Get-ChildItem $animFolder -Recurse -Filter *.zip
+$anims = @()
+foreach ($animFile in $animFiles) {
+    $relativePath = $animFile.FullName.Substring($animFolder.Length + 1)
+    $relativePath = $relativePath.Replace("\", "/")
+    $anims += "    `Asset(`"ANIM`", `"anim/$($relativePath)`")"
+}
+$animString = "local assets = {`n" + ($anims -join ",`n") + "`n}`n"
+$animString += "`nGLOBAL.JoinArrays(Assets, assets)"
+$animString | Out-String | ForEach-Object { [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot "main/anim-assets.lua"), $_, [System.Text.UTF8Encoding]::new($false)) }

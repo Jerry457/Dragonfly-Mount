@@ -1,5 +1,5 @@
 modimport("main/prefab_files")
-
+modimport("main/anim-assets")
 Assets = {
     -- Asset("IMAGE", "images/inventoryimages.xml"),
     -- Asset("ATLAS", "images/minimap.xml" ),

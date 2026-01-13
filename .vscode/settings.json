@@ -1,6 +1,30 @@
 {
     "filewatcher.commands": [
         {
+            "match": "anim.*zip",
+            "isAsync": true,
+            "cmd": "powershell -ExecutionPolicy Bypass -File \"${workspaceRoot}/filewatcher.ps1\"",
+            "event": "onFileChange"
+        },
+        {
+            "match": "anim.*zip",
+            "isAsync": true,
+            "cmd": "powershell -ExecutionPolicy Bypass -File \"${workspaceRoot}/filewatcher.ps1\"",
+            "event": "onFileRename"
+        },
+        {
+            "match": "anim.*zip",
+            "isAsync": true,
+            "cmd": "powershell -ExecutionPolicy Bypass -File \"${workspaceRoot}/filewatcher.ps1\"",
+            "event": "onFileCreate"
+        },
+        {
+            "match": "anim.*zip",
+            "isAsync": true,
+            "cmd": "powershell -ExecutionPolicy Bypass -File \"${workspaceRoot}/filewatcher.ps1\"",
+            "event": "onFileDelete"
+        },
+        {
             "match": "(postinit|scripts[/\\\\]prefabs)[/\\\\].*",
             "isAsync": true,
             "cmd": "powershell -ExecutionPolicy Bypass -File \"${workspaceRoot}/filewatcher.ps1\"",
