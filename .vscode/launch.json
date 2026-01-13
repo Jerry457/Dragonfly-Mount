@@ -1,0 +1,57 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "address": "127.0.0.1:12306",
+            "name": "attach client",
+            "request": "attach",
+            "stopOnEntry": true,
+            "type": "lua",
+            "luaVersion": "luajit",
+            "sourceMaps": [
+                [
+                    "../mods/workshop-*",
+                    "D:/steam/steamapps/workshop/content/322330/*"
+                ]
+            ]
+        },
+        {
+            "address": "127.0.0.1:12307",
+            "name": "attach server",
+            "request": "attach",
+            "stopOnEntry": true,
+            "type": "lua",
+            "luaVersion": "luajit",
+            "sourceMaps": [
+                [
+                    "../mods/workshop-*",
+                    "D:/steam/steamapps/workshop/content/322330/*"
+                ]
+            ]
+        },
+        {
+            "address": "127.0.0.1:12308",
+            "name": "attach server cave",
+            "request": "attach",
+            "stopOnEntry": true,
+            "type": "lua",
+            "luaVersion": "luajit",
+            "sourceMaps": [
+                [
+                    "../mods/workshop-*",
+                    "D:/steam/steamapps/workshop/content/322330/*"
+                ]
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Compound servers",
+            "configurations": [
+                "attach server",
+                "attach server cave"
+            ],
+            "stopAll": true
+        }
+    ]
+}

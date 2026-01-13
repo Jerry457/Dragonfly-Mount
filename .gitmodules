@@ -1,0 +1,3 @@
+[submodule "GlassicAPI"]
+	path = GlassicAPI
+	url = https://github.com/AkinoYuiko/DST-GlassicAPI.git

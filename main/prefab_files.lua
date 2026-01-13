@@ -1,0 +1,3 @@
+PrefabFiles = {
+    "skins"
+}

@@ -1,0 +1,1 @@
+-- GlassicAPI.InitCharacterAssets("goblinkiller", "MALE", Assets)
