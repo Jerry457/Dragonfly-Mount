@@ -1,4 +1,5 @@
 # python anim/py_scripts/main.py
+import json
 import os
 import subprocess
 import threading
@@ -8,9 +9,18 @@ from utils import *
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
 start = time()
 
+target_dir = "target"
+os.makedirs(target_dir, exist_ok=True)
+
+# 读取脚本上次执行时间
+timestamps_file = os.path.join(target_dir, "script_timestamps.json")
+if os.path.exists(timestamps_file):
+    with open(timestamps_file, "r") as f:
+        script_timestamps = json.load(f)
+else:
+    script_timestamps = {}
 
 # 执行scripts文件夹下所有子文件夹中的python脚本
 scripts_dir = "scripts"
@@ -21,8 +31,15 @@ def run_scripts_in_folder(folder_path):
     for script in os.listdir(folder_path):
         if script.endswith(".py"):
             script_path = os.path.join(folder_path, script)
-            subprocess.run(["python", script_path], check=True)
-            print(f"Executed {script_path}")
+            last_execution_time = script_timestamps.get(script_path, 0)
+            script_mod_time = os.path.getmtime(script_path)
+
+            if script_mod_time > last_execution_time:
+                subprocess.run(["python", script_path], check=True)
+                script_timestamps[script_path] = time()
+                print(f"Executed {script_path}")
+            else:
+                print(f"Skipped {script_path} (no changes detected)")
 
 
 for folder in os.listdir(scripts_dir):
@@ -37,16 +54,20 @@ for thread in threads:
     thread.join()
 
 
+# 保存脚本最后执行时间
+with open(timestamps_file, "w") as f:
+    json.dump(script_timestamps, f, indent=4)
+
 # 合并target里面的所有anim
 animations = []
 print("Joint Animations")
-for file in os.listdir("target"):
-    if file.endswith(".json"):
-        anim = load_anim(f"target/{file}")
+for file in os.listdir(target_dir):
+    if file.endswith(".json") and file != "script_timestamps.json":
+        anim = load_anim(os.path.join(target_dir, file))
         animation = anim["banks"][0]["animations"][0]
         animations.append(animation)
 
-# 字符表排序动画
+# 字符表排序动画名称
 animations.sort(key=lambda x: x["name"])
 save_animations(animations, "wilsondragonfly", "wilsondragonfly.json")
 
