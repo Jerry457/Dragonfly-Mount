@@ -1,8 +1,8 @@
 -- This information tells other players more about the mod
-name = "Dragonfly-Mount"  ---mod名字
-version = "" -- mod版本 上传mod需要两次的版本不一样
+name = "Move!!Dragonfly"  ---mod名字
+version = "1.0.0" -- mod版本 上传mod需要两次的版本不一样
 description =""  --mod描述
-author = "" --作者
+author = "WIGFRID、Guto、jerry457" --作者
 
 -- This is the URL name of the mod's thread on the forum; the part after the ? and before the first & in the url
 forumthread = ""
