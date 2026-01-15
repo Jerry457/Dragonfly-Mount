@@ -1,12 +1,14 @@
 modimport("main/prefab_files")
-modimport("main/anim-assets")
 Assets = {
     -- Asset("IMAGE", "images/inventoryimages.xml"),
     -- Asset("ATLAS", "images/minimap.xml" ),
+    Asset("ANIM", "anim/wilsondragonfly.zip")
 }
 
 PreloadAssets = {
 }
+
+modimport("main/anim-assets")
 
 ReloadPreloadAssets()
 

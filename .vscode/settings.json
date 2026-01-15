@@ -60,5 +60,8 @@
             "cmd": "powershell -ExecutionPolicy Bypass -File \"${workspaceRoot}/filewatcher.ps1\"",
             "event": "onFolderDelete"
         },
+    ],
+    "Lua.diagnostics.disable": [
+        "inject-field"
     ]
 }
