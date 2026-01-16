@@ -21,6 +21,8 @@ def derive_from_dragonfly_template(
     animation_length_align=1,
     dragonfly_animation_range=[None, None],
     dragonfly_animation_repeat=1,
+    fix_swap_saddle_scale=True,
+    fix_swap_saddle_pos=True,
 ):
     wilson_animation = get_animation(wilsonbeefalo_anim, wilson_animation_name)
 
@@ -34,6 +36,8 @@ def derive_from_dragonfly_template(
     )
 
     wilson_animation = remove_beefalo_elements(wilson_animation)
+
+    fix_swap_saddle(wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos)
 
     dragonfly_idle = get_animation(dragonfly_anim, dragonfly_animation_name)
 
@@ -204,4 +208,217 @@ derive_from_dragonfly_template(
     dragonfly_animation_name="idle",
     output_animation_name="dart_downside",
     dragonfly_animation_range=[20, None],
+)
+
+# ================= action_uniqueitem
+
+derive_from_dragonfly_template(
+    wilson_animation_name="action_uniqueitem_lag",
+    dragonfly_animation_name="idle",
+    output_animation_name="action_uniqueitem_lag",
+    dragonfly_animation_range=[0, 15],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="action_uniqueitem_pre",
+    dragonfly_animation_name="idle",
+    output_animation_name="action_uniqueitem_pre",
+    dragonfly_animation_range=[0, 7],
+    animation_length_align=2,
+)
+
+# ================= alert
+
+derive_from_dragonfly_template(
+    wilson_animation_name="alert_pre",
+    dragonfly_animation_name="idle",
+    output_animation_name="alert_pre",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="alert_idle",
+    dragonfly_animation_name="idle",
+    output_animation_name="alert_idle",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="alert_pst",
+    dragonfly_animation_name="idle",
+    output_animation_name="alert_pst",
+    dragonfly_animation_range=[-2, None],
+    animation_length_align=2,
+)
+
+
+# ================= book
+
+derive_from_dragonfly_template(
+    wilson_animation_name="book",
+    dragonfly_animation_name="idle",
+    output_animation_name="book",
+)
+
+# ================= atk_recoil_downside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="atk_recoil_downside",
+    dragonfly_animation_name="idle",
+    output_animation_name="atk_recoil_downside",
+)
+
+# ================= bell
+
+derive_from_dragonfly_template(
+    wilson_animation_name="bell",
+    dragonfly_animation_name="idle",
+    output_animation_name="bell",
+)
+
+# ================= eat
+
+derive_from_dragonfly_template(
+    wilson_animation_name="bell",
+    dragonfly_animation_name="idle",
+    output_animation_name="bell",
+)
+
+# ================= quick_drink
+
+derive_from_dragonfly_template(
+    wilson_animation_name="quick_drink_pre",
+    dragonfly_animation_name="idle",
+    output_animation_name="quick_drink_pre",
+    dragonfly_animation_range=[0, 18],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="quick_drink",
+    dragonfly_animation_name="idle",
+    output_animation_name="quick_drink",
+    dragonfly_animation_range=[19, None],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="quick_drink_lag",
+    dragonfly_animation_name="idle",
+    output_animation_name="quick_drink_lag",
+    dragonfly_animation_range=[18, 19],
+    animation_length_align=2,
+)
+
+# ================= quick_eat
+
+derive_from_dragonfly_template(
+    wilson_animation_name="quick_eat_pre",
+    dragonfly_animation_name="idle",
+    output_animation_name="quick_eat_pre",
+    dragonfly_animation_range=[0, 18],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="quick_eat",
+    dragonfly_animation_name="idle",
+    output_animation_name="quick_eat",
+    dragonfly_animation_range=[19, None],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="quick_eat_lag",
+    dragonfly_animation_name="idle",
+    output_animation_name="quick_eat_lag",
+    dragonfly_animation_range=[18, 19],
+    animation_length_align=2,
+)
+
+# ================= useitem
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_pre",
+    dragonfly_animation_name="idle",
+    output_animation_name="useitem_pre",
+    dragonfly_animation_range=[0, 14],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_lag",
+    dragonfly_animation_name="idle",
+    output_animation_name="useitem_lag",
+    dragonfly_animation_range=[14, 15],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_pst",
+    dragonfly_animation_name="idle",
+    output_animation_name="useitem_pst",
+    dragonfly_animation_range=[15, None],
+)
+
+# ================= useitem
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_dir_pre",
+    dragonfly_animation_name="idle",
+    output_animation_name="useitem_dir_pre",
+    dragonfly_animation_range=[0, 14],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_dir_lag",
+    dragonfly_animation_name="idle",
+    output_animation_name="useitem_dir_lag",
+    dragonfly_animation_range=[14, 15],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_dir_pst",
+    dragonfly_animation_name="idle",
+    output_animation_name="useitem_dir_pst",
+    dragonfly_animation_range=[15, None],
+)
+
+
+# ================= deploytoss_downside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_pre_downside",
+    dragonfly_animation_name="idle",
+    output_animation_name="deploytoss_pre_downside",
+    dragonfly_animation_range=[0, 12],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_lag_downside",
+    dragonfly_animation_name="idle",
+    output_animation_name="deploytoss_lag_downside",
+    dragonfly_animation_range=[12, 14],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_downside",
+    dragonfly_animation_name="idle",
+    output_animation_name="deploytoss_downside",
+    dragonfly_animation_range=[14, None],
+)
+
+# ================= dialog_loop
+
+derive_from_dragonfly_template(
+    wilson_animation_name="dialog_loop",
+    dragonfly_animation_name="idle",
+    output_animation_name="dialog_loop",
+    dragonfly_animation_range=[None, None],
+)
+
+# ================= dial_loop
+
+derive_from_dragonfly_template(
+    wilson_animation_name="dial_loop",
+    dragonfly_animation_name="idle",
+    output_animation_name="dial_loop",
+    dragonfly_animation_range=[None, None],
 )

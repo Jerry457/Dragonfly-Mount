@@ -385,3 +385,27 @@ def joint_animations(animations, name):
 
     new["name"] = name
     return new
+
+
+def fix_swap_saddle(
+    wilson_animation, fix_swap_saddle_scale=True, fix_swap_saddle_pos=True
+):
+    if fix_swap_saddle_scale or fix_swap_saddle_pos:
+        swap_saddle_x = None
+        swap_saddle_y = None
+        for frame in wilson_animation["frames"]:  # type: ignore
+            for element in frame["elements"]:
+                if str.lower(element["symbol"]) == "swap_saddle":
+                    if fix_swap_saddle_scale:
+                        element["a"] = 0.705
+                        element["b"] = 0.0
+                        element["c"] = 0.0
+                        element["d"] = 0.705
+                    if fix_swap_saddle_pos:
+                        element["tx"] = swap_saddle_x or element["tx"]
+                        element["ty"] = swap_saddle_y or element["ty"]
+                        if swap_saddle_x is None:
+                            swap_saddle_x = element["tx"]
+                        if swap_saddle_y is None:
+                            swap_saddle_y = element["ty"]
+                    break

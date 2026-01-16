@@ -23,7 +23,6 @@ wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
 
 wilson_animation = get_animation(wilsonbeefalo_anim, WILSON_ANIMATION_NAME)
 
-
 wilson_animation = apply_anti_follow_symbol(
     wilson_animation,
     {

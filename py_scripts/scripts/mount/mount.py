@@ -73,6 +73,8 @@ wilson_mount = apply_anti_follow_symbol(
 )
 wilson_mount = remove_beefalo_elements(wilson_mount)
 
+fix_swap_saddle(wilson_mount)
+
 wilson_mount_front, wilson_mount_back = split_wilson_down_animation(wilson_mount)
 
 # front, back = split_wilson_animation(wilson_animation)

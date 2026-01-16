@@ -20,6 +20,8 @@ def derive_from_dragonfly_template(
     split_front_back=True,
     animation_length_align=1,
     dragonfly_animation_range=[None, None],
+    fix_swap_saddle_scale=True,
+    fix_swap_saddle_pos=True,
 ):
     wilson_animation = get_animation(wilsonbeefalo_anim, wilson_animation_name)
 
@@ -34,22 +36,14 @@ def derive_from_dragonfly_template(
 
     wilson_animation = remove_beefalo_elements(wilson_animation)
 
-    hand_18_ty = None
-    hand_19_ty = None
+    fix_swap_saddle(wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos)
+
     for frame in wilson_animation["frames"]:  # type: ignore
         for element in frame["elements"]:
             if str.lower(element["symbol"]) == "swap_saddle":
                 scaling_element(element, SIDE_DIR_SADDLE_SCALE_X, 1.0)
                 element["tx"] = element["tx"] + SIDE_DIR_SADDLE_X_OFFSET
-            elif str.lower(element["symbol"]) == "hand":
-                # # 固定手不要上下浮动
-                # if element["frameNum"] == 18:
-                #     element["ty"] = hand_18_ty or element["ty"]
-                #     hand_18_ty = element["ty"]
-                # elif element["frameNum"] == 19:
-                #     element["ty"] = hand_19_ty or element["ty"]
-                #     hand_19_ty = element["ty"]
-                pass
+                break
 
     dragonfly_idle = get_animation(dragonfly_anim, dragonfly_animation_name)
 
@@ -159,4 +153,38 @@ derive_from_dragonfly_template(
     dragonfly_animation_name="idle_side",
     output_animation_name="dart_side",
     dragonfly_animation_range=[20, None],
+)
+
+
+# ================= atk_recoil_side
+
+derive_from_dragonfly_template(
+    wilson_animation_name="atk_recoil_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="atk_recoil_side",
+    dragonfly_animation_range=[None, None],
+)
+
+# ================= deploytoss_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_pre_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="deploytoss_pre_side",
+    dragonfly_animation_range=[0, 12],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_lag_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="deploytoss_lag_side",
+    dragonfly_animation_range=[12, 14],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="deploytoss_side",
+    dragonfly_animation_range=[14, None],
 )

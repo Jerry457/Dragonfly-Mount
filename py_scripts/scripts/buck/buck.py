@@ -33,6 +33,8 @@ wilson_animation = apply_anti_follow_symbol(
 
 wilson_animation = remove_beefalo_elements(wilson_animation)
 
+fix_swap_saddle(wilson_animation)
+
 front, back = split_wilson_down_animation(wilson_animation)
 
 dragonfly_anim = load_anim("assets/dragonfly.json")

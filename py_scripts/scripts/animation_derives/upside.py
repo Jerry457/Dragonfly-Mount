@@ -19,6 +19,8 @@ def derive_from_dragonfly_template(
     output_animation_name="idle_loop_upside",
     animation_length_align=1,
     dragonfly_animation_range=[None, None],
+    fix_swap_saddle_scale=True,
+    fix_swap_saddle_pos=True,
 ):
     wilson_animation = get_animation(wilsonbeefalo_anim, wilson_animation_name)
 
@@ -32,6 +34,8 @@ def derive_from_dragonfly_template(
     )
 
     wilson_animation = remove_beefalo_elements(wilson_animation)
+
+    fix_swap_saddle(wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos)
 
     dragonfly_idle = get_animation(dragonfly_anim, dragonfly_animation_name)
 
@@ -92,4 +96,61 @@ derive_from_dragonfly_template(
     dragonfly_animation_name="idle_upside",
     output_animation_name="dart_upside",
     dragonfly_animation_range=[20, None],
+)
+
+# ================= atk_recoil_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="atk_recoil_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="atk_recoil_upside",
+    dragonfly_animation_range=[None, None],
+)
+
+# ================= useitem
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_dir_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="useitem_dir_pre_upside",
+    dragonfly_animation_range=[0, 14],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_dir_lag_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="useitem_dir_lag_upside",
+    dragonfly_animation_range=[14, 15],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="useitem_dir_pst_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="useitem_dir_pst_upside",
+    dragonfly_animation_range=[15, None],
+)
+
+# ================= deploytoss_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="deploytoss_pre_upside",
+    dragonfly_animation_range=[0, 12],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_lag_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="deploytoss_lag_upside",
+    dragonfly_animation_range=[12, 14],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="deploytoss_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="deploytoss_upside",
+    dragonfly_animation_range=[14, None],
 )
