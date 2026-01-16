@@ -207,3 +207,138 @@ derive_from_dragonfly_template(
     dragonfly_animation_range=[-2, None],
     animation_length_align=2,
 )
+
+# ================= pickup
+
+derive_from_dragonfly_template(
+    wilson_animation_name="pickup_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="pickup_upside",
+    dragonfly_animation_range=[0, 10],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="pickup_lag_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="pickup_lag_upside",
+    dragonfly_animation_range=[10, 14],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="pickup_pst_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="pickup_pst_upside",
+    dragonfly_animation_range=[14, None],
+)
+
+# ================= player_atk
+
+derive_from_dragonfly_template(
+    wilson_animation_name="player_atk_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="player_atk_pre_upside",
+    dragonfly_animation_range=[0, 10],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="player_atk_lag_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="player_atk_lag_upside",
+    dragonfly_animation_range=[10, 14],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="player_atk_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="player_atk_upside",
+    dragonfly_animation_range=[14, None],
+)
+
+# ================= remotecast
+
+derive_from_dragonfly_template(
+    wilson_animation_name="remotecast_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="remotecast_pre_upside",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="remotecast_loop_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="remotecast_loop_upside",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="remotecast_pst_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="remotecast_pst_upside",
+    dragonfly_animation_range=[-2, None],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="remotecast_trigger_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="remotecast_trigger_upside",
+    dragonfly_animation_range=[0, 11],
+)
+
+# ================= sand_idle_loop
+
+derive_from_dragonfly_template(
+    wilson_animation_name="sand_idle_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="sand_idle_pre_upside",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="sand_idle_loop_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="sand_idle_loop_upside",
+    dragonfly_animation_repeat=2,
+)
+
+# ================= slingshot_alt_pre_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_alt_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="slingshot_alt_pre_upside",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+# ================= slingshot_pre_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_pre_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="slingshot_pre_upside",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+
+# ================= slingshot_downside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="slingshot_upside",
+    animation_length_align=2,
+)
+
+# ================= slingshot_downside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_lag_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="slingshot_lag_upside",
+    dragonfly_animation_repeat=2,
+)

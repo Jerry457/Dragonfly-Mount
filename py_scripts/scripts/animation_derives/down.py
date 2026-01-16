@@ -756,3 +756,23 @@ derive_from_dragonfly_template(
     dragonfly_animation_range=[-2, None],
     animation_length_align=2,
 )
+
+# ================= item
+
+derive_from_dragonfly_template(
+    wilson_animation_name="item_hat",
+    dragonfly_animation_name="idle",
+    output_animation_name="item_hat",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="item_in",
+    dragonfly_animation_name="idle",
+    output_animation_name="item_in",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="item_out",
+    dragonfly_animation_name="idle",
+    output_animation_name="item_out",
+)

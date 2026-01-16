@@ -223,3 +223,65 @@ derive_from_dragonfly_template(
     output_animation_name="idle_walk_pst_side",
     dragonfly_animation_range=[-2, None],
 )
+
+# ================= player_atk
+
+derive_from_dragonfly_template(
+    wilson_animation_name="player_atk_pre_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="player_atk_pre_side",
+    dragonfly_animation_range=[0, 10],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="player_atk_lag_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="player_atk_lag_side",
+    dragonfly_animation_range=[10, 14],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="player_atk_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="player_atk_side",
+    dragonfly_animation_range=[14, None],
+)
+
+# ================= slingshot_alt_pre
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_alt_pre_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="slingshot_alt_pre_side",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+# ================= slingshot_pre
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_pre_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="slingshot_pre_side",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+# ================= slingshot_downside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="slingshot_side",
+    animation_length_align=2,
+)
+
+# ================= slingshot_downside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="slingshot_lag_side",
+    dragonfly_animation_name="idle_side",
+    output_animation_name="slingshot_lag_side",
+    dragonfly_animation_repeat=2,
+)
