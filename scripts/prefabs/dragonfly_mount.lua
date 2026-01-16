@@ -36,7 +36,7 @@ local function fn()
 
     MakeFlyingGiantCharacterPhysics(inst, 500, 1.4)
 
-    inst.AnimState:SetBank("dragonfly")
+    inst.AnimState:SetBank("dragonfly_mount")
     inst.AnimState:SetBuild("dragonfly_fire_build")
     inst.AnimState:PlayAnimation("idle", true)
 
