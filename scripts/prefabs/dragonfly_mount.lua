@@ -32,7 +32,7 @@ local function fn()
 
     inst.DynamicShadow:SetSize(6, 3.5)
     inst.Transform:SetSixFaced()
-    inst.Transform:SetScale(1.3, 1.3, 1.3)
+    -- inst.Transform:SetScale(1.3, 1.3, 1.3)
 
     MakeFlyingGiantCharacterPhysics(inst, 500, 1.4)
 
