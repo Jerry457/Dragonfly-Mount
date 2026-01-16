@@ -9,8 +9,7 @@ from constant import *
 from follow_symbol import apply_follow_symbol
 from utils import *
 
-WILSON_ANIMATION1_NAME = "atk_pre_upside"
-WILSON_ANIMATION2_NAME = "atk_upside"
+WILSON_ANIMATION_NAME = "atk_upside"
 
 DRAGONFLY_ANIMATION_NAME = "atk_upside"
 
@@ -20,13 +19,7 @@ OUTPUT_ANIMATION_NAME = "atk_upside"
 wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
 
 
-wilson_animation1 = get_animation(wilsonbeefalo_anim, WILSON_ANIMATION1_NAME)
-wilson_animation2 = get_animation(wilsonbeefalo_anim, WILSON_ANIMATION2_NAME)
-
-wilson_animation = joint_animations(
-    [wilson_animation1, wilson_animation2], WILSON_ANIMATION2_NAME
-)
-
+wilson_animation = get_animation(wilsonbeefalo_anim, WILSON_ANIMATION_NAME)
 
 wilson_animation = apply_anti_follow_symbol(
     wilson_animation,
@@ -42,6 +35,8 @@ wilson_animation = remove_beefalo_elements(wilson_animation)
 dragonfly_anim = load_anim("assets/dragonfly.json")
 
 dragonfly_idle = get_animation(dragonfly_anim, DRAGONFLY_ANIMATION_NAME)
+
+dragonfly_idle["frames"] = dragonfly_idle["frames"][6:]
 
 dragonfly_idle = apply_follow_symbol(
     dragonfly_idle,

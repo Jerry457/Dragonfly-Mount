@@ -14,6 +14,7 @@ DRAGONFLY_ANIMATION_NAME = "idle_side"
 
 OUTPUT_ANIMATION_NAME = "idle_loop_side"
 
+ANIM_LEN_ALIGN = 1
 
 wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
 
@@ -26,7 +27,7 @@ wilson_animation = apply_anti_follow_symbol(
     {
         "anti_symbol": "beefalo_headbase",
         "follow_num": "",
-        "maintain_scale": False,
+        "maintain_scale": True,
     },
 )
 
@@ -55,6 +56,8 @@ dragonfly_anim = load_anim("assets/dragonfly.json")
 
 dragonfly_idle = get_animation(dragonfly_anim, DRAGONFLY_ANIMATION_NAME)
 
+# dragonfly_idle["frames"] = dragonfly_idle["frames"][:2]
+
 dragonfly_idle = apply_follow_symbol(
     dragonfly_idle,
     front,
@@ -73,7 +76,7 @@ dragonfly_idle = apply_follow_symbol(
         "inherit_scale": True,
         "inherit_rotation": True,
         "average_rotation": True,
-        "alignment": 1,
+        "alignment": ANIM_LEN_ALIGN,
         "interpolate": True,
     },
 )
@@ -96,7 +99,7 @@ dragonfly_idle = apply_follow_symbol(
         "inherit_scale": True,
         "inherit_rotation": True,
         "average_rotation": True,
-        "alignment": 1,
+        "alignment": ANIM_LEN_ALIGN,
         "interpolate": True,
     },
 )

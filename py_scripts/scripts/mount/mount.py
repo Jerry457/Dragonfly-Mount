@@ -20,7 +20,7 @@ wilson_idle = apply_anti_follow_symbol(
     {
         "anti_symbol": "beefalo_headbase",
         "follow_num": "",
-        "maintain_scale": False,
+        "maintain_scale": True,
     },
 )
 wilson_idle = remove_beefalo_elements(wilson_idle)
@@ -68,7 +68,7 @@ wilson_mount = apply_anti_follow_symbol(
     {
         "anti_symbol": "beefalo_headbase",
         "follow_num": "",
-        "maintain_scale": False,
+        "maintain_scale": True,
     },
 )
 wilson_mount = remove_beefalo_elements(wilson_mount)

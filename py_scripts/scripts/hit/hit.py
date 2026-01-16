@@ -26,7 +26,7 @@ wilson_animation = apply_anti_follow_symbol(
     {
         "anti_symbol": "beefalo_headbase",
         "follow_num": "",
-        "maintain_scale": False,
+        "maintain_scale": True,
     },
 )
 
@@ -34,7 +34,7 @@ wilson_animation = remove_beefalo_elements(wilson_animation)
 
 front, back = split_wilson_down_animation(wilson_animation)
 
-dragonfly_anim = load_anim("assets/dragonfly_hit.json")
+dragonfly_anim = load_anim("assets/dragonfly.json")
 
 dragonfly_idle = get_animation(dragonfly_anim, DRAGONFLY_ANIMATION_NAME)
 

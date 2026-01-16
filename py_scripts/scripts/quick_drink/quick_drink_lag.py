@@ -25,7 +25,7 @@ wilson_animation = apply_anti_follow_symbol(
     {
         "anti_symbol": "beefalo_headbase",
         "follow_num": "",
-        "maintain_scale": False,
+        "maintain_scale": True,
     },
 )
 
