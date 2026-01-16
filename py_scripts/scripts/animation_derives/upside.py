@@ -13,6 +13,17 @@ wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
 dragonfly_anim = load_anim("assets/dragonfly.json")
 
 
+wilson_up = get_animation(wilsonbeefalo_anim, "idle_loop_upside")
+wilson_up = apply_anti_follow_symbol(
+    wilson_up,
+    {
+        "anti_symbol": "beefalo_headbase",
+        "follow_num": "",
+        "maintain_scale": True,
+    },
+)
+
+
 def derive_from_dragonfly_template(
     wilson_animation_name="idle_loop_upside",
     dragonfly_animation_name="idle_upside",
@@ -36,7 +47,9 @@ def derive_from_dragonfly_template(
 
     wilson_animation = remove_beefalo_elements(wilson_animation)
 
-    fix_swap_saddle(wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos)
+    fix_swap_saddle(
+        wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos, wilson_up
+    )
 
     dragonfly_idle = get_animation(dragonfly_anim, dragonfly_animation_name)
 
@@ -70,7 +83,7 @@ def derive_from_dragonfly_template(
             "local_scale_x": LOCAL_SCALE_X,
             "local_scale_y": LOCAL_SCALE_Y,
             "local_rotate": 0,
-            "z_index_offset": 0,
+            "z_index_offset": -1,
             "inherit_pos_x": True,
             "inherit_pos_y": True,
             "inherit_scale": True,

@@ -12,6 +12,16 @@ from utils import *
 wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
 dragonfly_anim = load_anim("assets/dragonfly.json")
 
+wilson_side = get_animation(wilsonbeefalo_anim, "walk_loop_side")
+wilson_side = apply_anti_follow_symbol(
+    wilson_side,
+    {
+        "anti_symbol": "beefalo_headbase",
+        "follow_num": "",
+        "maintain_scale": True,
+    },
+)
+
 
 def derive_from_dragonfly_template(
     wilson_animation_name="walk_loop_side",
@@ -37,7 +47,9 @@ def derive_from_dragonfly_template(
 
     wilson_animation = remove_beefalo_elements(wilson_animation)
 
-    fix_swap_saddle(wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos)
+    fix_swap_saddle(
+        wilson_animation, fix_swap_saddle_scale, fix_swap_saddle_pos, wilson_side
+    )
 
     for frame in wilson_animation["frames"]:  # type: ignore
         for element in frame["elements"]:

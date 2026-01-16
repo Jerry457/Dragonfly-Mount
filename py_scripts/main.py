@@ -1,5 +1,4 @@
 # python anim/py_scripts/main.py
-import hashlib
 import json
 import os
 import subprocess

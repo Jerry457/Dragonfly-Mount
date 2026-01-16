@@ -25,11 +25,13 @@ wilson_animation = get_animation(wilsonbeefalo_anim, WILSON_ANIMATION_NAME)
 wilson_animation = apply_anti_follow_symbol(
     wilson_animation,
     {
-        "anti_symbol": "swap_saddle",
+        "anti_symbol": "beefalo_headbase",
         "follow_num": "",
         "maintain_scale": True,
     },
 )
+
+fix_swap_saddle(wilson_animation)
 
 wilson_animation = remove_beefalo_elements(wilson_animation)
 
