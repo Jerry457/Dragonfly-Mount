@@ -193,6 +193,8 @@ emotes = {
     "emoteXL_waving2": 1,
     "emoteXL_waving3": 1,
     "emoteXL_waving4": 1,
+    "emoteXL_happycheer": 1,
+    "emote_fistshake": 1,
 }
 
 
@@ -204,9 +206,6 @@ emotes_pst = {
     "emoteXL_pst_dance8": 1,
 }
 
-# 这两个特殊处理
-# "emote_fistshake"
-# emoteXL_happycheer
 
 for emote, repeat in emotes_pre.items():
     derive_from_dragonfly_template(

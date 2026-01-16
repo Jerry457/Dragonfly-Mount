@@ -100,17 +100,17 @@ else:
     print("No updated or new JSON files found.")
 
 
-# # 合并target里面的所有anim
-# animations = []
-# print("Joint Animations")
-# for file in os.listdir(target_dir):
-#     if file.endswith(".json") and file != "script_timestamps.json":
-#         anim = load_anim(os.path.join(target_dir, file))
-#         animation = anim["banks"][0]["animations"][0]
-#         animations.append(animation)
+# 合并target里面的所有anim
+animations = []
+print("Joint Animations")
+for file in os.listdir(target_dir):
+    if file.endswith(".json") and file != "script_timestamps.json":
+        anim = load_anim(os.path.join(target_dir, file))
+        animation = anim["banks"][0]["animations"][0]
+        animations.append(animation)
 
-# # 字符表排序动画名称
-# animations.sort(key=lambda x: x["name"])
-# save_animations(animations, "wilsondragonfly", "wilsondragonfly.json")
+# 字符表排序动画名称
+animations.sort(key=lambda x: x["name"])
+save_animations(animations, "wilsondragonfly", "wilsondragonfly.json")
 
 print(f"Time taken: {time() - start:.2f} seconds")
