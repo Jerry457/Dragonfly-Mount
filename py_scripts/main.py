@@ -1,4 +1,5 @@
 # python anim/py_scripts/main.py
+import hashlib
 import json
 import os
 import subprocess
@@ -21,6 +22,20 @@ if os.path.exists(timestamps_file):
         script_timestamps = json.load(f)
 else:
     script_timestamps = {}
+
+
+# 检查 target 目录中所有 JSON 文件的最后修改时间
+def get_json_file_mod_times(directory):
+    json_mod_times = {}
+    for file in os.listdir(directory):
+        if file.endswith(".json") and file != "script_timestamps.json":
+            file_path = os.path.join(directory, file)
+            json_mod_times[file] = os.path.getmtime(file_path)
+    return json_mod_times
+
+
+# 记录脚本执行前的 JSON 文件修改时间
+pre_execution_json_mod_times = get_json_file_mod_times(target_dir)
 
 # 执行scripts文件夹下所有子文件夹中的python脚本
 scripts_dir = "scripts"
@@ -58,17 +73,44 @@ for thread in threads:
 with open(timestamps_file, "w") as f:
     json.dump(script_timestamps, f, indent=4)
 
-# 合并target里面的所有anim
-animations = []
-print("Joint Animations")
-for file in os.listdir(target_dir):
-    if file.endswith(".json") and file != "script_timestamps.json":
+# 记录脚本执行后的 JSON 文件修改时间
+post_execution_json_mod_times = get_json_file_mod_times(target_dir)
+
+# 筛选出更新或新生成的 JSON 文件
+updated_or_new_json_files = [
+    file
+    for file, mod_time in post_execution_json_mod_times.items()
+    if file not in pre_execution_json_mod_times
+    or mod_time > pre_execution_json_mod_times[file]
+]
+
+# 合并更新或新生成的 JSON 文件
+if updated_or_new_json_files:
+    print("Merging updated or new JSON files into anim.json")
+    animations = []
+    for file in updated_or_new_json_files:
         anim = load_anim(os.path.join(target_dir, file))
         animation = anim["banks"][0]["animations"][0]
         animations.append(animation)
 
-# 字符表排序动画名称
-animations.sort(key=lambda x: x["name"])
-save_animations(animations, "wilsondragonfly", "wilsondragonfly.json")
+    # 字符表排序动画名称
+    animations.sort(key=lambda x: x["name"])
+    save_animations(animations, "wilsondragonfly", "update.json")
+else:
+    print("No updated or new JSON files found.")
+
+
+# # 合并target里面的所有anim
+# animations = []
+# print("Joint Animations")
+# for file in os.listdir(target_dir):
+#     if file.endswith(".json") and file != "script_timestamps.json":
+#         anim = load_anim(os.path.join(target_dir, file))
+#         animation = anim["banks"][0]["animations"][0]
+#         animations.append(animation)
+
+# # 字符表排序动画名称
+# animations.sort(key=lambda x: x["name"])
+# save_animations(animations, "wilsondragonfly", "wilsondragonfly.json")
 
 print(f"Time taken: {time() - start:.2f} seconds")

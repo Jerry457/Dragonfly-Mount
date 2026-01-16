@@ -37,7 +37,7 @@ def save_animation(animation, path):
             }
         ],
     }
-    json.dump(anim, open(path, "w"), indent=4)
+    json.dump(anim, open(path, "w"), indent=None)
 
 
 def save_animations(animations, name, path):
@@ -51,7 +51,7 @@ def save_animations(animations, name, path):
             }
         ],
     }
-    json.dump(anim, open(path, "w"), indent=4)
+    json.dump(anim, open(path, "w"), indent=None)
 
 
 def lerp(start, end, t):
@@ -388,11 +388,23 @@ def joint_animations(animations, name):
 
 
 def fix_swap_saddle(
-    wilson_animation, fix_swap_saddle_scale=True, fix_swap_saddle_pos=True
+    wilson_animation,
+    fix_swap_saddle_scale=True,
+    fix_swap_saddle_pos=True,
+    custom_saddle_pos_animation=None,
 ):
     if fix_swap_saddle_scale or fix_swap_saddle_pos:
         swap_saddle_x = None
         swap_saddle_y = None
+
+        if custom_saddle_pos_animation:
+            frame = custom_saddle_pos_animation["frames"][0]
+            for element in frame["elements"]:
+                if str.lower(element["symbol"]) == "swap_saddle":
+                    swap_saddle_x = element["tx"]
+                    swap_saddle_y = element["ty"]
+                    break
+
         for frame in wilson_animation["frames"]:  # type: ignore
             for element in frame["elements"]:
                 if str.lower(element["symbol"]) == "swap_saddle":
@@ -409,3 +421,8 @@ def fix_swap_saddle(
                         if swap_saddle_y is None:
                             swap_saddle_y = element["ty"]
                     break
+
+
+def reorder_animation(animation):
+    for i, frame in enumerate(animation["frames"]):
+        frame["idx"] = i

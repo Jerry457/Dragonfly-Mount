@@ -91,6 +91,8 @@ wilson_dismount = apply_anti_follow_symbol(
 )
 wilson_dismount = remove_beefalo_elements(wilson_dismount)
 
+fix_swap_saddle(wilson_dismount)
+
 wilson_dismount_front, wilson_dismount_back = split_wilson_down_animation(
     wilson_dismount
 )
@@ -99,10 +101,11 @@ wilson_dismount_front, wilson_dismount_back = split_wilson_down_animation(
 
 dragonfly_land_2 = deepcopy(dragonfly_land)
 dragonfly_land_2["frames"] = dragonfly_land_2["frames"][LAND_SEP_IDX:]
-
-dragonfly_land_2["frames"] = relength_anim_frames(dragonfly_land_2["frames"], 16, True)
+dragonfly_land_2["frames"] = relength_anim_frames(dragonfly_land_2["frames"], 22, True)
 
 dragonfly_takeoff = get_animation(dragonfly_anim, "takeoff")
+dragonfly_takeoff["frames"] = dragonfly_takeoff["frames"][:-5]
+
 dragonfly_land_2 = joint_animations([dragonfly_land_2, dragonfly_takeoff], "takeoff")
 
 dragonfly_land_2 = apply_follow_symbol(

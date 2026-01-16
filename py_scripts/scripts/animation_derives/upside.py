@@ -21,6 +21,7 @@ def derive_from_dragonfly_template(
     dragonfly_animation_range=[None, None],
     fix_swap_saddle_scale=True,
     fix_swap_saddle_pos=True,
+    dragonfly_animation_repeat=1,
 ):
     wilson_animation = get_animation(wilsonbeefalo_anim, wilson_animation_name)
 
@@ -39,13 +40,23 @@ def derive_from_dragonfly_template(
 
     dragonfly_idle = get_animation(dragonfly_anim, dragonfly_animation_name)
 
-    range = dragonfly_animation_range
-    if range[0] is not None and range[1] is not None:
-        dragonfly_idle["frames"] = dragonfly_idle["frames"][range[0] : range[1]]  # type: ignore
-    elif range[0] is not None:
-        dragonfly_idle["frames"] = dragonfly_idle["frames"][range[0] :]  # type: ignore
-    elif range[1] is not None:
-        dragonfly_idle["frames"] = dragonfly_idle["frames"][: range[1]]  # type: ignore
+    if dragonfly_animation_repeat > 1:
+        dragonfly_animations = []
+        for i in range(dragonfly_animation_repeat):
+            dragonfly_animations.append(deepcopy(dragonfly_idle))  # type: ignore
+        dragonfly_idle = joint_animations(
+            dragonfly_animations, dragonfly_animation_name
+        )
+
+    anim_range = dragonfly_animation_range
+    if anim_range[0] is not None and anim_range[1] is not None:
+        dragonfly_idle["frames"] = dragonfly_idle["frames"][  # type: ignore
+            anim_range[0] : anim_range[1]
+        ]  # type: ignore
+    elif anim_range[0] is not None:
+        dragonfly_idle["frames"] = dragonfly_idle["frames"][anim_range[0] :]  # type: ignore
+    elif anim_range[1] is not None:
+        dragonfly_idle["frames"] = dragonfly_idle["frames"][: anim_range[1]]  # type: ignore
 
     dragonfly_idle = apply_follow_symbol(
         dragonfly_idle,
@@ -70,6 +81,7 @@ def derive_from_dragonfly_template(
         },
     )
 
+    reorder_animation(dragonfly_idle)
     dragonfly_idle["name"] = output_animation_name  # type: ignore
     save_animation(dragonfly_idle, f"target/{output_animation_name}.json")
 
@@ -153,4 +165,45 @@ derive_from_dragonfly_template(
     dragonfly_animation_name="idle_upside",
     output_animation_name="deploytoss_upside",
     dragonfly_animation_range=[14, None],
+)
+
+# ================= give_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="give_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="give_upside",
+    dragonfly_animation_range=[0, 18],
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="give_pst_upside",
+    dragonfly_animation_name="idle_upside",
+    output_animation_name="give_pst_upside",
+    dragonfly_animation_range=[18, None],
+)
+
+# ================= idle_walk_upside
+
+derive_from_dragonfly_template(
+    wilson_animation_name="idle_walk_pre_upside",
+    dragonfly_animation_name="walk_upside",
+    output_animation_name="idle_walk_pre_upside",
+    dragonfly_animation_range=[0, 2],
+    animation_length_align=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="idle_walk_upside",
+    dragonfly_animation_name="walk_upside",
+    output_animation_name="idle_walk_upside",
+    dragonfly_animation_repeat=2,
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="idle_walk_pst_upside",
+    dragonfly_animation_name="walk_upside",
+    output_animation_name="idle_walk_pst_upside",
+    dragonfly_animation_range=[-2, None],
+    animation_length_align=2,
 )

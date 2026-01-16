@@ -2,4 +2,5 @@ __pycache__
 .DS_Store
 target
 wilsondragonfly.json
+update.json
 assets
