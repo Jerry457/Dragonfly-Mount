@@ -24,6 +24,7 @@ local function SGwilson(sg)
     local attack = sg.states.attack
     local attack_timeline = attack.timeline
 
+    -- 添加骑乘龙蝇攻击音效
     table.insert(attack_timeline, TimeEvent(7 * FRAMES, function(inst)
         local rider = inst.replica.rider
         local mount = rider and rider:GetMount()

@@ -37,6 +37,7 @@ local function ConfigureRunState(inst)
 end
 
 AddStategraphPostInit("wilson", function(sg)
+    -- 修改locomote事件目标state
     local locomote_fn = sg.events.locomote.fn
     sg.events.locomote.fn = function(inst, data)
         local rider = inst.replica.rider
@@ -59,7 +60,7 @@ AddStategraphPostInit("wilson", function(sg)
         end
     end
 
-
+    -- dragonfly_mount_run
     sg.states.dragonfly_mount_run_start = State{
         name = "dragonfly_mount_run_start",
         tags = { "moving", "running", "canrotate", "autopredict" },
@@ -145,6 +146,7 @@ AddStategraphPostInit("wilson", function(sg)
         },
     }
 
+    -- dragonfly_mount
     local mount_onenter = sg.states.mount.onenter
     sg.states.mount.onenter = function(inst, ...)
         local dragonfly = inst.components.rider.target_mount and inst.components.rider.target_mount:HasTag("dragonfly_mount")
@@ -212,17 +214,22 @@ AddStategraphPostInit("wilson", function(sg)
         },
 
         onexit = function(inst)
+            -- 播放飞行音效
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "dragonfly_flying")
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
             end
         end,
     }
 
+    -- dragonfly_dismount
     local dismount_onenter = sg.states.dismount.onenter
     sg.states.dismount.onenter = function(inst, ...)
         local dragonfly = inst.components.rider.mount and inst.components.rider.mount:HasTag("dragonfly_mount")
         if dragonfly then
             inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+            -- 停止飞行音效
+            inst.SoundEmitter:KillSound("dragonfly_flying")
         end
         return dismount_onenter(inst, ...)
     end

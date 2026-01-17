@@ -3,7 +3,7 @@ local function PotentialRiderTest(inst, potential_rider)
 end
 
 local function ApplyBuildOverrides(inst, animstate)
-    local basebuild = "dragonfly_fire_build"
+    local basebuild = "dragonfly_mount_fire_build"
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(basebuild)
@@ -15,7 +15,7 @@ end
 
 local function ClearBuildOverrides(inst, animstate)
     if animstate ~= inst.AnimState then
-        animstate:ClearOverrideBuild("dragonfly_fire_build")
+        animstate:ClearOverrideBuild("dragonfly_mount_fire_build")
     end
 end
 
@@ -54,7 +54,7 @@ local function fn()
     inst:AddTag("saddleable")
 
     inst.AnimState:SetBank("dragonfly_mount")
-    inst.AnimState:SetBuild("dragonfly_fire_build")
+    inst.AnimState:SetBuild("dragonfly_mount_fire_build")
     inst.AnimState:PlayAnimation("idle", true)
 
     inst.Light:Enable(false)

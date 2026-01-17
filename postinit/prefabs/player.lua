@@ -52,21 +52,8 @@ local function EnableLight(inst, enable)
     end
 end
 
-local function EnableFlyingSound(inst, enable)
-    if inst.SoundEmitter == nil then
-        return
-    end
-
-    if enable then
-        if not inst.SoundEmitter:PlayingSound("dragonfly_flying") then
-            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "dragonfly_flying")
-        end
-    else
-        inst.SoundEmitter:KillSound("dragonfly_flying")
-    end
-end
-
 AddPlayerPostInit(function(inst)
+    -- 延长骑龙蝇攻击的CD
     inst:ListenForEvent("newstate", function(inst, data)
         local statename = data.statename
         if statename and statename == "attack" then
@@ -81,21 +68,26 @@ AddPlayerPostInit(function(inst)
         return
     end
 
+    -- 骑龙蝇
     inst:ListenForEvent("mounted", function(inst, data)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, true)
             EnableLight(inst, true)
-            EnableFlyingSound(inst, true)
         end
     end)
 
+    -- 下龙蝇
     inst:ListenForEvent("dismounted", function(inst, data)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, false)
             EnableLight(inst, false)
-            EnableFlyingSound(inst, false)
+            -- 转而由龙蝇本身播放音效
+            inst.SoundEmitter:KillSound("dragonfly_flying")
+            if not target.SoundEmitter:PlayingSound("flying") then
+                target.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
+            end
         end
     end)
 end)

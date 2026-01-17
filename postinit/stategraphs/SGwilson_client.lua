@@ -29,6 +29,7 @@ local function ConfigureRunState(inst)
 end
 
 AddStategraphPostInit("wilson_client", function(sg)
+    -- 修改locomote事件目标state
     local locomote_fn = sg.events.locomote.fn
     sg.events.locomote.fn = function(inst, data)
         local rider = inst.replica.rider
@@ -59,7 +60,7 @@ AddStategraphPostInit("wilson_client", function(sg)
         end
     end
 
-
+    -- dragonfly_mount_run
     sg.states.dragonfly_mount_run_start = State{
         name = "dragonfly_mount_run_start",
         tags = { "moving", "running", "canrotate" },
