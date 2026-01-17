@@ -45,9 +45,10 @@ local function fn()
     inst.Transform:SetSixFaced()
     -- inst.Transform:SetScale(1.3, 1.3, 1.3)
 
-    MakeFlyingGiantCharacterPhysics(inst, 500, 1.4)
+    MakeFlyingGiantCharacterPhysics(inst, 500, 1)
 
     inst:AddTag("dragonfly_mount")
+    inst:AddTag("flying")
 
     --saddleable (from rideable component) added to pristine state for optimization
     inst:AddTag("saddleable")
@@ -62,6 +63,8 @@ local function fn()
     inst.Light:SetIntensity(0.75)
     inst.Light:SetColour(235/255, 121/255, 12/255)
 
+    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
+
     inst.sounds = sounds
 
     if not TheWorld.ismastersim then
@@ -69,6 +72,39 @@ local function fn()
     end
 
     inst:AddComponent("inspectable")
+
+    local combat = inst:AddComponent("combat")
+    local groundpounder = inst:AddComponent("groundpounder")
+    local health = inst:AddComponent("health")
+
+    combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE)
+    combat:SetAttackPeriod(TUNING.DRAGONFLY_ATTACK_PERIOD)
+    combat.playerdamagepercent = 0.5
+    combat:SetRange(TUNING.DRAGONFLY_ATTACK_RANGE, TUNING.DRAGONFLY_HIT_RANGE)
+    -- combat:SetRetargetFunction(3, RetargetFn)
+    -- combat:SetKeepTargetFunction(KeepTargetFn)
+    combat.battlecryenabled = false
+    combat.hiteffectsymbol = "dragonfly_body"
+    combat:SetHurtSound("dontstarve_DLC001/creatures/dragonfly/hurt")
+
+    groundpounder:UseRingMode()
+    groundpounder.numRings = 3
+    groundpounder.initialRadius = 1.5
+    groundpounder.radiusStepDistance = 2
+    groundpounder.ringWidth = 2
+    groundpounder.damageRings = 2
+    groundpounder.destructionRings = 3
+    groundpounder.platformPushingRings = 3
+    groundpounder.fxRings = 2
+    groundpounder.fxRadiusOffset = 1.5
+    groundpounder.burner = true
+    groundpounder.groundpoundfx = "firesplash_fx"
+    groundpounder.groundpounddamagemult = 0.5
+    groundpounder.groundpoundringfx = "firering_fx"
+
+    health:SetMaxHealth(TUNING.DRAGONFLY_HEALTH)
+    health.nofadeout = true --Handled in death state instead
+    health.fire_damage_scale = 0 -- Take no damage from fire
 
     inst:AddComponent("lootdropper")
 
