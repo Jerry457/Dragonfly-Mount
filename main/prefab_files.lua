@@ -1,4 +1,5 @@
 PrefabFiles = {
     "dragonfly_mount",
-    "skins"
+    "skins",
+    "dragonfly_bell",
 }

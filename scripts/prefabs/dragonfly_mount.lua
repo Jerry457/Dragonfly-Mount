@@ -19,6 +19,55 @@ local function ClearBuildOverrides(inst, animstate)
     end
 end
 
+local function SetDragonflyBellOwner(inst, bell, bell_user)
+    if inst.components.follower:GetLeader() == nil and bell ~= nil and bell.components.leader ~= nil then
+        bell.components.leader:AddFollower(inst)
+        inst.components.rideable:SetShouldSave(false)
+
+        if bell:HasTag("shadowbell") then
+            -- NOTES(DiogoW): Removing event callback set by leader:AddFollower
+            bell:RemoveEventCallback("death", bell.components.leader._onfollowerdied, inst)
+
+            if inst.components.burnable ~= nil then
+                inst.components.burnable.nocharring = true
+            end
+        end
+
+        inst:ListenForEvent("onremove", inst._BellRemoveCallback, bell)
+
+        inst.persists = false
+        inst:UpdateDomestication()
+        -- inst.components.knownlocations:ForgetLocation("herd")
+
+        if bell_user ~= nil then
+            inst.components.writeable:BeginWriting(bell_user)
+        end
+
+        return true
+    else
+        return false, "ALREADY_USED"
+    end
+end
+
+local function UpdateDomestication(inst)
+    -- inst.components.dragonfly_domesticatable
+end
+
+local function OnNamedByWriteable(inst, new_name, writer)
+    if inst.components.named ~= nil then
+        inst.components.named:SetName(new_name, writer ~= nil and writer.userid or nil)
+    end
+end
+
+local function OnWritingEnded(inst)
+    if not inst.components.writeable:IsWritten() then
+        local leader = inst.components.follower:GetLeader()
+        if leader ~= nil and leader.components.inventoryitem ~= nil then
+            inst.components.follower:SetLeader(nil)
+        end
+    end
+end
+
 local sounds =
 {
     walk = "dontstarve/beefalo/walk",
@@ -114,6 +163,10 @@ local function fn()
     inst.components.locomotor.pathcaps = { ignorewalls = true, allowocean = true }
     inst.components.locomotor.walkspeed = TUNING.DRAGONFLY_SPEED
 
+    inst:AddComponent("follower")
+    inst.components.follower.maxfollowtime = TUNING.BEEFALO_FOLLOW_TIME
+    inst.components.follower.canaccepttarget = false
+
     inst:AddComponent("rideable")
     inst.components.rideable.canride = true
     inst.components.rideable:SetSaddleable(true)
@@ -121,8 +174,19 @@ local function fn()
 
     inst:AddComponent("dragonfly_domesticatable")
 
+    inst:AddComponent("named")
+
+    inst:AddComponent("writeable")
+    inst.components.writeable:SetDefaultWriteable(false)
+    inst.components.writeable:SetAutomaticDescriptionEnabled(false)
+    inst.components.writeable:SetWriteableDistance(TUNING.BEEFALO_NAMING_DIST)
+    inst.components.writeable:SetOnWrittenFn(OnNamedByWriteable)
+    inst.components.writeable:SetOnWritingEndedFn(OnWritingEnded)
+
     inst.ApplyBuildOverrides = ApplyBuildOverrides
     inst.ClearBuildOverrides = ClearBuildOverrides
+    inst.SetDragonflyBellOwner = SetDragonflyBellOwner
+    inst.UpdateDomestication = UpdateDomestication
 
     inst:SetStateGraph("SGdragonfly")
 
