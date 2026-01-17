@@ -52,6 +52,20 @@ local function EnableLight(inst, enable)
     end
 end
 
+local function EnableFlyingSound(inst, enable)
+    if inst.SoundEmitter == nil then
+        return
+    end
+
+    if enable then
+        if not inst.SoundEmitter:PlayingSound("dragonfly_flying") then
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "dragonfly_flying")
+        end
+    else
+        inst.SoundEmitter:KillSound("dragonfly_flying")
+    end
+end
+
 AddPlayerPostInit(function(inst)
     inst:ListenForEvent("newstate", function(inst, data)
         local statename = data.statename
@@ -63,11 +77,16 @@ AddPlayerPostInit(function(inst)
         end
     end)
 
+    if not TheWorld.ismastersim then
+        return
+    end
+
     inst:ListenForEvent("mounted", function(inst, data)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, true)
             EnableLight(inst, true)
+            EnableFlyingSound(inst, true)
         end
     end)
 
@@ -76,6 +95,7 @@ AddPlayerPostInit(function(inst)
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, false)
             EnableLight(inst, false)
+            EnableFlyingSound(inst, false)
         end
     end)
 end)

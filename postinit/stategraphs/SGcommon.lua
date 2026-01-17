@@ -43,6 +43,7 @@ local function SGwilson(sg)
         inst.SoundEmitter:PlaySound(
             "dontstarve_DLC001/creatures/dragonfly/punchimpact")
     end))
+
 end
 
 AddStategraphPostInit("wilson", SGwilson)
