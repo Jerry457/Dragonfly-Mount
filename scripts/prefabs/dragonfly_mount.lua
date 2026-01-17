@@ -22,10 +22,10 @@ end
 local sounds =
 {
     walk = "dontstarve/beefalo/walk",
-    grunt = "dontstarve/beefalo/grunt",
-    yell = "dontstarve/beefalo/yell",
-    swish = "dontstarve/beefalo/tail_swish",
-    curious = "dontstarve/beefalo/curious",
+    grunt = "dontstarve_DLC001/creatures/dragonfly/sleep_pre",
+    yell = "dontstarve_DLC001/creatures/dragonfly/angry",
+    swish = "dontstarve_DLC001/creatures/dragonfly/sleep_pre",
+    curious = "dontstarve_DLC001/creatures/dragonfly/sleep_pre",
     angry = "dontstarve_DLC001/creatures/dragonfly/angry",
     sleep = "dontstarve/beefalo/sleep",
 }

@@ -144,4 +144,87 @@ AddStategraphPostInit("wilson", function(sg)
             end),
         },
     }
+
+    local mount_onenter = sg.states.mount.onenter
+    sg.states.mount.onenter = function(inst, ...)
+        local dragonfly = inst.components.rider.target_mount and inst.components.rider.target_mount:HasTag("dragonfly_mount")
+        if dragonfly then
+            inst.sg:GoToState("dragonfly_mount")
+        else
+            return mount_onenter(inst, ...)
+        end
+    end
+
+    sg.states.dragonfly_mount = State{
+        name = "dragonfly_mount",
+        tags = { "doing", "busy", "nomorph", "nopredict" },
+
+        onenter = function(inst)
+            inst.sg.statemem.heavy = inst.components.inventory:IsHeavyLifting()
+
+            inst.components.locomotor:StopMoving()
+            inst.AnimState:PlayAnimation(inst.sg.statemem.heavy and "heavy_mount" or "mount")
+
+            inst:PushEvent("ms_closepopups")
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+            end
+        end,
+
+        timeline =
+        {
+            --Heavy lifting
+            TimeEvent(12 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy then
+                    inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+                end
+            end),
+            --Normal
+            TimeEvent(14 * FRAMES, function(inst)
+                if not inst.sg.statemem.heavy then
+                    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+                end
+
+            end),
+            --Heavy lifting
+            TimeEvent(38 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy then
+                    inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt")
+                end
+            end),
+            --Normal
+            TimeEvent(20 * FRAMES, function(inst)
+                if not inst.sg.statemem.heavy then
+                    inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+                    inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt")
+                end
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("mounted_idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(true)
+            end
+        end,
+    }
+
+    local dismount_onenter = sg.states.dismount.onenter
+    sg.states.dismount.onenter = function(inst, ...)
+        local dragonfly = inst.components.rider.mount and inst.components.rider.mount:HasTag("dragonfly_mount")
+        if dragonfly then
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+        end
+        return dismount_onenter(inst, ...)
+    end
+
 end)
