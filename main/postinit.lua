@@ -3,7 +3,8 @@ local files = {
     "postinit/loottables.lua",
     "postinit/stategraphs/SGcommon.lua",
     "postinit/stategraphs/SGwilson.lua",
-    "postinit/stategraphs/SGwilson_client.lua"
+    "postinit/stategraphs/SGwilson_client.lua",
+    "postinit/prefabs/player.lua",
 }
 
 for _, file in ipairs(files) do

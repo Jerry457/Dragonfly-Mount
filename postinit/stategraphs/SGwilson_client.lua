@@ -20,4 +20,26 @@ for _, actionhandler in ipairs(actionhandlers) do
 end
 
 AddStategraphPostInit("wilson_client", function(sg)
+    local attack = sg.states.attack
+    local attack_timeline = attack.timeline
+
+    table.insert(attack_timeline, TimeEvent(7 * FRAMES, function(inst)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return
+        end
+        inst.SoundEmitter:PlaySound(
+            "dontstarve_DLC001/creatures/dragonfly/swipe")
+    end))
+
+    table.insert(attack_timeline, TimeEvent(15 * FRAMES, function(inst)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return
+        end
+        inst.SoundEmitter:PlaySound(
+            "dontstarve_DLC001/creatures/dragonfly/punchimpact")
+    end))
 end)

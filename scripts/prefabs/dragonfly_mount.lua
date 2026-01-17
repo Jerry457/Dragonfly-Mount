@@ -19,6 +19,17 @@ local function ClearBuildOverrides(inst, animstate)
     end
 end
 
+local sounds =
+{
+    walk = "dontstarve/beefalo/walk",
+    grunt = "dontstarve/beefalo/grunt",
+    yell = "dontstarve/beefalo/yell",
+    swish = "dontstarve/beefalo/tail_swish",
+    curious = "dontstarve/beefalo/curious",
+    angry = "dontstarve_DLC001/creatures/dragonfly/angry",
+    sleep = "dontstarve/beefalo/sleep",
+}
+
 local function fn()
     local inst = CreateEntity()
 
@@ -36,6 +47,8 @@ local function fn()
 
     MakeFlyingGiantCharacterPhysics(inst, 500, 1.4)
 
+    inst:AddTag("dragonfly_mount")
+
     inst.AnimState:SetBank("dragonfly_mount")
     inst.AnimState:SetBuild("dragonfly_fire_build")
     inst.AnimState:PlayAnimation("idle", true)
@@ -45,6 +58,8 @@ local function fn()
     inst.Light:SetFalloff(0.5)
     inst.Light:SetIntensity(0.75)
     inst.Light:SetColour(235/255, 121/255, 12/255)
+
+    inst.sounds = sounds
 
     if not TheWorld.ismastersim then
         return inst

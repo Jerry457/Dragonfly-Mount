@@ -1,4 +1,3 @@
-
 env.SG_COMMON = env.SG_COMMON or {}
 
 local SG_COMMON = SG_COMMON
@@ -7,11 +6,9 @@ local AddStategraphState = AddStategraphState
 local AddStategraphPostInit = AddStategraphPostInit
 GLOBAL.setfenv(1, GLOBAL)
 
-local actionhandlers = {
-}
+local actionhandlers = {}
 
-local states = {
-}
+local states = {}
 
 for _, actionhandler in ipairs(actionhandlers) do
     AddStategraphActionHandler("wilson", actionhandler)
@@ -24,6 +21,28 @@ for _, state in ipairs(states) do
 end
 
 local function SGwilson(sg)
+    local attack = sg.states.attack
+    local attack_timeline = attack.timeline
+
+    table.insert(attack_timeline, TimeEvent(7 * FRAMES, function(inst)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return
+        end
+        inst.SoundEmitter:PlaySound(
+            "dontstarve_DLC001/creatures/dragonfly/swipe")
+    end))
+
+    table.insert(attack_timeline, TimeEvent(15 * FRAMES, function(inst)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return
+        end
+        inst.SoundEmitter:PlaySound(
+            "dontstarve_DLC001/creatures/dragonfly/punchimpact")
+    end))
 end
 
 AddStategraphPostInit("wilson", SGwilson)
