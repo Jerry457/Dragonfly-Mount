@@ -1,6 +1,3 @@
-local assets = {
-    Asset("ANIM", "anim/wilsondragonfly.zip")
-    Asset("ANIM", "anim/dragonfly_mount.zip")
-}
+local assets = {}
 
 GLOBAL.JoinArrays(Assets, assets)
