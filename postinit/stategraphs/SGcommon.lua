@@ -24,6 +24,34 @@ local function SGwilson(sg)
     local attack = sg.states.attack
     local attack_timeline = attack.timeline
 
+    -- 修改攻击出伤时间
+    for i, time_event in ipairs(attack_timeline) do
+        local time_event_fn = time_event.fn
+        time_event.fn = function(inst, ...)
+            local rider = inst.replica.rider
+            local mount = rider and rider:GetMount()
+            if mount and mount:HasTag("dragonfly_mount") then
+                return
+            end
+            return time_event_fn(inst, ...)
+        end
+    end
+
+    table.insert(attack_timeline, TimeEvent(12 * FRAMES, function(inst)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return
+        end
+
+        if TheWorld.ismastersim then
+            inst:PerformBufferedAction()
+        else
+            inst:ClearBufferedAction()
+        end
+        inst.sg:RemoveStateTag("abouttoattack")
+    end))
+
     -- 添加骑乘龙蝇攻击音效
     table.insert(attack_timeline, TimeEvent(7 * FRAMES, function(inst)
         local rider = inst.replica.rider
@@ -31,8 +59,7 @@ local function SGwilson(sg)
         if not mount or not mount:HasTag("dragonfly_mount") then
             return
         end
-        inst.SoundEmitter:PlaySound(
-            "dontstarve_DLC001/creatures/dragonfly/swipe")
+        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/swipe")
     end))
 
     table.insert(attack_timeline, TimeEvent(15 * FRAMES, function(inst)
@@ -42,8 +69,7 @@ local function SGwilson(sg)
             return
         end
         local volume = 0.6
-        inst.SoundEmitter:PlaySound(
-            "dontstarve_DLC001/creatures/dragonfly/punchimpact", nil, volume)
+        inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/punchimpact", nil, volume)
     end))
 
 end
