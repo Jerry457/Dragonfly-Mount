@@ -40,8 +40,9 @@ local function SGwilson(sg)
         if not mount or not mount:HasTag("dragonfly_mount") then
             return
         end
+        local volume = 0.6
         inst.SoundEmitter:PlaySound(
-            "dontstarve_DLC001/creatures/dragonfly/punchimpact")
+            "dontstarve_DLC001/creatures/dragonfly/punchimpact", nil, volume)
     end))
 
 end
