@@ -6,6 +6,7 @@ local files = {
     "postinit/stategraphs/SGwilson_client.lua",
     "postinit/prefabs/player.lua",
     "postinit/components/locomotor.lua",
+    "postinit/actions.lua",
 }
 
 for _, file in ipairs(files) do
