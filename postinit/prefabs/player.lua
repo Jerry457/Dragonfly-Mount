@@ -2,6 +2,41 @@ local AddPlayerPostInit = AddPlayerPostInit
 
 GLOBAL.setfenv(1, GLOBAL)
 
+local function EnableFlyingMode(inst, enable)
+    --V2C: drownable HACKS, using "false" to override "nil" load behaviour
+    --     Please refactor drownable to use POST LOAD timing.
+    if inst.components.drownable == nil then
+        return
+    end
+
+    if enable then
+        if inst.components.drownable.enabled ~= false then
+            inst.components.drownable.enabled = false
+            inst.Physics:SetCollisionMask(
+                COLLISION.GROUND,
+                COLLISION.OBSTACLES,
+                COLLISION.SMALLOBSTACLES,
+                COLLISION.CHARACTERS,
+                COLLISION.GIANTS
+            )
+            inst.Physics:Teleport(inst.Transform:GetWorldPosition())
+        end
+    elseif inst.components.drownable.enabled == false then
+        inst.components.drownable.enabled = true
+        if not inst:HasTag("playerghost") then
+            inst.Physics:SetCollisionMask(
+                COLLISION.WORLD,
+                COLLISION.OBSTACLES,
+                COLLISION.SMALLOBSTACLES,
+                COLLISION.CHARACTERS,
+                COLLISION.GIANTS
+            )
+            inst.Physics:Teleport(inst.Transform:GetWorldPosition())
+        end
+    end
+
+end
+
 AddPlayerPostInit(function(inst)
     inst:ListenForEvent("newstate", function(inst, data)
         local statename = data.statename
@@ -10,6 +45,20 @@ AddPlayerPostInit(function(inst)
             if (mount and mount:HasTag("dragonfly_mount")) then
                 inst.sg:SetTimeout(25 * FRAMES)
             end
+        end
+    end)
+
+    inst:ListenForEvent("mounted", function(inst, data)
+        local target = data.target
+        if target and target:HasTag("dragonfly_mount") then
+            EnableFlyingMode(inst, true)
+        end
+    end)
+
+    inst:ListenForEvent("dismounted", function(inst, data)
+        local target = data.target
+        if target and target:HasTag("dragonfly_mount") then
+            EnableFlyingMode(inst, false)
         end
     end)
 end)
