@@ -37,6 +37,21 @@ local function EnableFlyingMode(inst, enable)
 
 end
 
+local function EnableLight(inst, enable)
+    if inst.Light == nil then
+        return
+    end
+    if enable then
+        inst.Light:Enable(true)
+        inst.Light:SetRadius(2)
+        inst.Light:SetFalloff(0.5)
+        inst.Light:SetIntensity(0.75)
+        inst.Light:SetColour(235/255, 121/255, 12/255)
+    else
+        inst.Light:Enable(false)
+    end
+end
+
 AddPlayerPostInit(function(inst)
     inst:ListenForEvent("newstate", function(inst, data)
         local statename = data.statename
@@ -52,6 +67,7 @@ AddPlayerPostInit(function(inst)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, true)
+            EnableLight(inst, true)
         end
     end)
 
@@ -59,6 +75,7 @@ AddPlayerPostInit(function(inst)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, false)
+            EnableLight(inst, false)
         end
     end)
 end)
