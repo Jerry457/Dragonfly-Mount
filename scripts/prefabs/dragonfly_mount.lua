@@ -49,6 +49,9 @@ local function fn()
 
     inst:AddTag("dragonfly_mount")
 
+    --saddleable (from rideable component) added to pristine state for optimization
+    inst:AddTag("saddleable")
+
     inst.AnimState:SetBank("dragonfly_mount")
     inst.AnimState:SetBuild("dragonfly_fire_build")
     inst.AnimState:PlayAnimation("idle", true)
@@ -79,6 +82,8 @@ local function fn()
     inst.components.rideable.canride = true
     inst.components.rideable:SetSaddleable(true)
     inst.components.rideable:SetCustomRiderTest(PotentialRiderTest)
+
+    inst:AddComponent("dragonfly_domesticatable")
 
     inst.ApplyBuildOverrides = ApplyBuildOverrides
     inst.ClearBuildOverrides = ClearBuildOverrides
