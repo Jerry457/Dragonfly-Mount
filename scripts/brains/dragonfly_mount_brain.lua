@@ -11,8 +11,8 @@ local MIN_FOLLOW_DIST = 0
 local MAX_FOLLOW_DIST = 12
 local TARGET_FOLLOW_DIST = 6
 
-local AVOID_MONSTER_DIST = 4
-local AVOID_MONSTER_STOP = 12
+local SEE_MONSTER_DIST = 8
+local AVOID_MONSTER_STOP = 14
 
 local DROP_TARGET_DIST = 20
 
@@ -318,7 +318,7 @@ local function InitTargetMem(inst, target)
     inst.targetmem = {
         target = target,
         epic = target and target:HasTag("epic"),
-        physicsrange = target and target:GetPhysicsRadius(0) or 0.5,
+        physicsrange = target and target:GetPhysicsRadius(0),
         attackother_sg = attackother_sg,
         inst_attacked = inst_attacked,
         run_ahead_time = run_ahead_time,
@@ -435,6 +435,7 @@ function DragonflyMountBrain:OnStart()
     local runaway = WhileNode(
         function()
             local shouldrunaway = ShouldRunaway(inst)
+            -- print("ShouldRunaway:", shouldrunaway)
             if shouldrunaway and not inst.sg:HasStateTag("moving") then
                 inst.sg:AddStateTag("idle")
             end
@@ -442,7 +443,7 @@ function DragonflyMountBrain:OnStart()
             return shouldrunaway
         end,
         "Runaway",
-        RunAway(inst, function(ent, inst) return inst.components.combat:TargetIs(ent) end, AVOID_MONSTER_DIST, AVOID_MONSTER_STOP)
+        RunAway(inst, function(ent, inst) return inst.components.combat:TargetIs(ent) end, SEE_MONSTER_DIST, AVOID_MONSTER_STOP)
     )
 
     local standstill = WhileNode(
