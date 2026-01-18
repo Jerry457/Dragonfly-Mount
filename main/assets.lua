@@ -2,7 +2,8 @@ modimport("main/prefab_files")
 Assets = {
     -- Asset("IMAGE", "images/inventoryimages.xml"),
     -- Asset("ATLAS", "images/minimap.xml" ),
-    Asset("ANIM", "anim/wilsondragonfly.zip"),
+    Asset("ANIM", "anim/wilsondragonfly_base.zip"),
+    Asset("ANIM", "anim/wilsondragonfly_mount_actions.zip"),
     Asset("ANIM", "anim/dragonfly_mount.zip"),
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
