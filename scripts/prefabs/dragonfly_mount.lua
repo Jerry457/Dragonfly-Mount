@@ -24,14 +24,14 @@ local function SetDragonflyBellOwner(inst, bell, bell_user)
         bell.components.leader:AddFollower(inst)
         inst.components.rideable:SetShouldSave(false)
 
-        if bell:HasTag("shadowbell") then
-            -- NOTES(DiogoW): Removing event callback set by leader:AddFollower
-            bell:RemoveEventCallback("death", bell.components.leader._onfollowerdied, inst)
+        -- if bell:HasTag("shadowbell") then
+        --     -- NOTES(DiogoW): Removing event callback set by leader:AddFollower
+        --     bell:RemoveEventCallback("death", bell.components.leader._onfollowerdied, inst)
 
-            if inst.components.burnable ~= nil then
-                inst.components.burnable.nocharring = true
-            end
-        end
+        --     if inst.components.burnable ~= nil then
+        --         inst.components.burnable.nocharring = true
+        --     end
+        -- end
 
         inst:ListenForEvent("onremove", inst._BellRemoveCallback, bell)
 
@@ -66,6 +66,48 @@ local function OnWritingEnded(inst)
             inst.components.follower:SetLeader(nil)
         end
     end
+end
+
+local function RemoveName(inst)
+    inst.components.writeable:SetText(nil)
+    inst.components.named:SetName(nil)
+end
+
+local function ClearBellOwner(inst)
+    if inst._marked_for_despawn then
+        -- We're marked for despawning, so don't disconnect anything,
+        -- in case we get saved for real i.e. when despawning in caves.
+        return
+    end
+
+    RemoveName(inst)
+
+    local bell_leader = inst.components.follower:GetLeader()
+    inst:RemoveEventCallback("onremove", inst._BellRemoveCallback, bell_leader)
+
+    inst.components.follower:SetLeader(nil)
+    inst.components.rideable:SetShouldSave(true)
+
+    inst.persists = true
+
+    inst:UpdateDomestication()
+end
+
+local function GetDragonflyBellOwner(inst)
+    local leader = inst.components.follower:GetLeader()
+    return (leader ~= nil
+        and leader.components.inventoryitem ~= nil
+        and leader.components.inventoryitem:GetGrandOwner())
+        or nil
+end
+
+local TWEEN_TARGET = {0, 0, 0, 1}
+local TWEEN_TIME = 13 * FRAMES
+local function OnDespawnRequest(inst)
+    local fx = SpawnPrefab("spawn_fx_medium")
+    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    inst._marked_for_despawn = true
+    inst.components.colourtweener:StartTween(TWEEN_TARGET, TWEEN_TIME, inst.Remove)
 end
 
 local sounds =
@@ -183,10 +225,19 @@ local function fn()
     inst.components.writeable:SetOnWrittenFn(OnNamedByWriteable)
     inst.components.writeable:SetOnWritingEndedFn(OnWritingEnded)
 
+    inst:AddComponent("colourtweener")
+
     inst.ApplyBuildOverrides = ApplyBuildOverrides
     inst.ClearBuildOverrides = ClearBuildOverrides
     inst.SetDragonflyBellOwner = SetDragonflyBellOwner
     inst.UpdateDomestication = UpdateDomestication
+
+    inst:ListenForEvent("despawn", OnDespawnRequest)
+    inst:ListenForEvent("stopfollowing", ClearBellOwner)
+
+    inst._BellRemoveCallback = function(bell)
+        ClearBellOwner(inst)
+    end
 
     inst:SetStateGraph("SGdragonfly")
 
