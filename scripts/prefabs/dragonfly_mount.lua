@@ -110,6 +110,53 @@ local function OnDespawnRequest(inst)
     inst.components.colourtweener:StartTween(TWEEN_TARGET, TWEEN_TIME, inst.Remove)
 end
 
+local COMBAT_MUSHAVE_TAGS = { "_combat", "_health" }
+local COMBAT_CANTHAVE_TAGS = { "INLIMBO", "noauradamage", "companion" }
+
+-- local COMBAT_MUSTONEOF_TAGS_DEFENSIVE = { "monster", "prey", "hostile" }
+
+local function CommonRetarget(inst, v)
+    return v ~= inst and not v:HasTag("player") and v.entity:IsVisible()
+            and inst.components.combat:CanTarget(v)
+            and v.components.minigame_participator == nil
+end
+
+local function RetargetFn(inst)
+    local leader = inst.components.follower:GetLeader()
+    if leader and leader.components.inventoryitem then
+        leader = leader.components.inventoryitem:GetGrandOwner()
+    end
+
+    if not leader then
+        return nil
+    end
+
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+    local entities_near_me = TheSim:FindEntities(
+        ix, iy, iz, TUNING.ABIGAIL_COMBAT_TARGET_DISTANCE,
+        COMBAT_MUSHAVE_TAGS, COMBAT_CANTHAVE_TAGS, nil
+    )
+
+    for _, entity_near_me in ipairs(entities_near_me) do
+        if CommonRetarget(inst, entity_near_me) then
+            local combat = entity_near_me.components.combat
+            if combat and (combat.target == leader or combat.target == inst) then
+                return entity_near_me
+            end
+        end
+    end
+
+    return nil
+end
+
+local function KeepTargetFn(inst, target)
+    return inst.components.combat:CanTarget(target)
+end
+
+local function OnRiderChanged(inst, data)
+    inst.components.combat:SetTarget(nil)
+end
+
 local sounds =
 {
     walk = "dontstarve/beefalo/walk",
@@ -120,6 +167,8 @@ local sounds =
     angry = "dontstarve_DLC001/creatures/dragonfly/angry",
     sleep = "dontstarve/beefalo/sleep",
 }
+
+local brain = require("brains/dragonfly_mount_brain")
 
 local function fn()
     local inst = CreateEntity()
@@ -169,14 +218,15 @@ local function fn()
     local health = inst:AddComponent("health")
 
     combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE)
-    combat:SetAttackPeriod(TUNING.DRAGONFLY_ATTACK_PERIOD)
+    combat:SetAttackPeriod(2)
     combat.playerdamagepercent = 0.5
     combat:SetRange(TUNING.DRAGONFLY_ATTACK_RANGE, TUNING.DRAGONFLY_HIT_RANGE)
-    -- combat:SetRetargetFunction(3, RetargetFn)
-    -- combat:SetKeepTargetFunction(KeepTargetFn)
+    combat:SetRetargetFunction(3, RetargetFn)
+    combat:SetKeepTargetFunction(KeepTargetFn)
     combat.battlecryenabled = false
     combat.hiteffectsymbol = "dragonfly_body"
     combat:SetHurtSound("dontstarve_DLC001/creatures/dragonfly/hurt")
+    combat:AddNoAggroTag("player")
 
     groundpounder:UseRingMode()
     groundpounder.numRings = 3
@@ -203,7 +253,9 @@ local function fn()
     inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { ignorewalls = true, allowocean = true }
-    inst.components.locomotor.walkspeed = TUNING.DRAGONFLY_SPEED
+    inst.components.locomotor.walkspeed = 7.5
+
+    inst:AddComponent("timer")
 
     inst:AddComponent("follower")
     inst.components.follower.maxfollowtime = TUNING.BEEFALO_FOLLOW_TIME
@@ -234,12 +286,15 @@ local function fn()
 
     inst:ListenForEvent("despawn", OnDespawnRequest)
     inst:ListenForEvent("stopfollowing", ClearBellOwner)
+    inst:ListenForEvent("riderchanged", OnRiderChanged)
 
     inst._BellRemoveCallback = function(bell)
         ClearBellOwner(inst)
     end
 
     inst:SetStateGraph("SGdragonfly")
+
+    inst:SetBrain(brain)
 
     return inst
 end
