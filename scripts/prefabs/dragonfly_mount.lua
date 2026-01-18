@@ -226,10 +226,10 @@ local function fn()
     local groundpounder = inst:AddComponent("groundpounder")
     local health = inst:AddComponent("health")
 
-    combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE / 2)
+    combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE)
     combat:SetAttackPeriod(2)
     combat.playerdamagepercent = 0.5
-    combat:SetRange(TUNING.DRAGONFLY_ATTACK_RANGE, TUNING.DRAGONFLY_HIT_RANGE)
+    combat:SetRange(TUNING.DRAGONFLY_ATTACK_RANGE + 1, TUNING.DRAGONFLY_HIT_RANGE + 1)
     combat:SetRetargetFunction(3, RetargetFn)
     combat:SetKeepTargetFunction(KeepTargetFn)
     combat.battlecryenabled = false
