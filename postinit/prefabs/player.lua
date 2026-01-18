@@ -93,16 +93,16 @@ AddPlayerPostInit(function(inst)
 
     -- 加载时检查位置自动骑乘
     local _OnSave = inst.OnSave or function() end
-    inst.OnSave = function(inst, data)
-        _OnSave(inst, data)
+    inst.OnSave = function(inst, data, ...)
+        _OnSave(inst, data, ...)
         local x, y, z = inst.Transform:GetWorldPosition()
         local over_water = TheWorld.Map:IsInvalidTileAtPoint(x, y, z) or TheWorld.Map:IsOceanTileAtPoint(x, y, z)
         data.over_water = over_water
     end
 
     local _OnLoad = inst.OnLoad or function() end
-    inst.OnLoad = function(inst, data)
-        _OnLoad(inst, data)
+    inst.OnLoad = function(inst, data, ...)
+        _OnLoad(inst, data, ...)
         -- 在被传送到出生点之前触发
         if data and data.over_water then
             local dragonfly_bell = inst.components.inventory and inst.components.inventory:FindItem(function(item)
