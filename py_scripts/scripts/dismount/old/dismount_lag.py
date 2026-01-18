@@ -10,7 +10,7 @@ from follow_symbol import apply_follow_symbol
 from utils import *
 
 wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
-dragonfly_anim = load_anim("assets/dragonfly_land.json")
+dragonfly_anim = load_anim("assets/dragonfly.json")
 
 wilson_idle = get_animation(wilsonbeefalo_anim, "idle_loop")
 wilson_idle = apply_anti_follow_symbol(
@@ -21,7 +21,6 @@ wilson_idle = apply_anti_follow_symbol(
         "maintain_scale": True,
     },
 )
-
 wilson_idle = remove_beefalo_elements(wilson_idle)
 for frame in wilson_idle["frames"]:
     frame["elements"] = [
@@ -31,8 +30,8 @@ for frame in wilson_idle["frames"]:
     for i in range(len(frame["elements"])):
         frame["elements"][i]["zIndex"] = i
 
-dragonfly_takeoff = get_animation(dragonfly_anim, "land")
-dragonfly_takeoff["frames"] = dragonfly_takeoff["frames"][-4:]
+dragonfly_takeoff = get_animation(dragonfly_anim, "takeoff")
+dragonfly_takeoff["frames"] = dragonfly_takeoff["frames"][-5:]
 
 dragonfly_takeoff = apply_follow_symbol(
     dragonfly_takeoff,

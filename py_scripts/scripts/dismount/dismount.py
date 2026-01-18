@@ -12,7 +12,7 @@ from utils import *
 LAND_SEP_IDX = 16
 
 wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
-dragonfly_anim = load_anim("assets/dragonfly.json")
+dragonfly_anim = load_anim("assets/dragonfly_land.json")
 
 wilson_idle = get_animation(wilsonbeefalo_anim, "idle_loop")
 wilson_idle = apply_anti_follow_symbol(
@@ -100,13 +100,13 @@ wilson_dismount_front, wilson_dismount_back = split_wilson_down_animation(
 # front, back = split_wilson_animation(wilson_animation)
 
 dragonfly_land_2 = deepcopy(dragonfly_land)
-dragonfly_land_2["frames"] = dragonfly_land_2["frames"][LAND_SEP_IDX:]
-dragonfly_land_2["frames"] = relength_anim_frames(dragonfly_land_2["frames"], 22, True)
+dragonfly_land_2["frames"] = dragonfly_land_2["frames"][LAND_SEP_IDX:-4]
+# dragonfly_land_2["frames"] = relength_anim_frames(dragonfly_land_2["frames"], 22, True)
 
-dragonfly_takeoff = get_animation(dragonfly_anim, "takeoff")
-dragonfly_takeoff["frames"] = dragonfly_takeoff["frames"][:-5]
+# dragonfly_takeoff = get_animation(dragonfly_anim, "takeoff")
+# dragonfly_takeoff["frames"] = dragonfly_takeoff["frames"][:-5]
 
-dragonfly_land_2 = joint_animations([dragonfly_land_2, dragonfly_takeoff], "takeoff")
+# dragonfly_land_2 = joint_animations([dragonfly_land_2, dragonfly_takeoff], "takeoff")
 
 dragonfly_land_2 = apply_follow_symbol(
     dragonfly_land_2,

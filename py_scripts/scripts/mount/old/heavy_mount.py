@@ -12,7 +12,7 @@ from utils import *
 LAND_SEP_IDX = 20
 
 wilsonbeefalo_anim = load_anim("assets/wilsonbeefalo.json")
-dragonfly_anim = load_anim("assets/dragonfly_land.json")
+dragonfly_anim = load_anim("assets/dragonfly.json")
 
 wilson_idle = get_animation(wilsonbeefalo_anim, "idle_loop")
 wilson_idle = apply_anti_follow_symbol(
@@ -62,7 +62,7 @@ dragonfly_land_1 = apply_follow_symbol(
 
 # ==========================================================================================
 
-wilson_mount = get_animation(wilsonbeefalo_anim, "mount")
+wilson_mount = get_animation(wilsonbeefalo_anim, "heavy_mount")
 wilson_mount = apply_anti_follow_symbol(
     wilson_mount,
     {
@@ -82,10 +82,10 @@ wilson_mount_front, wilson_mount_back = split_wilson_down_animation(wilson_mount
 dragonfly_land_2 = deepcopy(dragonfly_land)
 dragonfly_land_2["frames"] = dragonfly_land_2["frames"][LAND_SEP_IDX:]
 
-# dragonfly_land_2["frames"] = relength_anim_frames(dragonfly_land_2["frames"], 12, True)
+dragonfly_land_2["frames"] = relength_anim_frames(dragonfly_land_2["frames"], 12, True)
 
-# dragonfly_takeoff = get_animation(dragonfly_anim, "takeoff")
-# dragonfly_land_2 = joint_animations([dragonfly_land_2, dragonfly_takeoff], "takeoff")
+dragonfly_takeoff = get_animation(dragonfly_anim, "takeoff")
+dragonfly_land_2 = joint_animations([dragonfly_land_2, dragonfly_takeoff], "takeoff")
 
 dragonfly_land_2 = apply_follow_symbol(
     dragonfly_land_2,
@@ -112,7 +112,7 @@ dragonfly_land_2 = apply_follow_symbol(
 
 
 def front_z_index_offset(idx):
-    if idx > 5:
+    if idx > 24:
         return -1
     return 0
 
@@ -142,7 +142,7 @@ dragonfly_land_2 = apply_follow_symbol(
 
 # ==========================================================================================
 
-final = joint_animations([dragonfly_land_1, dragonfly_land_2], "mount")
+final = joint_animations([dragonfly_land_1, dragonfly_land_2], "heavy_mount")
 
 for i in range(len(final["frames"])):
     frame = final["frames"][i]
@@ -151,4 +151,4 @@ for i in range(len(final["frames"])):
         if str.lower(element["symbol"]) == "dragonfly_head":
             element["frameNum"] = 0
 
-save_animation(final, f"target/mount.json")
+save_animation(final, f"target/heavy_mount.json")
