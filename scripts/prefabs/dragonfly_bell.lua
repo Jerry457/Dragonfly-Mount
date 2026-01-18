@@ -36,6 +36,7 @@ local function OnPlayerDespawned(inst)
             if rider ~= nil and rider.components.rider ~= nil then
                 dismounting = true
 
+                -- print("OnPlayerDespawned dismounting rider")
                 rider.components.rider:Dismount()
                 rider:ListenForEvent("dismounted", inst._OnPlayerDesmounted)
             end
@@ -321,6 +322,7 @@ local function CommonFn(data)
     MakeInventoryFloatable(inst, nil, 0.05, FLOAT_SCALE)
 
     inst:AddTag("bell")
+    inst:AddTag("dragonfly_bell")
     inst:AddTag("donotautopick")
 
     inst._sound = data.sound
