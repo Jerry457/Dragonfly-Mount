@@ -25,3 +25,8 @@ AddRecipe2("dragonfly_bell",
     {atlas = "images/inventoryimages/dragonfly_bell.xml", image = "dragonfly_bell.tex"},
     {CRAFTING_FILTERS.RIDING.name})
 
+AddRecipe2("saddle_dragonfly",
+    {Ingredient("saddle_war", 1), Ingredient("dragon_scales", 2)},
+    TECH.SCIENCE_TWO,
+    {atlas = "images/inventoryimages/saddle_dragonfly.xml", image = "saddle_dragonfly.tex"},
+    {CRAFTING_FILTERS.RIDING.name})
