@@ -1,3 +1,6 @@
+local modname = modname
+local GetModRPC = GetModRPC
+
 GLOBAL.setfenv(1, GLOBAL)
 
 -- 禁止在水面和虚空中下龙蝇
@@ -32,4 +35,23 @@ ACTIONS.SADDLE.fn = function(act)
         end
     end
     return SADDLE_fn(act)
+end
+
+-- 骑乘或上鞍时呼叫龙蝇前往玩家位置
+local function TryDragonflyGotoPlayer(act)
+    if act.target and act.target:HasTag("dragonfly_mount") then
+        SendModRPCToServer(GetModRPC(modname, "TryDragonflyGotoPlayer"), act.target)
+    end
+end
+
+local MOUNT_pre_action_cb = ACTIONS.MOUNT.pre_action_cb or function() end
+ACTIONS.MOUNT.pre_action_cb = function(act)
+    TryDragonflyGotoPlayer(act)
+    return MOUNT_pre_action_cb(act)
+end
+
+local SADDLE_pre_action_cb = ACTIONS.SADDLE.pre_action_cb or function() end
+ACTIONS.SADDLE.pre_action_cb = function(act)
+    TryDragonflyGotoPlayer(act)
+    return SADDLE_pre_action_cb(act)
 end

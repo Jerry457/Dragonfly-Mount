@@ -8,8 +8,8 @@ require "behaviours/doaction"
 require "behaviours/chaseandattack"
 
 local MIN_FOLLOW_DIST = 0
-local MAX_FOLLOW_DIST = 12
-local TARGET_FOLLOW_DIST = 6
+local MAX_FOLLOW_DIST = 16
+local TARGET_FOLLOW_DIST = 8
 
 local SEE_MONSTER_DIST = 8
 local AVOID_MONSTER_STOP = 14
@@ -19,6 +19,15 @@ local DROP_TARGET_DIST = 20
 local DragonflyMountBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
 end)
+
+local function GetLeaderPos(inst)
+    local leader = inst.components.follower.leader
+    if leader and leader:IsValid() then
+        return leader:GetPosition()
+    else
+        return nil
+    end
+end
 
 local function GetWanderPos(inst)
     local leader = inst.components.follower.leader
@@ -431,6 +440,33 @@ function DragonflyMountBrain:OnStart()
         PostInitCombat(inst)
     end
 
+    -- GotoLeader
+    local GotoLeader = WhileNode(
+        function()
+            if not inst.goto_leader then
+                return false
+            end
+            if not GetLeaderPos(inst) then
+                inst.goto_leader = false
+                return false
+            end
+            return true
+        end, 
+        "GotoLeader",
+        SequenceNode{
+            ActionNode(function() inst.components.combat:SetTarget(nil) end),
+            ParallelNodeAny{
+                WaitNode(4),
+                SequenceNode{
+                    Leash(self.inst, GetWanderPos, 0, 2, false),
+                    ActionNode(function() inst.components.locomotor:Stop() end),
+                    WaitNode(0.5),
+                },
+            },
+            ActionNode(function() inst.goto_leader = false end),
+        }
+    )
+
     -- CombatBehavior
     local runaway = WhileNode(
         function()
@@ -472,7 +508,6 @@ function DragonflyMountBrain:OnStart()
 
     local CombatBehavior = WhileNode(
         function()
-            -- print("CombatBehavior check:", inst.targetmem.target)
             return inst.targetmem.target ~= nil
         end,
         "CombatBehavior", 
@@ -498,9 +533,10 @@ function DragonflyMountBrain:OnStart()
     local root = 
     PriorityNode(
     {
+        GotoLeader,
         CombatBehavior,
-        Follow(inst, function() return inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
         WaitBellLink,
+        Follow(inst, function() return inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
         Wander(inst, function() return GetWanderPos(inst) end, MAX_FOLLOW_DIST)
     }, 0.1)
 
