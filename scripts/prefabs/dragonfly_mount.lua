@@ -217,7 +217,7 @@ local function fn()
     local groundpounder = inst:AddComponent("groundpounder")
     local health = inst:AddComponent("health")
 
-    combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE)
+    combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE / 2)
     combat:SetAttackPeriod(2)
     combat.playerdamagepercent = 0.5
     combat:SetRange(TUNING.DRAGONFLY_ATTACK_RANGE, TUNING.DRAGONFLY_HIT_RANGE)
@@ -243,7 +243,7 @@ local function fn()
     groundpounder.groundpounddamagemult = 0.5
     groundpounder.groundpoundringfx = "firering_fx"
 
-    health:SetMaxHealth(TUNING.DRAGONFLY_HEALTH)
+    health:SetMaxHealth(TUNING.DRAGONFLY_HEALTH / 2)
     health.nofadeout = true --Handled in death state instead
     health.fire_damage_scale = 0 -- Take no damage from fire
 
@@ -253,7 +253,8 @@ local function fn()
     inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { ignorewalls = true, allowocean = true }
-    inst.components.locomotor.walkspeed = 7.5
+    inst.components.locomotor.walkspeed = 6
+    inst.components.locomotor.runspeed = 8
 
     inst:AddComponent("timer")
 
