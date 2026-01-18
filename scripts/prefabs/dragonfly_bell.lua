@@ -70,7 +70,7 @@ end
 local function CleanUpBell(inst)
     inst:RemoveTag("nobundling")
 
-    -- inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+    inst.components.inventoryitem:ChangeImageName("dragonfly_bell")
 
     inst.AnimState:PlayAnimation("idle1", false)
     inst.components.inventoryitem.nobounce = false
@@ -158,8 +158,7 @@ local function OnUsedOnDragonfly(inst, target, user)
     if successful then
         inst:AddTag("nobundling")
 
-        -- local basename = inst:GetSkinName() or inst.prefab
-        -- inst.components.inventoryitem:ChangeImageName(basename.."_linked")
+        inst.components.inventoryitem:ChangeImageName("dragonfly_bell_linked")
         inst.AnimState:PlayAnimation("idle2", true)
 
         -- if inst.isbonded ~= nil then
@@ -348,7 +347,8 @@ local function CommonFn(data)
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.imagename = "beef_bell"
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/dragonfly_bell.xml"
+    inst.components.inventoryitem.imagename = "dragonfly_bell"
     inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
 
     inst:AddComponent("useabletargeteditem")
@@ -375,11 +375,13 @@ end
 
 local function RegularFn()
     return CommonFn({
-        bank  = "cowbell",
-        build = "cowbell",
+        bank  = "dragonfly_bell",
+        build = "dragonfly_bell",
         sound = "yotb_2021/common/cow_bell",
     })
 end
+
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_bell.xml", "dragonfly_bell.tex")
 
 -- local function ShadowCommonPostInit(inst, data)
 --     inst.entity:AddDynamicShadow()

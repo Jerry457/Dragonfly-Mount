@@ -19,6 +19,8 @@ local function ClearBuildOverrides(inst, animstate)
     end
 end
 
+local WRITE_TIMEOUT = 20
+
 local function SetDragonflyBellOwner(inst, bell, bell_user)
     if inst.components.follower:GetLeader() == nil and bell ~= nil and bell.components.leader ~= nil then
         bell.components.leader:AddFollower(inst)
@@ -40,7 +42,12 @@ local function SetDragonflyBellOwner(inst, bell, bell_user)
         -- inst.components.knownlocations:ForgetLocation("herd")
 
         if bell_user ~= nil then
+            inst.is_writing = true
             inst.components.writeable:BeginWriting(bell_user)
+            inst:DoTaskInTime(WRITE_TIMEOUT, function(inst)
+                inst.is_writing = false
+            end)
+
         end
 
         return true
@@ -54,12 +61,14 @@ local function UpdateDomestication(inst)
 end
 
 local function OnNamedByWriteable(inst, new_name, writer)
+    inst.is_writing = false
     if inst.components.named ~= nil then
         inst.components.named:SetName(new_name, writer ~= nil and writer.userid or nil)
     end
 end
 
 local function OnWritingEnded(inst)
+    inst.is_writing = false
     if not inst.components.writeable:IsWritten() then
         local leader = inst.components.follower:GetLeader()
         if leader ~= nil and leader.components.inventoryitem ~= nil then

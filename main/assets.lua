@@ -6,6 +6,8 @@ Assets = {
     Asset("ANIM", "anim/dragonfly_mount.zip"),
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
+    Asset("ANIM", "anim/dragonfly_bell.zip"),
+    Asset("ATLAS", "images/inventoryimages/dragonfly_bell.xml"),
 }
 
 PreloadAssets = {

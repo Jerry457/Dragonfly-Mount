@@ -482,12 +482,24 @@ function DragonflyMountBrain:OnStart()
         }, 0.1)
     )
 
+    -- WaitBellLink
+    local WaitBellLink = WhileNode(
+        function()
+            return inst.is_writing
+        end,
+        "WaitBellLink",
+        ActionNode(function()
+            inst.components.locomotor:Stop()
+        end)
+    )
+
     -- root
     local root = 
     PriorityNode(
     {
         CombatBehavior,
         Follow(inst, function() return inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
+        WaitBellLink,
         Wander(inst, function() return GetWanderPos(inst) end, MAX_FOLLOW_DIST)
     }, 0.1)
 
