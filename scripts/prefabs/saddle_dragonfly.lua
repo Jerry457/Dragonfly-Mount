@@ -99,10 +99,10 @@ end
 
 local data = {
     war = {
-        bonusdamage = TUNING.SADDLE_WAR_BONUS_DAMAGE,
+        bonusdamage = 2 * TUNING.SADDLE_WAR_BONUS_DAMAGE,
         foley = "war_foley",
         uses = TUNING.SADDLE_WAR_USES,
-        speedmult = TUNING.SADDLE_WAR_SPEEDMULT,
+        speedmult = (TUNING.SADDLE_WAR_SPEEDMULT + TUNING.SADDLE_RACE_SPEEDMULT) / 2,
         floater = {"small", 0.1, 0.7},
         extra_tags = {"combatmount"},
     },

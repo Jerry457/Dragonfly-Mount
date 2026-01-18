@@ -1,5 +1,19 @@
 local function PotentialRiderTest(inst, potential_rider)
-    return true
+    if not inst.components.rideable:IsSaddled() then
+        local talker = potential_rider.components.talker
+        if talker then
+            talker:Say(GetString(potential_rider, "ANNOUNCE_DRAGONFLY_NEED_SADDLE"))
+        end
+        return false
+    end
+
+    local leader = inst.components.follower:GetLeader()
+    if leader == nil or leader.components.inventoryitem == nil then
+        return true
+    end
+
+    local leader_owner = leader.components.inventoryitem:GetGrandOwner()
+    return (leader_owner == nil or leader_owner == potential_rider)
 end
 
 local function ApplyBuildOverrides(inst, animstate)
