@@ -1,3 +1,5 @@
+local AddRecipe2 = AddRecipe2
+
 GLOBAL.setfenv(1, GLOBAL)
 
 -- GlassicAPI.AddTech("GK_SMITH")  -- 科技
@@ -15,3 +17,11 @@ GLOBAL.setfenv(1, GLOBAL)
 --     { builder_tag = "goblinkiller" },
 --     { "CHARACTER", "CONTAINERS" }
 -- )
+
+
+AddRecipe2("dragonfly_bell",
+    {Ingredient("beef_bell", 1), Ingredient("dragon_scales", 1)},
+    TECH.SCIENCE_TWO,
+    {atlas = "images/inventoryimages/dragonfly_bell.xml", image = "dragonfly_bell.tex"},
+    {CRAFTING_FILTERS.RIDING.name})
+
