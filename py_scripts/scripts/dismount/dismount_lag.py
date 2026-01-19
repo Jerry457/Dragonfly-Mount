@@ -59,13 +59,15 @@ dragonfly_takeoff = apply_follow_symbol(
 
 # ==========================================================================================
 
+reorder_animation(dragonfly_takeoff)
+
 dragonfly_takeoff["name"] = "dismount_lag"
 
-for i in range(len(dragonfly_takeoff["frames"])):
-    frame = dragonfly_takeoff["frames"][i]
-    for j in range(len(frame["elements"])):
-        element = frame["elements"][j]
-        if str.lower(element["symbol"]) == "dragonfly_head":
-            element["frameNum"] = 0
+# for i in range(len(dragonfly_takeoff["frames"])):
+#     frame = dragonfly_takeoff["frames"][i]
+#     for j in range(len(frame["elements"])):
+#         element = frame["elements"][j]
+#         if str.lower(element["symbol"]) == "dragonfly_head":
+#             element["frameNum"] = 0
 
 save_animation(dragonfly_takeoff, f"target/dismount_lag.json")

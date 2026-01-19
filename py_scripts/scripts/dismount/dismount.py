@@ -165,11 +165,11 @@ dragonfly_land_2 = apply_follow_symbol(
 
 final = joint_animations([dragonfly_land_1, dragonfly_land_2], "dismount")
 
-for i in range(len(final["frames"])):
-    frame = final["frames"][i]
-    for j in range(len(frame["elements"])):
-        element = frame["elements"][j]
-        if str.lower(element["symbol"]) == "dragonfly_head":
-            element["frameNum"] = 0
+# for i in range(len(final["frames"])):
+#     frame = final["frames"][i]
+#     for j in range(len(frame["elements"])):
+#         element = frame["elements"][j]
+#         if str.lower(element["symbol"]) == "dragonfly_head":
+#             element["frameNum"] = 0
 
 save_animation(final, f"target/dismount.json")
