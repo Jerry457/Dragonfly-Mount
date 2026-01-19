@@ -20,16 +20,19 @@ local DragonflyMountBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
 end)
 
-local function GetLeaderPos(inst)
-    local leader = inst.components.follower.leader
-    if leader and leader:IsValid() then
-        return leader:GetPosition()
-    else
-        return nil
+local function ShouldGotoLeader(inst)
+    if not inst.goto_leader then
+        return false
     end
+    local leader = inst.components.follower.leader
+    if not (leader and leader:IsValid()) then
+        inst.goto_leader = false
+        return false
+    end
+    return true
 end
 
-local function GetWanderPos(inst)
+local function GetLeaderPos(inst)
     local leader = inst.components.follower.leader
     if leader and leader:IsValid() then
         return leader:GetPosition()
@@ -77,13 +80,13 @@ end
 
 local function GetDangerRangeSq(inst)
     local targetmem = inst.targetmem
-    
+
     -- 粗略估计用数据
     local hitrange = targetmem.hitrange or 1
     local physicsrange = inst.physicsrange or 0.5
     local guess_hit_range = hitrange + physicsrange
     local danger_range = guess_hit_range
-    
+
     local danger_range_sq = danger_range * danger_range
 
     -- 根据历史受伤数据计算
@@ -317,7 +320,7 @@ local function InitTargetMem(inst, target)
     local attackother_sg = {}
     local inst_attacked = {}
     local run_ahead_time = 0.05
-    
+
     if target and target.prefab and TRAINING_DATA[target.prefab] then
         attackother_sg = TRAINING_DATA[target.prefab].attackother_sg or attackother_sg
         inst_attacked = TRAINING_DATA[target.prefab].inst_attacked or inst_attacked
@@ -332,7 +335,7 @@ local function InitTargetMem(inst, target)
         inst_attacked = inst_attacked,
         run_ahead_time = run_ahead_time,
     }
-    
+
     WatchTargetCombat(inst)
 end
 
@@ -443,22 +446,15 @@ function DragonflyMountBrain:OnStart()
     -- GotoLeader
     local GotoLeader = WhileNode(
         function()
-            if not inst.goto_leader then
-                return false
-            end
-            if not GetLeaderPos(inst) then
-                inst.goto_leader = false
-                return false
-            end
-            return true
-        end, 
+            return ShouldGotoLeader(inst)
+        end,
         "GotoLeader",
         SequenceNode{
             ActionNode(function() inst.components.combat:SetTarget(nil) end),
             ParallelNodeAny{
-                WaitNode(4),
+                WaitNode(4), -- TIMEOUT
                 SequenceNode{
-                    Leash(self.inst, GetWanderPos, 0, 2, false),
+                    Leash(inst, GetLeaderPos, 0, 2, false),
                     ActionNode(function() inst.components.locomotor:Stop() end),
                     WaitNode(0.5),
                 },
@@ -471,7 +467,6 @@ function DragonflyMountBrain:OnStart()
     local runaway = WhileNode(
         function()
             local shouldrunaway = ShouldRunaway(inst)
-            -- print("ShouldRunaway:", shouldrunaway)
             if shouldrunaway and not inst.sg:HasStateTag("moving") then
                 inst.sg:AddStateTag("idle")
             end
@@ -485,8 +480,8 @@ function DragonflyMountBrain:OnStart()
     local standstill = WhileNode(
         function()
             return ShouldStandStill(inst)
-        end, 
-        "Stand", 
+        end,
+        "Stand",
         ActionNode(function()
             inst.components.locomotor:Stop()
             if inst.standstill then
@@ -510,7 +505,7 @@ function DragonflyMountBrain:OnStart()
         function()
             return inst.targetmem.target ~= nil
         end,
-        "CombatBehavior", 
+        "CombatBehavior",
         PriorityNode({
             runaway,
             standstill,
@@ -530,14 +525,14 @@ function DragonflyMountBrain:OnStart()
     )
 
     -- root
-    local root = 
+    local root =
     PriorityNode(
     {
         GotoLeader,
         CombatBehavior,
         WaitBellLink,
         Follow(inst, function() return inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
-        Wander(inst, function() return GetWanderPos(inst) end, MAX_FOLLOW_DIST)
+        Wander(inst, function() return GetLeaderPos(inst) end, MAX_FOLLOW_DIST)
     }, 0.1)
 
     self.bt = BT(inst, root)
