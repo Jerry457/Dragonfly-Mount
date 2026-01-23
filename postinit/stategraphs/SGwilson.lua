@@ -234,4 +234,62 @@ AddStategraphPostInit("wilson", function(sg)
         return dismount_onenter(inst, ...)
     end
 
+    -- castspell
+    local castspell_onenter = sg.states.castspell.onenter
+    sg.states.castspell.onenter = function(inst, ...)
+        castspell_onenter(inst, ...)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if mount and mount:HasTag("dragonfly_mount") then
+            if inst.sg.statemem.stafffx then
+                inst.sg.statemem.stafffx:Remove()
+            end
+            -- 替换spell特效
+            local staff = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+            local colour = staff ~= nil and staff.fxcolour or { 1, 1, 1 }
+            inst.sg.statemem.stafffx = SpawnPrefab("staffcastfx_dragonfly")
+            inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
+            inst.sg.statemem.stafffx:SetUp(colour)
+        end
+    end
+
+    -- taunt技能
+    sg.states.dragonfly_taunt = State({
+        name = "dragonfly_taunt",
+        tags = {"doing", "busy", "nopredict", "noattack", "nointerrupt"},
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.components.playercontroller:Enable(false)
+            inst.components.playercontroller:RemotePausePrediction()
+            inst:PerformBufferedAction()
+            inst.AnimState:PlayAnimation("taunt")
+            inst.sg:SetTimeout(3)
+        end,
+
+        timeline = {
+            -- TimeEvent(10 * FRAMES, function(inst)
+            --     inst.components.talker:Say(STRINGS.CHARACTERS.MAD_MITA.SKILLS_TALK.LETYOUSEE)
+            --     local pos = inst:GetPosition()
+            --     -- SpawnAt("miside_attune_in", Vector3(pos.x, 0.25, pos.z))
+            -- end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            inst.components.playercontroller:Enable(true)
+        end,
+    })
 end)

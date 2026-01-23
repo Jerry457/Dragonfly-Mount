@@ -61,7 +61,6 @@ local function SetDragonflyBellOwner(inst, bell, bell_user)
             inst:DoTaskInTime(WRITE_TIMEOUT, function(inst)
                 inst.is_writing = false
             end)
-
         end
 
         return true
@@ -136,8 +135,6 @@ end
 local COMBAT_MUSHAVE_TAGS = { "_combat", "_health" }
 local COMBAT_CANTHAVE_TAGS = { "INLIMBO", "noauradamage", "companion" }
 
--- local COMBAT_MUSTONEOF_TAGS_DEFENSIVE = { "monster", "prey", "hostile" }
-
 local function CommonRetarget(inst, v)
     return v ~= inst and not v:HasTag("player") and v.entity:IsVisible()
             and inst.components.combat:CanTarget(v)
@@ -193,6 +190,8 @@ local sounds =
 
 local brain = require("brains/dragonfly_mount_brain")
 
+local SetupDragonflyMountSpell = require("prefabs/dragonfly_mount_skills").SetupDragonflyMountSpell
+
 local function fn()
     local inst = CreateEntity()
 
@@ -229,6 +228,8 @@ local function fn()
     inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
 
     inst.sounds = sounds
+
+    SetupDragonflyMountSpell(inst)
 
     if not TheWorld.ismastersim then
         return inst
@@ -302,6 +303,9 @@ local function fn()
     inst.components.writeable:SetOnWritingEndedFn(OnWritingEnded)
 
     inst:AddComponent("colourtweener")
+
+    local propagator = MakeLargePropagator(inst)
+    propagator.decayrate = 0
 
     inst.ApplyBuildOverrides = ApplyBuildOverrides
     inst.ClearBuildOverrides = ClearBuildOverrides

@@ -72,6 +72,14 @@ local function SGwilson(sg)
         inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/punchimpact", nil, volume)
     end))
 
+    -- 修改ACTIONS.CASTAOE的目标状态
+    local castaoe_deststate = sg.actionhandlers[ACTIONS.CASTAOE].deststate
+    sg.actionhandlers[ACTIONS.CASTAOE].deststate = function(inst, action)
+        if action.invobject and action.invobject:HasTag("dragonfly_mount") and action.invobject.spell_deststate then
+            return action.invobject.spell_deststate(inst, action)
+        end
+        return castaoe_deststate(inst, action)
+    end
 end
 
 AddStategraphPostInit("wilson", SGwilson)

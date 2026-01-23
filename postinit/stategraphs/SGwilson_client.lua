@@ -28,6 +28,36 @@ local function ConfigureRunState(inst)
     end
 end
 
+local function ClientCommonState(name, tags, server_states)
+    return State({
+        name = name,
+        tags = tags,
+        server_states = server_states,
+
+        onenter = function(inst)
+            if inst.components.locomotor then
+                inst.components.locomotor:Stop()
+            end
+            inst.sg:SetTimeout(2)
+            inst:PerformPreviewBufferedAction()
+        end,
+    
+        onupdate = function(inst)
+            if inst.sg:ServerStateMatches() then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+    
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle", true)
+        end,
+    })
+end
+
 AddStategraphPostInit("wilson_client", function(sg)
     -- 修改locomote事件目标state
     local locomote_fn = sg.events.locomote.fn
@@ -145,4 +175,7 @@ AddStategraphPostInit("wilson_client", function(sg)
             end),
         },
     }
+
+    -- taunt技能
+    sg.states.dragonfly_taunt = ClientCommonState("dragonfly_taunt", {"doing", "busy"}, {"dragonfly_taunt"})
 end)
