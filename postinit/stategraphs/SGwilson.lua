@@ -57,6 +57,10 @@ AddStategraphPostInit("wilson", function(sg)
             return locomote_fn(inst, data)
         end
 
+        if inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("overridelocomote") then
+            return
+        end
+
         local is_moving = inst.sg:HasStateTag("moving")
         local should_move = inst.components.locomotor:WantsToMoveForward()
 
