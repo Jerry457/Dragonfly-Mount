@@ -616,14 +616,14 @@ derive_from_dragonfly_template(
 )
 
 
-# ================= heavy_mount
+# # ================= heavy_mount
 
-derive_from_dragonfly_template(
-    wilson_animation_name="heavy_mount",
-    dragonfly_animation_name="idle",
-    output_animation_name="heavy_mount",
-    split_front_back=False,
-)
+# derive_from_dragonfly_template(
+#     wilson_animation_name="heavy_mount",
+#     dragonfly_animation_name="idle",
+#     output_animation_name="heavy_mount",
+#     split_front_back=False,
+# )
 
 # ================= hit_darkness
 
