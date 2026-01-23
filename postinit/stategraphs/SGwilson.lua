@@ -36,6 +36,17 @@ local function ConfigureRunState(inst)
     inst.sg:AddStateTag("noslip")
 end
 
+local function GroundPound(inst)
+    local rider = inst.replica.rider
+    local mount = rider and rider:GetMount()
+    if not mount or not mount:HasTag("dragonfly_mount") then
+        return
+    end
+    mount.components.groundpounder:GroundPound()
+    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/buttstomp")
+    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/buttstomp_voice")
+end
+
 AddStategraphPostInit("wilson", function(sg)
     -- 修改locomote事件目标state
     local locomote_fn = sg.events.locomote.fn
@@ -267,12 +278,20 @@ AddStategraphPostInit("wilson", function(sg)
             inst.sg:SetTimeout(3)
         end,
 
-        timeline = {
-            -- TimeEvent(10 * FRAMES, function(inst)
-            --     inst.components.talker:Say(STRINGS.CHARACTERS.MAD_MITA.SKILLS_TALK.LETYOUSEE)
-            --     local pos = inst:GetPosition()
-            --     -- SpawnAt("miside_attune_in", Vector3(pos.x, 0.25, pos.z))
-            -- end),
+        timeline =
+        {
+            TimeEvent(21*FRAMES, function(inst)
+                local tauntfx = SpawnPrefab("tauntfire_fx")
+                tauntfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+                tauntfx.Transform:SetRotation(inst.Transform:GetRotation())
+                GroundPound(inst)
+            end),
+            TimeEvent(30*FRAMES, function(inst)
+                GroundPound(inst)
+            end),
+            TimeEvent(39*FRAMES, function(inst)
+                GroundPound(inst)
+            end),
         },
 
         events =

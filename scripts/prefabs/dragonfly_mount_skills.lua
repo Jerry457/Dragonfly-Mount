@@ -219,7 +219,7 @@ local SKILL_DEFS =
     --     sort_order = 2,
     -- },
     TAUNT = {
-        label = "taunt",
+        label = STRINGS.DRAGONFLY_SKILLS.TAUNT,
         onselect = function(inst)
             -- 这里写双端内容
             inst.spell_deststate = function(player, act) -- action对应的sg
@@ -229,7 +229,7 @@ local SKILL_DEFS =
             spellbook.closeonexecute = true
             local aoetargeting = inst.components.aoetargeting
 
-            spellbook:SetSpellName("spell_name:taunt")
+            spellbook:SetSpellName(STRINGS.DRAGONFLY_SKILLS.TAUNT)
 
             aoetargeting:SetRange(8)
             aoetargeting:SetDeployRadius(0)
@@ -239,7 +239,7 @@ local SKILL_DEFS =
             aoetargeting:SetAllowWater(true)
             aoetargeting:SetAllowRiding(true)
 
-            aoetargeting.reticule.validcolour = {1, 0.2, 0, 1}
+            aoetargeting.reticule.validcolour = {1, 1, 0, 1}
             aoetargeting.reticule.invalidcolour = {0.75, 0.15, 0, 1}
             aoetargeting.reticule.reticuleprefab = "reticulemultitarget"
             aoetargeting.reticule.pingprefab = "reticulemultitargetping"
@@ -251,7 +251,9 @@ local SKILL_DEFS =
             if TheWorld.ismastersim then
                 -- 这里写主机内容
                 inst.components.aoespell:SetSpellFn(function(inst, player, pos)
-                    player.components.talker:Say("skill:taunt")
+                    if player.components.spellbookcooldowns then
+                        player.components.spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
+                    end
                     return true
                 end)
             end
@@ -268,7 +270,7 @@ local SKILL_DEFS =
 			cooldown = { anim = "lunar_fire_cooldown" },
 		},
 		checkenabled = function(player) return true end,
-        -- checkcooldown = function(player) return 0 end,
+        checkcooldown = CheckCooldown("dragonfly_taunt"),
         cooldowncolor = COOLDOWN_COLOR,
         widget_scale = ICON_SCALE,
         sort_order = 3,
