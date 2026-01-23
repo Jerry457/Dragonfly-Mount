@@ -5,7 +5,7 @@ local writeables = require "writeables"
 
 local dragonfly_mount_layout =
 {
-    prompt = STRINGS.SIGNS.MENU.PROMPT_BEEFALO,
+    prompt = STRINGS.SIGNS.MENU.PROMPT_DRAGONFLY,
     animbank = "ui_board_5x3",
     animbuild = "ui_board_5x3",
     menuoffset = Vector3(6, -70, 0),
@@ -13,7 +13,7 @@ local dragonfly_mount_layout =
 
 
     defaulttext = function(inst, doer)
-        return subfmt(STRINGS.NAMES.BEEFALO_BUDDY_NAME, { buddy = doer.name })
+        return subfmt(STRINGS.NAMES.DRAGONFLY_BUDDY_NAME, { buddy = doer.name })
     end,
 
     cancelbtn = {
@@ -24,8 +24,8 @@ local dragonfly_mount_layout =
     middlebtn = {
         text = STRINGS.BEEFALONAMING.MENU.RANDOM,
         cb = function(inst, doer, widget)
-            local name_index = math.random(#STRINGS.BEEFALONAMING.BEEFNAMES)
-            widget:OverrideText( STRINGS.BEEFALONAMING.BEEFNAMES[name_index] )
+            local name_index = math.random(#STRINGS.DRAGONFLYNAMING.DRAGONFLYNAMES)
+            widget:OverrideText(STRINGS.DRAGONFLYNAMING.DRAGONFLYNAMES[name_index] )
         end,
         control = CONTROL_MENU_MISC_2
     },
