@@ -18,3 +18,37 @@ STRINGS.CHARACTERS.GENERIC.ANNOUNCE_DRAGONFLY_GOTO_PLAYER = "Big guy, come over 
 STRINGS.DRAGONFLY_SKILLS = {
     TAUNT = "Taunt",
 }
+
+STRINGS.SIGNS.MENU.PROMPT_DRAGONFLY = "Name This Dragonfly"
+    
+STRINGS.NAMES.DRAGONFLY_BUDDY_NAME = "{buddy}'s Dragonfly",
+
+STRINGS.DRAGONFLYNAMING =
+{
+    DRAGONFLYNAMES =
+    {
+        "Flamewing", -- 火焰之翼
+        "Scorch", -- 灼烧
+        "Ember", -- 余烬
+        "Pyra", -- 火焰女神
+        "Blaze", -- 火焰
+        "Flareon", -- 闪焰
+        "Cinder", -- 煤渣
+        "Ashen", -- 灰烬
+        "Sizzle", -- 嘶嘶
+        "Pyro", -- 火焰
+        "Inferno", -- 地狱火
+        "Smolder", -- 闷烧
+        "Flicker", -- 闪烁
+        "Glint", -- 闪光
+        "Radiance", -- 光辉
+        "Spark", -- 火花
+        "Kindle", -- 点燃
+        "Flare", -- 闪耀
+        "Torch", -- 火炬
+        "Emberly", -- 余烬
+        "Burnie", -- 小火
+        "Charcoal", -- 木炭
+        "Fiero", -- 火热
+    },
+}

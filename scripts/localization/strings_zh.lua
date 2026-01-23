@@ -18,3 +18,33 @@ STRINGS.CHARACTERS.GENERIC.ANNOUNCE_DRAGONFLY_GOTO_PLAYER = "大家伙，过来�
 STRINGS.DRAGONFLY_SKILLS = {
     TAUNT = "暴怒",
 }
+
+STRINGS.SIGNS.MENU.PROMPT_DRAGONFLY = "为这只龙蝇命名"
+
+STRINGS.NAMES.DRAGONFLY_BUDDY_NAME = "{buddy}的龙蝇"
+
+STRINGS.DRAGONFLYNAMING =
+{
+    DRAGONFLYNAMES =
+    {
+        "龙龙",
+        "龙当劳",
+        "龙德基",
+        "火翼",
+        "炽焰",
+        "蝇蝇",
+        "火花",
+        "飞天小火龙",
+        "龙大了",
+        "焰主",
+        "炎龙",
+        "大火龙",
+        "火火的龙",
+        "暴怒龙",
+        "火焰使者",
+        "燃烧者",
+        "大巴掌",
+        "小翅膀",
+        "火焰宝宝",
+    },
+}
