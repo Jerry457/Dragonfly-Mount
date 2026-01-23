@@ -13,12 +13,18 @@ from utils import (
 )
 
 
-def get_parent_transform(parent_element, params):
-    if (
-        params["inherit_scale"]
-        and params["inherit_rotation"]
-        and not params["average_rotation"]
-    ):
+def resolve_param(param, child_element):
+    if callable(param):
+        return param(child_element)
+    return param
+
+
+def get_parent_transform(parent_element, params, child_element):
+    inherit_scale = resolve_param(params["inherit_scale"], child_element)
+    inherit_rotation = resolve_param(params["inherit_rotation"], child_element)
+    average_rotation = resolve_param(params["average_rotation"], child_element)
+
+    if inherit_scale and inherit_rotation and not average_rotation:
         return [
             [parent_element["a"], parent_element["c"]],
             [parent_element["b"], parent_element["d"]],
@@ -31,12 +37,12 @@ def get_parent_transform(parent_element, params):
         parent_element["d"],
     )
 
-    scale_x = transform["scale_x"] if params["inherit_scale"] else 1
-    scale_y = transform["scale_y"] if params["inherit_scale"] else 1
-    shear_x = transform["shear_x"] if params["inherit_rotation"] else 0
-    shear_y = transform["shear_y"] if params["inherit_rotation"] else 0
+    scale_x = transform["scale_x"] if inherit_scale else 1
+    scale_y = transform["scale_y"] if inherit_scale else 1
+    shear_x = transform["shear_x"] if inherit_rotation else 0
+    shear_y = transform["shear_y"] if inherit_rotation else 0
 
-    if params["inherit_rotation"] and params["average_rotation"]:
+    if inherit_rotation and average_rotation:
         diff = (shear_x - shear_y) * (np.pi / 180)
         if np.cos(diff) < 0:
             shear_x -= 180
@@ -90,10 +96,15 @@ def follow_single_frame(
         return False
 
     for element in child_frame["elements"]:
-        scaling_element(element, local_scale_x, local_scale_y)
-        rotate_element(element, local_rotate)
-        element["tx"] += local_x
-        element["ty"] += local_y
+        scale_x = resolve_param(local_scale_x, element)
+        scale_y = resolve_param(local_scale_y, element)
+        scaling_element(element, scale_x, scale_y)
+
+        angle = resolve_param(local_rotate, element)
+        rotate_element(element, angle)
+
+        element["tx"] += resolve_param(local_x, element)
+        element["ty"] += resolve_param(local_y, element)
 
     insert_indices = sorted(follow_elements.keys(), reverse=True)
 
@@ -103,12 +114,12 @@ def follow_single_frame(
             0, min(index + z_index_offset, len(parent_frame["elements"]))
         )
 
-        parent_transform = get_parent_transform(parent_element, params)
         parent_tx = parent_element["tx"] if params["inherit_pos_x"] else 0
         parent_ty = parent_element["ty"] if params["inherit_pos_y"] else 0
 
         insert_elements = deepcopy(child_frame["elements"])
         for element in insert_elements:
+            parent_transform = get_parent_transform(parent_element, params, element)
             transform_element(element, parent_transform)
             element["tx"] += parent_tx
             element["ty"] += parent_ty

@@ -182,17 +182,17 @@ emotes = {
     "emoteXL_angry": 1,
     "emoteXL_annoyed": 2,
     "emoteXL_bonesaw": 2,
-    "emoteXL_facepalm": 1,
+    # "emoteXL_facepalm": 1,
     "emoteXL_kiss": 2,
     "emoteXL_loop_dance0": 1,
     "emoteXL_loop_dance6": 5,
     "emoteXL_loop_dance7": 3,
     "emoteXL_loop_dance8": 4,
     "emoteXL_sad": 2,
-    "emoteXL_waving1": 1,
-    "emoteXL_waving2": 1,
-    "emoteXL_waving3": 1,
-    "emoteXL_waving4": 1,
+    # "emoteXL_waving1": 1,
+    # "emoteXL_waving2": 1,
+    # "emoteXL_waving3": 1,
+    # "emoteXL_waving4": 1,
     "emoteXL_happycheer": 1,
     "emote_fistshake": 1,
 }
@@ -262,3 +262,36 @@ for i in range(4):
         animation_length_align=2,
         dragonfly_animation_range=[-2, None],
     )
+
+
+# spine自制动画部分
+dragonfly_anim = load_anim("assets/dragonfly_emotes.json")
+derive_from_dragonfly_template(
+    wilson_animation_name="emoteXL_facepalm",
+    dragonfly_animation_name="emoteXL_facepalm",
+    output_animation_name="emoteXL_facepalm",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="emoteXL_waving1",
+    dragonfly_animation_name="emoteXL_waving",
+    output_animation_name="emoteXL_waving1",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="emoteXL_waving2",
+    dragonfly_animation_name="emoteXL_waving",
+    output_animation_name="emoteXL_waving2",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="emoteXL_waving3",
+    dragonfly_animation_name="emoteXL_waving",
+    output_animation_name="emoteXL_waving3",
+)
+
+derive_from_dragonfly_template(
+    wilson_animation_name="emoteXL_waving4",
+    dragonfly_animation_name="warm_up",
+    output_animation_name="emoteXL_waving4",
+)
