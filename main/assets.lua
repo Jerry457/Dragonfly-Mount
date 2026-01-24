@@ -7,6 +7,7 @@ Assets = {
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
     Asset("ANIM", "anim/dragonfly_bell.zip"),
+    Asset("ANIM", "anim/spell_icons_dragonfly.zip"),
     Asset("ATLAS", "images/inventoryimages/dragonfly_bell.xml"),
 }
 

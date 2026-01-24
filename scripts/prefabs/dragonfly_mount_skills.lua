@@ -1,5 +1,5 @@
 local SPELLBOOK_RADIUS = 70
-local ICON_SCALE = 0.5
+local ICON_SCALE = 0.6
 local COOLDOWN_COLOR = {0.5, 0.5, 0.5, 0.75}
 
 local function StartAOETargeting(inst)
@@ -93,15 +93,15 @@ local SKILL_DEFS =
             end
         end,
         execute = StartAOETargeting, --按下按钮[客机]立刻执行onselect，并显示范围指示器，确定使用技能后[主机]执行onselect
-		bank = "spell_icons_willow",
-		build = "spell_icons_willow",
+		bank = "spell_icons_dragonfly",
+		build = "spell_icons_dragonfly",
 		anims =
 		{
-			idle = { anim = "lunar_fire" },
-			focus = { anim = "lunar_fire_focus", loop = true },
-			down = { anim = "lunar_fire_pressed" },
-			disabled = { anim = "lunar_fire_disabled" },
-			cooldown = { anim = "lunar_fire_cooldown" },
+			idle = { anim = "taunt" },
+			focus = { anim = "taunt_focus", loop = true },
+			down = { anim = "taunt_pressed" },
+			disabled = { anim = "taunt_disabled" },
+			cooldown = { anim = "taunt_cooldown" },
 		},
 		checkenabled = function(player) return true end,
         checkcooldown = CheckCooldown("dragonfly_taunt"),
