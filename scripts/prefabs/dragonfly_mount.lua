@@ -266,6 +266,7 @@ local function fn()
     groundpounder.groundpoundfx = "firesplash_fx"
     groundpounder.groundpounddamagemult = 0.5
     groundpounder.groundpoundringfx = "firering_fx"
+    table.insert(groundpounder.noTags, "player")
 
     health:SetMaxHealth(TUNING.DRAGONFLY_HEALTH / 2)
     health.nofadeout = true --Handled in death state instead

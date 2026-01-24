@@ -37,194 +37,33 @@ local function CheckCooldown(spell_name)
     end
 end
 
--- local function CheckNotRiding(player)
---     --client safe
---     local rider = player and player.replica.rider
---     return not (rider and rider:IsRiding())
--- end
+local function TauntSpell(inst, player, pos)
+    local spellbookcooldowns = player.components.spellbookcooldowns
+    if spellbookcooldowns then
+        if spellbookcooldowns:IsInCooldown("dragonfly_taunt") then
+            player.sg:GoToState("idle")
+            return false
+        end
+        spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
+    end
+    player.sg:GoToState("dragonfly_taunt")
+    return true
+end
 
 local SKILL_DEFS =
 {
-    -- BLINK = {
-    --     label = STRING.BLINK,
-    --     onselect = function(inst)
-    --         local spellbook = inst.components.spellbook
-    --         spellbook.closeonexecute = false
-    --         if ThePlayer then
-    --             if ThePlayer.mad_mita_blink_disabled then
-    --                 ThePlayer.mad_mita_blink_disabled = false
-    --             else
-    --                 ThePlayer.mad_mita_blink_disabled = true
-    --             end
-    --         end
-    --         -- 这里写双端内容
-    --         if TheWorld.ismastersim then
-
-    --         end
-    --     end,
-    --     execute = function(inst) end,
-	-- 	bank = "spell_icons_mad_mita",
-	-- 	build = "spell_icons_mad_mita",
-	-- 	anims =
-	-- 	{
-	-- 		idle = { anim = "blink" },
-	-- 		focus = { anim = "blink_focus" },
-	-- 		down = { anim = "blink_pressed" },
-	-- 		disabled = { anim = "blink_disabled" },
-	-- 		cooldown = { anim = "blink_cooldown" },
-	-- 	},
-    --     checkenabled = function(player)
-    --         return true
-    --     end,
-    --     widget_scale = ICON_SCALE,
-    --     unlock_stage = 1,
-    --     sort_order = 0,
-    --     postinit = function(w)
-    --         if ThePlayer and ThePlayer.mad_mita_blink_disabled then
-    --             w.animstate:Show("lock")
-    --         else
-    --             w.animstate:Hide("lock")
-    --         end
-
-    --         local onclick = w.onclick
-    --         w.onclick = function(...)
-    --             onclick(...)
-    --             if ThePlayer and ThePlayer.mad_mita_blink_disabled then
-    --                 w.animstate:Show("lock")
-    --             else
-    --                 w.animstate:Hide("lock")
-    --             end
-    --         end
-    --     end,
-    -- },
-    -- DRINK_BLOOD = {
-    --     label = STRING.DRINK_BLOOD,
-    --     onselect = function(inst)
-    --         inst.miside_deststate = function() -- action对应的sg
-    --             return "quickeat"
-    --         end
-    --         local spellbook = inst.components.spellbook
-    --         spellbook.closeonexecute = true
-    --         -- 这里写双端内容
-    --         if TheWorld.ismastersim then
-    --             -- 这里写主机内容
-    --             spellbook:SetSpellFn(function(inst, player)
-    --                 local current = player.components.bloodthirsty:GetCurrent()
-    --                 if current > 0 then
-    --                     local health = player.components.health
-    --                     local health_lost = health.maxhealth - health.currenthealth
-
-    --                     local need = health_lost / TUNING.MAD_MITA_GET_HEALTH_FROM_BLOODTHIRSTY_PROPORTION
-    --                     local consume = math.min(need, current)
-
-    --                     player.components.bloodthirsty:DoDelta(-consume)
-    --                     player.components.health:DoDelta(consume * TUNING.MAD_MITA_GET_HEALTH_FROM_BLOODTHIRSTY_PROPORTION, nil, nil, true)
-    --                     return true
-    --                 end
-    --                 return false, "NOT_ENOUGH_BLOOD_THIRSTY"
-    --             end)
-    --         end
-    --     end,
-    --     execute = ExecuteSpell, -- 按下按钮[主机]和[客机]都立刻执行onselect
-	-- 	bank = "spell_icons_mad_mita",
-	-- 	build = "spell_icons_mad_mita",
-	-- 	anims =
-	-- 	{
-	-- 		idle = { anim = "drink_blood" },
-	-- 		focus = { anim = "drink_blood_focus" },
-	-- 		down = { anim = "drink_blood_pressed" },
-	-- 		disabled = { anim = "drink_blood_disabled" },
-	-- 		cooldown = { anim = "drink_blood_cooldown" },
-	-- 	},
-    --     checkenabled = function(player)
-    --         local health = player.replica.health
-    --         return health and health:GetPercent() < 1
-    --     end,
-    --     checkcooldown = CheckCooldown("mad_mita_drink_blood"),
-	-- 	cooldowncolor = COOLDOWN_COLOR,
-    --     widget_scale = ICON_SCALE,
-    --     hotkey = TUNING.MAD_MITA_SKILL_DRINK_BLOOD,
-    --     unlock_stage = 1,
-    --     sort_order = 1,
-    -- },
-    -- GLITCH_EFFECT = {
-    --     label = STRING.GLITCH_EFFECT.."("..TUNING.MAD_MITA_GLITCH_EFFECT_BLOOD_THIRSTY_COSTS..STRING.BLOOD_THIRSTY..")",
-    --     onselect = function(inst)
-    --         -- 这里写双端内容
-    --         inst.miside_deststate = function() -- action对应的sg
-    --             return "mad_mita_glitch_effect"
-    --         end
-    --         local spellbook = inst.components.spellbook
-    --         spellbook.closeonexecute = true
-    --         local aoetargeting = inst.components.aoetargeting
-
-    --         spellbook:SetSpellName("错误化")
-
-    --         aoetargeting:SetRange(12)
-    --         aoetargeting:SetDeployRadius(0)
-
-    --         aoetargeting:SetShouldRepeatCastFn(nil)
-    --         aoetargeting:SetAlwaysValid(true)
-    --         aoetargeting:SetAllowWater(true)
-    --         aoetargeting:SetAllowRiding(true)
-
-    --         aoetargeting.reticule.validcolour = {1, 0.2, 0, 1}
-    --         aoetargeting.reticule.invalidcolour = {0.75, 0.15, 0, 1}
-    --         aoetargeting.reticule.reticuleprefab = "reticuleaoe_mad_mita_glitch_effect"
-    --         aoetargeting.reticule.pingprefab = "reticuleaoe_mad_mita_glitch_effect_ping"
-
-    --         aoetargeting.reticule.mousetargetfn = nil
-    --         aoetargeting.reticule.targetfn = nil 
-    --         aoetargeting.reticule.updatepositionfn = nil
-
-    --         if TheWorld.ismastersim then
-    --             -- 这里写主机内容
-    --             inst.components.aoespell:SetSpellFn(function(inst, player, pos)
-    --                 local current = player.components.bloodthirsty:GetCurrent()
-    --                 if current >= TUNING.MAD_MITA_GLITCH_EFFECT_BLOOD_THIRSTY_COSTS then
-    --                     player.components.bloodthirsty:DoDelta(-TUNING.MAD_MITA_GLITCH_EFFECT_BLOOD_THIRSTY_COSTS)
-    --                     -- success
-    --                     local ents = TheSim:FindEntities(pos.x, 0, pos.z, TUNING.MAD_MITA_GLITCH_EFFECT_RADIUS, {"_combat","_health"}, {"INLIMBO", "companion", "wall"})
-    --                     for i, ent in ipairs(ents) do
-    --                         if TargetTestFn(ent, player) then
-    --                             if ent.components.glitcheffect == nil then
-    --                                 ent:AddComponent("glitcheffect")
-    --                             end
-    --                             ent.components.glitcheffect:Start(TUNING.MAD_MITA_GLITCH_EFFECT_DURATION)
-    --                             ent:PushEvent("epicscare", {scarer = player, duration = 5})
-    --                         end
-    --                     end
-    --                     return true
-    --                 end
-    --                 -- fail
-    --                 return false, "NOT_ENOUGH_BLOOD_THIRSTY"
-    --             end)
-    --         end
-    --     end,
-    --     execute = StartAOETargeting, --按下按钮[客机]立刻执行onselect，并显示范围指示器，确定使用技能后[主机]执行onselect
-	-- 	bank = "spell_icons_mad_mita",
-	-- 	build = "spell_icons_mad_mita",
-	-- 	anims =
-	-- 	{
-	-- 		idle = { anim = "glitch_effect" },
-	-- 		focus = { anim = "glitch_effect_focus" },
-	-- 		down = { anim = "glitch_effect_pressed" },
-	-- 		disabled = { anim = "glitch_effect_disabled" },
-	-- 		cooldown = { anim = "glitch_effect_cooldown" },
-	-- 	},
-    --     checkenabled = nil,
-    --     widget_scale = ICON_SCALE,
-    --     hotkey = TUNING.MAD_MITA_SKILL_GLITCH_EFFECT,
-    --     unlock_stage = 2,
-    --     sort_order = 2,
-    -- },
     TAUNT = {
         label = STRINGS.DRAGONFLY_SKILLS.TAUNT,
         onselect = function(inst)
             -- 这里写双端内容
             inst.spell_deststate = function(player, act) -- action对应的sg
-                return "dragonfly_taunt"
+                if TheWorld.ismastersim then
+                    return "dragonfly_taunt_pre"
+                else
+                    return "dragonfly_taunt"
+                end
             end
+
             local spellbook = inst.components.spellbook
             spellbook.closeonexecute = true
             local aoetargeting = inst.components.aoetargeting
@@ -245,17 +84,12 @@ local SKILL_DEFS =
             aoetargeting.reticule.pingprefab = "reticulemultitargetping"
 
             aoetargeting.reticule.mousetargetfn = function(inst) return inst:GetPosition() end
-            aoetargeting.reticule.targetfn = nil 
+            aoetargeting.reticule.targetfn = nil
             aoetargeting.reticule.updatepositionfn = CenterReticuleUpdatePosition
 
             if TheWorld.ismastersim then
                 -- 这里写主机内容
-                inst.components.aoespell:SetSpellFn(function(inst, player, pos)
-                    if player.components.spellbookcooldowns then
-                        player.components.spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
-                    end
-                    return true
-                end)
+                inst.components.aoespell:SetSpellFn(TauntSpell)
             end
         end,
         execute = StartAOETargeting, --按下按钮[客机]立刻执行onselect，并显示范围指示器，确定使用技能后[主机]执行onselect
@@ -273,55 +107,8 @@ local SKILL_DEFS =
         checkcooldown = CheckCooldown("dragonfly_taunt"),
         cooldowncolor = COOLDOWN_COLOR,
         widget_scale = ICON_SCALE,
-        sort_order = 3,
+        sort_order = 1,
     },
-    -- DARK_WORLD = {
-    --     label = STRING.DARK_WORLD.."("..TUNING.MAD_MITA_DARK_WORLD_BLOOD_THIRSTY_COSTS..STRING.BLOOD_THIRSTY..")",
-    --     onselect = function(inst)
-    --         inst.miside_deststate = function() -- action对应的sg
-    --             return "mad_mita_dark_world"
-    --         end
-    --         local spellbook = inst.components.spellbook
-    --         spellbook.closeonexecute = true
-    --         -- 这里写双端内容
-    --         if TheWorld.ismastersim then
-    --             -- 这里写主机内容
-    --             spellbook:SetSpellFn(function(inst, player)
-    --                 if player.sg.currentstate.name == "mad_mita_dark_world" then
-    --                     local current = player.components.bloodthirsty:GetCurrent()
-    --                     if current >= TUNING.MAD_MITA_DARK_WORLD_BLOOD_THIRSTY_COSTS then
-    --                         player.components.bloodthirsty:DoDelta(-TUNING.MAD_MITA_DARK_WORLD_BLOOD_THIRSTY_COSTS)
-    --                         player.components.spellbookcooldowns:RestartSpellCooldown("mad_mita_dark_world", TUNING.MAD_MITA_DARK_WORLD_COOLDOWN)
-    --                         -- success
-    --                         player.sg:GoToState("mad_mita_dark_world_internal")
-    --                         return true
-    --                     end
-    --                 end
-    --                 -- fail
-    --                 player.sg:GoToState("idle")
-    --                 return false, "NOT_ENOUGH_BLOOD_THIRSTY"
-    --             end)
-    --         end
-    --     end,
-    --     execute = ExecuteSpell, -- 按下按钮[主机]和[客机]都立刻执行onselect
-	-- 	bank = "spell_icons_mad_mita",
-	-- 	build = "spell_icons_mad_mita",
-	-- 	anims =
-	-- 	{
-	-- 		idle = { anim = "dark_world" },
-	-- 		focus = { anim = "dark_world_focus" },
-	-- 		down = { anim = "dark_world_pressed" },
-	-- 		disabled = { anim = "dark_world_disabled" },
-	-- 		cooldown = { anim = "dark_world_cooldown" },
-	-- 	},
-    --     checkenabled = function(player) return CheckNotRiding(player) and CheckNotInRoom(player) end,
-    --     checkcooldown = CheckCooldown("mad_mita_dark_world"),
-	-- 	cooldowncolor = COOLDOWN_COLOR,
-    --     widget_scale = ICON_SCALE,
-    --     hotkey = TUNING.MAD_MITA_SKILL_DARK_WORLD,
-    --     unlock_stage = 4,
-    --     sort_order = 4,
-    -- },
 }
 
 local function GetUnlockedSkills(inst)

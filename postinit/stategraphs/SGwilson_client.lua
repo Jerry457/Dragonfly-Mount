@@ -19,7 +19,7 @@ for _, actionhandler in ipairs(actionhandlers) do
     AddStategraphActionHandler("wilson_client", actionhandler)
 end
 
-local function ConfigureRunState(inst) 
+local function ConfigureRunState(inst)
     inst.sg.statemem.riding = true
     if inst:HasTag("groggy") then
         inst.sg.statemem.groggy = true
@@ -41,7 +41,7 @@ local function ClientCommonState(name, tags, server_states)
             inst.sg:SetTimeout(2)
             inst:PerformPreviewBufferedAction()
         end,
-    
+
         onupdate = function(inst)
             if inst.sg:ServerStateMatches() then
                 if inst.entity:FlattenMovementPrediction() then
@@ -51,7 +51,7 @@ local function ClientCommonState(name, tags, server_states)
                 inst.sg:GoToState("idle")
             end
         end,
-    
+
         ontimeout = function(inst)
             inst.sg:GoToState("idle", true)
         end,
@@ -184,5 +184,9 @@ AddStategraphPostInit("wilson_client", function(sg)
     }
 
     -- taunt技能
-    sg.states.dragonfly_taunt = ClientCommonState("dragonfly_taunt", {"doing", "busy"}, {"dragonfly_taunt"})
+    sg.states.dragonfly_taunt = ClientCommonState(
+        "dragonfly_taunt",
+        {"doing", "busy"},
+        {"dragonfly_taunt_pre", "dragonfly_taunt"}
+    )
 end)

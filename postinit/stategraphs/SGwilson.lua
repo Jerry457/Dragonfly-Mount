@@ -25,7 +25,7 @@ for _, actionhandler in ipairs(actionhandlers) do
     AddStategraphActionHandler("wilson", actionhandler)
 end
 
-local function ConfigureRunState(inst) 
+local function ConfigureRunState(inst)
     inst.sg.statemem.riding = true
     if inst:HasTag("groggy") then
         inst.sg.statemem.groggy = true
@@ -269,15 +269,28 @@ AddStategraphPostInit("wilson", function(sg)
     end
 
     -- taunt技能
+    sg.states.dragonfly_taunt_pre = State({
+        name = "dragonfly_taunt_pre",
+        tags = {"doing", "busy", "nopredict", "nointerrupt"},
+
+        onenter = function(inst)
+            inst.sg:SetTimeout(1)
+            inst:PerformBufferedAction()
+        end,
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+    })
+
     sg.states.dragonfly_taunt = State({
         name = "dragonfly_taunt",
-        tags = {"doing", "busy", "nopredict", "noattack", "nointerrupt"},
+        tags = {"doing", "busy", "nopredict", "nointerrupt"},
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.components.playercontroller:Enable(false)
             inst.components.playercontroller:RemotePausePrediction()
-            inst:PerformBufferedAction()
             inst.AnimState:PlayAnimation("taunt")
             inst.sg:SetTimeout(3)
         end,
@@ -306,7 +319,7 @@ AddStategraphPostInit("wilson", function(sg)
                 end
             end),
         },
-    
+
         ontimeout = function(inst)
             inst.sg:GoToState("idle")
         end,
