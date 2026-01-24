@@ -22,8 +22,21 @@ function Playercontroller:TryAOETargeting(...)
     return _TryAOETargeting(self, ...)
 end
 
--- local _CancelAOETargeting = Playercontroller.CancelAOETargeting
--- function Playercontroller:CancelAOETargeting(...)
---     print("playercontroller.lua CancelAOETargeting")
---     return _CancelAOETargeting(self, ...)
--- end
+local function MimicInventoryitem(spellbook, player)
+    spellbook.components.inventoryitem = {
+        GetGrandOwner = function()
+            return player
+        end
+    }
+end
+
+local _OnRemoteLeftClick = Playercontroller.OnRemoteLeftClick
+function Playercontroller:OnRemoteLeftClick(actioncode, position, target, isreleased, controlmodscode, noforce, mod_name, spellbook, spell_id, ...)
+    if not (spellbook and spellbook:HasTag("dragonfly_mount")) then
+        return _OnRemoteLeftClick(self, actioncode, position, target, isreleased, controlmodscode, noforce, mod_name, spellbook, spell_id, ...)
+    end
+    -- 伪装inventoryitem
+    MimicInventoryitem(spellbook, self.inst)
+    _OnRemoteLeftClick(self, actioncode, position, target, isreleased, controlmodscode, noforce, mod_name, spellbook, spell_id, ...)
+    spellbook.components.inventoryitem = nil
+end
