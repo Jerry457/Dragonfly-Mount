@@ -149,7 +149,7 @@ def derive_from_dragonfly_template(
 
 emotes_pre = {
     "emote_pre_carol": 1,
-    "emote_pre_toast": 1,
+    # "emote_pre_toast": 1,
     "emoteXL_pre_dance0": 1,
     "emoteXL_pre_dance6": 1,
     "emoteXL_pre_dance7": 1,
@@ -170,7 +170,7 @@ emotes = {
     "emote_jumpcheer": 1,
     "emote_laugh": 2,
     "emote_loop_carol": 2,
-    "emote_loop_toast": 1,
+    # "emote_loop_toast": 1,
     "emote_sad": 2,
     "emote_shrug": 1,
     "emote_sleepy": 2,
@@ -200,7 +200,7 @@ emotes = {
 
 emotes_pst = {
     "emote_pst_carol": 1,
-    "emote_pst_toast": 1,
+    # "emote_pst_toast": 1,
     "emoteXL_pst_dance0": 1,
     "emoteXL_pst_dance6": 1,
     "emoteXL_pst_dance8": 1,

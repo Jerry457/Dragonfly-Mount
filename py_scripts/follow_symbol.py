@@ -13,16 +13,16 @@ from utils import (
 )
 
 
-def resolve_param(param, child_element):
+def resolve_param(param, child_element, idx):
     if callable(param):
-        return param(child_element)
+        return param(child_element, idx)
     return param
 
 
-def get_parent_transform(parent_element, params, child_element):
-    inherit_scale = resolve_param(params["inherit_scale"], child_element)
-    inherit_rotation = resolve_param(params["inherit_rotation"], child_element)
-    average_rotation = resolve_param(params["average_rotation"], child_element)
+def get_parent_transform(parent_element, params, child_element, idx):
+    inherit_scale = resolve_param(params["inherit_scale"], child_element, idx)
+    inherit_rotation = resolve_param(params["inherit_rotation"], child_element, idx)
+    average_rotation = resolve_param(params["average_rotation"], child_element, idx)
 
     if inherit_scale and inherit_rotation and not average_rotation:
         return [
@@ -96,15 +96,15 @@ def follow_single_frame(
         return False
 
     for element in child_frame["elements"]:
-        scale_x = resolve_param(local_scale_x, element)
-        scale_y = resolve_param(local_scale_y, element)
+        scale_x = resolve_param(local_scale_x, element, idx)
+        scale_y = resolve_param(local_scale_y, element, idx)
         scaling_element(element, scale_x, scale_y)
 
-        angle = resolve_param(local_rotate, element)
+        angle = resolve_param(local_rotate, element, idx)
         rotate_element(element, angle)
 
-        element["tx"] += resolve_param(local_x, element)
-        element["ty"] += resolve_param(local_y, element)
+        element["tx"] += resolve_param(local_x, element, idx)
+        element["ty"] += resolve_param(local_y, element, idx)
 
     insert_indices = sorted(follow_elements.keys(), reverse=True)
 
@@ -119,7 +119,9 @@ def follow_single_frame(
 
         insert_elements = deepcopy(child_frame["elements"])
         for element in insert_elements:
-            parent_transform = get_parent_transform(parent_element, params, element)
+            parent_transform = get_parent_transform(
+                parent_element, params, element, idx
+            )
             transform_element(element, parent_transform)
             element["tx"] += parent_tx
             element["ty"] += parent_ty
