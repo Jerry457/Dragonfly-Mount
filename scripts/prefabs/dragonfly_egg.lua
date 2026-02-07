@@ -180,8 +180,6 @@ local function common_fn(anim)
     return inst
 end
 
-RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg.tex")
-
 local function default()
     local inst = common_fn("idle")
 
@@ -199,6 +197,9 @@ local function cracked()
         return inst
     end
 
+    inst.components.inventoryitem.imagename = "dragonfly_egg_cracked"
+    inst.components.symbolswapdata:SetData("dragonfly_egg", "swap_body_cracked")
+
     inst.components.hatchable.state = "comfy"
 
     inst:AddComponent("playerprox")
@@ -207,6 +208,9 @@ local function cracked()
 
     return inst
 end
+
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg_cracked.tex")
 
 table.insert(LootTables["dragonfly"], {'dragonfly_egg', 1.00})
 
