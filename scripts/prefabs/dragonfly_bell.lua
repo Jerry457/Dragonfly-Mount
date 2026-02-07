@@ -2,8 +2,8 @@ local easing = require("easing")
 
 local assets =
 {
-    -- Asset("ANIM", "anim/cowbell.zip"),
-    -- Asset("INV_IMAGE", "dragonfly_bell_linked"),
+    Asset("ATLAS", "images/inventoryimages/dragonfly_bell.xml"),
+    Asset("ANIM", "anim/dragonfly_bell.zip"),
 }
 
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -305,6 +305,16 @@ local FLOAT_SCALE = { 1.2, 1, 1.2 }
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
+local function SpawnBabyDragonfly(inst)
+    local baby = SpawnPrefab("dragonfly_mount")
+    if baby ~= nil then
+        baby.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        baby.components.growable:SetStage(1)
+        baby.components.growable:StartGrowing()
+        inst.components.useabletargeteditem:StartUsingItem(baby, nil)
+    end
+end
+
 local function CommonFn(data)
     local inst = CreateEntity()
 
@@ -343,6 +353,7 @@ local function CommonFn(data)
     inst.HasDragonfly = HasDragonfly
     inst.GetDragonfly = GetDragonfly
     inst.OnStopUsing = OnStopUsing
+    inst.SpawnBabyDragonfly = SpawnBabyDragonfly
 
     inst:AddComponent("inspectable")
 

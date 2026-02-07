@@ -4,4 +4,5 @@ PrefabFiles = {
     "dragonfly_bell",
     "saddle_dragonfly",
     "staff_fx_dragonfly",
+    "dragonfly_egg",
 }

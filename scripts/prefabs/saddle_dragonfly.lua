@@ -1,4 +1,3 @@
-
 local function OnDiscarded(inst)
     inst.components.finiteuses:Use()
 end

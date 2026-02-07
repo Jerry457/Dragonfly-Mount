@@ -41,6 +41,15 @@ local function GetLeaderPos(inst)
     end
 end
 
+local function GetWanderPos(inst)
+    local leader = inst.components.follower.leader
+    if leader and leader:IsValid() then
+        return leader:GetPosition()
+    else
+        return inst.components.knownlocations:GetLocation("spawnpoint") or inst:GetPosition()
+    end
+end
+
 local function ShouldDropTarget(inst)
     local leader = inst.components.follower.leader
     if leader and leader:IsValid() then
@@ -187,7 +196,11 @@ local function ShouldRunaway(inst)
         abouttoattack = cooldown < targetmem.run_ahead_time
     end
 
-    local shouldrunaway = (really_attacking or abouttoattack)
+    -- 获取自身生命值百分比
+    local health_percent = inst.components.health and inst.components.health:GetPercent() or 1
+    local health_in_danger = health_percent < 0.2
+
+    local shouldrunaway = (really_attacking or abouttoattack or health_in_danger)
     -- 不需要再站定了
     if not shouldrunaway then
         inst.standstill = 0
@@ -532,12 +545,16 @@ function DragonflyMountBrain:OnStart()
         CombatBehavior,
         WaitBellLink,
         Follow(inst, function() return inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
-        Wander(inst, function() return GetLeaderPos(inst) end, MAX_FOLLOW_DIST)
+        Wander(inst, function() return GetWanderPos(inst) end, MAX_FOLLOW_DIST)
     }, 0.1)
 
     self.bt = BT(inst, root)
     self.bt.GetSleepTime = function() return 0 end
 
+end
+
+function DragonflyMountBrain:OnInitializationComplete()
+    self.inst.components.knownlocations:RememberLocation("spawnpoint", self.inst:GetPosition(), true)
 end
 
 return DragonflyMountBrain
