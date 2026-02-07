@@ -1,6 +1,7 @@
 local assets =
 {
     Asset("ATLAS", "images/inventoryimages/dragonfly_egg.xml"),
+    Asset("ANIM", "anim/dragonfly_egg.zip"),
 }
 
 local loot_cold =
@@ -128,12 +129,12 @@ local function common_fn(anim)
     MakeHeavyObstaclePhysics(inst, OVERSIZED_PHYSICS_RADIUS)
     inst:SetPhysicsRadiusOverride(OVERSIZED_PHYSICS_RADIUS)
 
-    inst.AnimState:SetBuild("lavae_egg")
-    inst.AnimState:SetBank("lavae_egg")
+    inst.AnimState:SetBuild("dragonfly_egg")
+    inst.AnimState:SetBank("dragonfly_egg")
     inst.AnimState:PlayAnimation(anim)
 
-    local scale = 2
-    inst.Transform:SetScale(scale, scale, scale)
+    -- local scale = 1
+    -- inst.Transform:SetScale(scale, scale, scale)
 
     inst.entity:SetPristine()
 
@@ -157,7 +158,7 @@ local function common_fn(anim)
     inst.components.equippable.walkspeedmult = TUNING.HEAVY_SPEED_MULT
 
     inst:AddComponent("symbolswapdata")
-    inst.components.symbolswapdata:SetData("farm_plant_corn_build", "swap_body")
+    inst.components.symbolswapdata:SetData("dragonfly_egg", "swap_body")
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = describe
@@ -206,6 +207,8 @@ local function cracked()
 
     return inst
 end
+
+table.insert(LootTables["dragonfly"], {'dragonfly_egg', 1.00})
 
 return Prefab("dragonfly_egg", default, assets),
     Prefab("dragonfly_egg_cracked", cracked, assets)
