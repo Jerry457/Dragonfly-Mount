@@ -1,7 +1,6 @@
 local assets =
 {
-    -- Asset("ANIM", "anim/lavae_egg.zip"),
-    -- Asset("SOUND", "sound/together.fsb"),
+    Asset("ATLAS", "images/inventoryimages/dragonfly_egg.xml"),
 }
 
 local loot_cold =
@@ -146,7 +145,8 @@ local function common_fn(anim)
     inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
 
     inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.imagename = "lavae_egg"
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/dragonfly_egg.xml"
+    inst.components.inventoryitem.imagename = "dragonfly_egg"
     inst.components.inventoryitem.cangoincontainer = false
     inst.components.inventoryitem:SetSinks(true)
 
@@ -178,6 +178,8 @@ local function common_fn(anim)
 
     return inst
 end
+
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg.tex")
 
 local function default()
     local inst = common_fn("idle")

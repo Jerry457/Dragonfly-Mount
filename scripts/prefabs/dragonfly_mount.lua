@@ -1,3 +1,10 @@
+local assets =
+{
+    Asset("ANIM", "anim/dragonfly_mount.zip"),
+    Asset("ANIM", "anim/dragonfly_mount_build.zip"),
+    Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
+}
+
 local function PotentialRiderTest(inst, potential_rider)
     if not inst.components.rideable:IsSaddled() then
         local talker = potential_rider.components.talker
@@ -151,10 +158,6 @@ local function RetargetFn(inst)
         leader = leader.components.inventoryitem:GetGrandOwner()
     end
 
-    if not leader then
-        return nil
-    end
-
     local ix, iy, iz = inst.Transform:GetWorldPosition()
     local entities_near_me = TheSim:FindEntities(
         ix, iy, iz, TUNING.ABIGAIL_COMBAT_TARGET_DISTANCE,
@@ -164,7 +167,7 @@ local function RetargetFn(inst)
     for _, entity_near_me in ipairs(entities_near_me) do
         if CommonRetarget(inst, entity_near_me) then
             local combat = entity_near_me.components.combat
-            if combat and (combat.target == leader or combat.target == inst) then
+            if combat and ((leader and combat.target == leader) or combat.target == inst) then
                 return entity_near_me
             end
         end
@@ -430,4 +433,4 @@ local function fn()
     return inst
 end
 
-return Prefab("dragonfly_mount", fn)
+return Prefab("dragonfly_mount", fn, assets)
