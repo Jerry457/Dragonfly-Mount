@@ -113,6 +113,8 @@ local function ClearBellOwner(inst)
     inst.persists = true
 
     inst:UpdateDomestication()
+
+    inst.components.knownlocations:RememberLocation("spawnpoint", inst:GetPosition())
 end
 
 local function GetDragonflyBellOwner(inst)
@@ -291,6 +293,8 @@ local function fn()
     inst.components.rideable.canride = true
     inst.components.rideable:SetSaddleable(true)
     inst.components.rideable:SetCustomRiderTest(PotentialRiderTest)
+
+    inst:AddComponent("knownlocations")
 
     inst:AddComponent("dragonfly_domesticatable")
 
