@@ -196,7 +196,11 @@ local function ShouldRunaway(inst)
         abouttoattack = cooldown < targetmem.run_ahead_time
     end
 
-    local shouldrunaway = (really_attacking or abouttoattack)
+    -- 获取自身生命值百分比
+    local health_percent = inst.components.health and inst.components.health:GetPercent() or 1
+    local health_in_danger = health_percent < 0.2
+
+    local shouldrunaway = (really_attacking or abouttoattack or health_in_danger)
     -- 不需要再站定了
     if not shouldrunaway then
         inst.standstill = 0

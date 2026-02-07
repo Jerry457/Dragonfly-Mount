@@ -9,6 +9,16 @@ STRINGS.NAMES.SADDLE_DRAGONFLY = "dragonfly saddle"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.SADDLE_DRAGONFLY = "A saddle fit for a dragonfly."
 STRINGS.RECIPE_DESC.SADDLE_DRAGONFLY = "Saddle up your dragonfly friend."
 
+STRINGS.NAMES.DRAGONFLY_EGG = "dragonfly egg"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_EGG = "A mysterious dragonfly egg."
+
+STRINGS.NAMES.DRAGONFLY_EGG_CRACKED = "dragonfly egg"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_EGG_CRACKED = {
+    COLD = "It's getting cold, and I don't like it.",
+	COMFY = "I can almost imagine it smiling.",
+    GENERIC = "It's hatching!",
+}
+
 STRINGS.CHARACTERS.GENERIC.ANNOUNCE_DRAGONFLY_NEED_SADDLE = "I need to saddle it before I can ride it."
 
 STRINGS.CHARACTERS.GENERIC.ANNOUNCE_NOT_DRAGONFLY_SADDLE = "This saddle won't do for a dragonfly."

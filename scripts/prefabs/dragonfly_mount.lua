@@ -16,8 +16,10 @@ local function PotentialRiderTest(inst, potential_rider)
     return (leader_owner == nil or leader_owner == potential_rider)
 end
 
+-- local basebuild = "dragonfly_mount_fire_build"
+local basebuild = "dragonfly_mount_build"
+
 local function ApplyBuildOverrides(inst, animstate)
-    local basebuild = "dragonfly_mount_fire_build"
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(basebuild)
@@ -29,7 +31,7 @@ end
 
 local function ClearBuildOverrides(inst, animstate)
     if animstate ~= inst.AnimState then
-        animstate:ClearOverrideBuild("dragonfly_mount_fire_build")
+        animstate:ClearOverrideBuild(basebuild)
     end
 end
 
@@ -194,6 +196,96 @@ local brain = require("brains/dragonfly_mount_brain")
 
 local SetupDragonflyMountSpell = require("prefabs/dragonfly_mount_skills").SetupDragonflyMountSpell
 
+local function OnSave(inst, data)
+
+end
+
+local function OnLoad(inst, data)
+
+end
+
+local function dummy() end
+
+local function print_stage(inst)
+    inst:DoTaskInTime(0,function()
+        print("Current stage: " .. tostring(inst.components.growable.stage))
+    end)
+end
+
+local function GrowTime()
+    return 5 * TUNING.TOTAL_DAY_TIME
+end
+
+local DRAGONFLY_SCALE = 1
+local DRAGONFLY_RADIUS = 1
+local SHADOW_SIZE_X = 6
+local SHADOW_SIZE_Y = 3.5
+local DRAGONFLY_DAMAGE = 150
+local DRAGONFLY_ATTACK_RANGE = 5
+local DRAGONFLY_HIT_RANGE = 6
+local DRAGONFLY_HEALTH = 5500
+local DRAGONFLY_WALK_SPEED = 6
+local DRAGONFLY_RUN_SPEED = 8
+
+local function BabyStage(inst)
+    local mult = 0.35
+
+    inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
+    inst.DynamicShadow:SetSize(SHADOW_SIZE_X * mult, SHADOW_SIZE_Y * mult)
+    inst.Physics:SetCapsule(DRAGONFLY_RADIUS * mult, 1)
+
+    inst.components.rideable.canride = false
+    inst.components.rideable:SetSaddleable(false)
+
+    inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE * mult)
+    inst.components.combat:SetRange(DRAGONFLY_ATTACK_RANGE * mult, DRAGONFLY_HIT_RANGE * mult)
+
+    local speed_mult = 0.8
+    inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED * speed_mult
+    inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED * speed_mult
+end
+
+local function TeenStage(inst)
+    local mult = 0.65
+
+    inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
+    inst.DynamicShadow:SetSize(SHADOW_SIZE_X * mult, SHADOW_SIZE_Y * mult)
+    inst.Physics:SetCapsule(DRAGONFLY_RADIUS * mult, 1)
+
+    inst.components.rideable.canride = false
+    inst.components.rideable:SetSaddleable(false)
+
+    inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE * mult)
+    inst.components.combat:SetRange(DRAGONFLY_ATTACK_RANGE * mult, DRAGONFLY_HIT_RANGE * mult)
+
+    local speed_mult = 0.9
+    inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED * speed_mult
+    inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED * speed_mult
+end
+
+local function AdultStage(inst)
+    inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
+    inst.DynamicShadow:SetSize(SHADOW_SIZE_X, SHADOW_SIZE_Y)
+    inst.Physics:SetCapsule(DRAGONFLY_RADIUS, 1)
+
+    inst.components.rideable.canride = true
+    inst.components.rideable:SetSaddleable(true)
+
+    inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE)
+    inst.components.combat:SetRange(DRAGONFLY_ATTACK_RANGE, DRAGONFLY_HIT_RANGE)
+
+    inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED
+    inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED
+end
+
+local dragonfly_stages =
+{
+    { name = "baby", time = GrowTime, fn = BabyStage },
+    { name = "teen", time = GrowTime, fn = TeenStage },
+    { name = "adult", fn = AdultStage },
+}
+
+
 local function fn()
     local inst = CreateEntity()
 
@@ -205,11 +297,10 @@ local function fn()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
-    inst.DynamicShadow:SetSize(6, 3.5)
+    inst.DynamicShadow:SetSize(SHADOW_SIZE_X, SHADOW_SIZE_Y)
     inst.Transform:SetSixFaced()
-    -- inst.Transform:SetScale(1.3, 1.3, 1.3)
 
-    MakeFlyingGiantCharacterPhysics(inst, 500, 1)
+    MakeFlyingGiantCharacterPhysics(inst, 500, DRAGONFLY_RADIUS)
 
     inst:AddTag("dragonfly_mount")
     inst:AddTag("flying")
@@ -218,7 +309,7 @@ local function fn()
     inst:AddTag("saddleable")
 
     inst.AnimState:SetBank("dragonfly_mount")
-    inst.AnimState:SetBuild("dragonfly_mount_fire_build")
+    inst.AnimState:SetBuild(basebuild)
     inst.AnimState:PlayAnimation("idle", true)
 
     inst.Light:Enable(false)
@@ -243,10 +334,10 @@ local function fn()
     local groundpounder = inst:AddComponent("groundpounder")
     local health = inst:AddComponent("health")
 
-    combat:SetDefaultDamage(TUNING.DRAGONFLY_DAMAGE)
+    combat:SetDefaultDamage(DRAGONFLY_DAMAGE)
     combat:SetAttackPeriod(2)
     combat.playerdamagepercent = 0.5
-    combat:SetRange(TUNING.DRAGONFLY_ATTACK_RANGE + 1, TUNING.DRAGONFLY_HIT_RANGE + 1)
+    combat:SetRange(DRAGONFLY_ATTACK_RANGE, DRAGONFLY_HIT_RANGE)
     combat:SetRetargetFunction(3, RetargetFn)
     combat:SetKeepTargetFunction(KeepTargetFn)
     combat.battlecryenabled = false
@@ -270,7 +361,7 @@ local function fn()
     groundpounder.groundpoundringfx = "firering_fx"
     table.insert(groundpounder.noTags, "player")
 
-    health:SetMaxHealth(TUNING.DRAGONFLY_HEALTH / 2)
+    health:SetMaxHealth(DRAGONFLY_HEALTH)
     health.nofadeout = true --Handled in death state instead
     health.fire_damage_scale = 0 -- Take no damage from fire
 
@@ -280,8 +371,8 @@ local function fn()
     inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { ignorewalls = true, allowocean = true }
-    inst.components.locomotor.walkspeed = 6
-    inst.components.locomotor.runspeed = 8
+    inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED
+    inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED
 
     inst:AddComponent("timer")
 
@@ -309,6 +400,10 @@ local function fn()
 
     inst:AddComponent("colourtweener")
 
+    inst:AddComponent("growable")
+    inst.components.growable.stages = dragonfly_stages
+    inst.components.growable:SetStage(3)
+
     local propagator = MakeLargePropagator(inst)
     propagator.decayrate = 0
 
@@ -316,6 +411,9 @@ local function fn()
     inst.ClearBuildOverrides = ClearBuildOverrides
     inst.SetDragonflyBellOwner = SetDragonflyBellOwner
     inst.UpdateDomestication = UpdateDomestication
+
+    inst.OnSave = OnSave
+    inst.OnLoad = OnLoad
 
     inst:ListenForEvent("despawn", OnDespawnRequest)
     inst:ListenForEvent("stopfollowing", ClearBellOwner)
