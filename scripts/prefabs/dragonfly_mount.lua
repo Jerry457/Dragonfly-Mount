@@ -1,8 +1,25 @@
 local assets =
 {
+    Asset("ANIM", "anim/dragonfly_mount_baby.zip"),
+    Asset("ANIM", "anim/dragonfly_mount_teen.zip"),
     Asset("ANIM", "anim/dragonfly_mount.zip"),
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
+}
+
+local AnimSet = {
+    baby = {
+        build = "dragonfly_mount_baby_build",
+        bank = "dragonfly_mount_baby"
+    },
+    teen = {
+        build = "dragonfly_mount_teen_build",
+        bank = "dragonfly_mount_teen"
+    },
+    adult = {
+        build = "dragonfly_mount_build",
+        bank = "dragonfly_mount"
+    }
 }
 
 local function PotentialRiderTest(inst, potential_rider)
@@ -23,22 +40,22 @@ local function PotentialRiderTest(inst, potential_rider)
     return (leader_owner == nil or leader_owner == potential_rider)
 end
 
--- local basebuild = "dragonfly_mount_fire_build"
-local basebuild = "dragonfly_mount_build"
+local override_build = AnimSet["adult"].build
+
 
 local function ApplyBuildOverrides(inst, animstate)
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:SetBank("wilsondragonfly")
-        animstate:AddOverrideBuild(basebuild)
+        animstate:AddOverrideBuild(override_build)
     else
-        animstate:SetBuild(basebuild)
+        animstate:SetBuild(override_build)
     end
 
 end
 
 local function ClearBuildOverrides(inst, animstate)
     if animstate ~= inst.AnimState then
-        animstate:ClearOverrideBuild(basebuild)
+        animstate:ClearOverrideBuild(override_build)
     end
 end
 
@@ -233,7 +250,10 @@ local DRAGONFLY_RUN_SPEED = 8
 local function BabyStage(inst)
     local mult = 0.35
 
-    inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
+    -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
+    inst.AnimState:SetBuild(AnimSet["baby"].build)
+    inst.AnimState:SetBank(AnimSet["baby"].bank)
+
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X * mult, SHADOW_SIZE_Y * mult)
     inst.Physics:SetCapsule(DRAGONFLY_RADIUS * mult, 1)
 
@@ -246,12 +266,20 @@ local function BabyStage(inst)
     local speed_mult = 0.8
     inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED * speed_mult
     inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED * speed_mult
+
+    local named = inst.components.named
+    if named and named.name == nil then
+        named:SetName(STRINGS.NAMES.DRAGONFLY_MOUNT_BABY, nil)
+    end
 end
 
 local function TeenStage(inst)
     local mult = 0.65
 
-    inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
+    -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
+    inst.AnimState:SetBuild(AnimSet["teen"].build)
+    inst.AnimState:SetBank(AnimSet["teen"].bank)
+
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X * mult, SHADOW_SIZE_Y * mult)
     inst.Physics:SetCapsule(DRAGONFLY_RADIUS * mult, 1)
 
@@ -264,10 +292,18 @@ local function TeenStage(inst)
     local speed_mult = 0.9
     inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED * speed_mult
     inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED * speed_mult
+
+    local named = inst.components.named
+    if named and named.name == STRINGS.NAMES.DRAGONFLY_MOUNT_BABY then
+        named:SetName(STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN, nil)
+    end
 end
 
 local function AdultStage(inst)
-    inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
+    -- inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
+    inst.AnimState:SetBuild(AnimSet["adult"].build)
+    inst.AnimState:SetBank(AnimSet["adult"].bank)
+
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X, SHADOW_SIZE_Y)
     inst.Physics:SetCapsule(DRAGONFLY_RADIUS, 1)
 
@@ -279,6 +315,11 @@ local function AdultStage(inst)
 
     inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED
     inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED
+
+    local named = inst.components.named
+    if named and named.name == STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN then
+        named:SetName(STRINGS.NAMES.DRAGONFLY_MOUNT, nil)
+    end
 end
 
 local dragonfly_stages =
@@ -288,6 +329,12 @@ local dragonfly_stages =
     { name = "adult", fn = AdultStage },
 }
 
+local function describe(inst)
+    local stage = inst.components.growable and inst.components.growable.stage
+    return (stage == 1 and "BABY")
+        or (stage == 2 and "TEEN")
+        or "ADULT"
+end
 
 local function fn()
     local inst = CreateEntity()
@@ -311,8 +358,8 @@ local function fn()
     --saddleable (from rideable component) added to pristine state for optimization
     inst:AddTag("saddleable")
 
-    inst.AnimState:SetBank("dragonfly_mount")
-    inst.AnimState:SetBuild(basebuild)
+    inst.AnimState:SetBuild(AnimSet["adult"].build)
+    inst.AnimState:SetBank(AnimSet["adult"].bank)
     inst.AnimState:PlayAnimation("idle", true)
 
     inst.Light:Enable(false)
@@ -332,6 +379,7 @@ local function fn()
     end
 
     inst:AddComponent("inspectable")
+    inst.components.inspectable.getstatus = describe
 
     local combat = inst:AddComponent("combat")
     local groundpounder = inst:AddComponent("groundpounder")

@@ -1,5 +1,12 @@
 STRINGS.NAMES.DRAGONFLY_MOUNT = "friendly dragonfly"
-STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = "Once a fearsome beast, now a trusty companion."
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
+    BABY = "It was once a fearsome beast, but now it's just a tiny, adorable creature.",
+    TEEN = "It's growing stronger, with its power emerging, yet still a bit immature.",
+    ADULT = "It has fully grown, majestic and reliable, an irreplaceable companion.",
+}
+
+STRINGS.NAMES.DRAGONFLY_MOUNT_BABY = "baby dragonfly"
+STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN = "teen dragonfly"
 
 STRINGS.NAMES.DRAGONFLY_BELL = "dragonfly bell"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_BELL = "Making friends is so easy."
@@ -30,7 +37,7 @@ STRINGS.DRAGONFLY_SKILLS = {
 }
 
 STRINGS.SIGNS.MENU.PROMPT_DRAGONFLY = "Name This Dragonfly"
-    
+
 STRINGS.NAMES.DRAGONFLY_BUDDY_NAME = "{buddy}'s Dragonfly",
 
 STRINGS.DRAGONFLYNAMING =

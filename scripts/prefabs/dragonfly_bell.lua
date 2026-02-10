@@ -178,7 +178,7 @@ end
 
 local function OnStopUsing(inst, dragonfly)
     dragonfly = dragonfly or inst:GetDragonfly()
-    
+
     -- if dragonfly ~= nil then
     --     dragonfly:UnSkin() -- Drop skins.
     -- end
@@ -208,18 +208,18 @@ local function OnStopUsing(inst, dragonfly)
 
     --     dragonfly:StartThread(function()
     --         local ticks = 0
-    
+
     --         while dragonfly:IsValid() and (ticks * ticktime < erodetime) do
     --             local n = ticks * ticktime / erodetime
-    
+
     --             local alpha = easing.inQuad(1 - n, 0, 1, 1)
     --             local color = 1 - (n * 5)
-    
+
     --             local color = math.min(multcolor, color)
 
     --             dragonfly.AnimState:SetErosionParams(n, .05, 1.0)
     --             dragonfly.AnimState:SetMultColour(color, color, color, math.max(.3, alpha))
-    
+
     --             ticks = ticks + 1
     --             Yield()
     --         end
@@ -236,7 +236,7 @@ local function OnSave(inst, data)
 
     if dragonfly ~= nil then
         -- local skinner_dragonfly = dragonfly.components.skinner_dragonfly
-    
+
         -- data.clothing = skinner_dragonfly ~= nil and skinner_dragonfly.clothing or nil
         -- local is_riding = dragonfly.components.rideable and dragonfly.components.rideable:IsBeingRidden()
         -- data.is_riding = is_riding
