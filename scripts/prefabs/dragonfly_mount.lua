@@ -201,6 +201,7 @@ local function OnRiderChanged(inst, data)
     inst.components.combat:SetTarget(nil)
 end
 
+-- only used for mount
 local sounds =
 {
     walk = "dontstarve/beefalo/walk",
@@ -222,14 +223,6 @@ end
 
 local function OnLoad(inst, data)
 
-end
-
-local function dummy() end
-
-local function print_stage(inst)
-    inst:DoTaskInTime(0,function()
-        print("Current stage: " .. tostring(inst.components.growable.stage))
-    end)
 end
 
 local function GrowTime()
@@ -271,6 +264,10 @@ local function BabyStage(inst)
     if named and named.name == nil then
         named:SetName(STRINGS.NAMES.DRAGONFLY_MOUNT_BABY, nil)
     end
+
+    inst:AddTag("baby")
+    inst:RemoveTag("teen")
+    inst:RemoveTag("adult")
 end
 
 local function TeenStage(inst)
@@ -297,6 +294,10 @@ local function TeenStage(inst)
     if named and named.name == STRINGS.NAMES.DRAGONFLY_MOUNT_BABY then
         named:SetName(STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN, nil)
     end
+
+    inst:AddTag("teen")
+    inst:RemoveTag("baby")
+    inst:RemoveTag("adult")
 end
 
 local function AdultStage(inst)
@@ -320,6 +321,10 @@ local function AdultStage(inst)
     if named and named.name == STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN then
         named:SetName(STRINGS.NAMES.DRAGONFLY_MOUNT, nil)
     end
+
+    inst:AddTag("adult")
+    inst:RemoveTag("baby")
+    inst:RemoveTag("teen")
 end
 
 local dragonfly_stages =
@@ -329,11 +334,53 @@ local dragonfly_stages =
     { name = "adult", fn = AdultStage },
 }
 
-local function describe(inst)
-    local stage = inst.components.growable and inst.components.growable.stage
-    return (stage == 1 and "BABY")
-        or (stage == 2 and "TEEN")
-        or "ADULT"
+-- client safe
+local function GetStage(inst)
+    if inst:HasTag("baby") then
+        return "BABY"
+    elseif inst:HasTag("teen") then
+        return "TEEN"
+    else
+        return "ADULT"
+    end
+end
+
+local SoundLookup = {
+    BABY = {
+        ["dontstarve_DLC001/creatures/dragonfly/angry"] = "dragonfly_mount/baby/angry",
+        ["dontstarve_DLC001/creatures/dragonfly/blink"] = "dragonfly_mount/baby/blink",
+        ["dontstarve_DLC001/creatures/dragonfly/death"] = "dragonfly_mount/baby/death",
+        ["dontstarve_DLC001/creatures/dragonfly/swipe"] = "dragonfly_mount/baby/swipe",
+    },
+    TEEN = {},
+    ADULT = {},
+}
+
+local function HookSoundEmitter(inst)
+    inst._SoundEmitter = inst.SoundEmitter
+    inst.SoundEmitter = {}
+    local meta = {
+        __index = function(t, k)
+            local fn = SoundEmitter[k]
+            if fn then
+                return function(tab, ...)
+                    return fn(inst._SoundEmitter, ...)
+                end
+            end
+        end
+    }
+    setmetatable(inst.SoundEmitter, meta)
+
+    local _PlaySound = inst.SoundEmitter.PlaySound
+    inst.SoundEmitter.PlaySound = function(self, path, ...)
+        local stage = GetStage(inst)
+        local sound = SoundLookup[stage][path]
+        if sound then
+            -- print("Replace", path, "  To  ", sound)
+            path = sound
+        end
+        return _PlaySound(self, path, ...)
+    end
 end
 
 local function fn()
@@ -347,12 +394,15 @@ local function fn()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
+    HookSoundEmitter(inst)
+
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X, SHADOW_SIZE_Y)
     inst.Transform:SetSixFaced()
 
     MakeFlyingGiantCharacterPhysics(inst, 500, DRAGONFLY_RADIUS)
 
     inst:AddTag("dragonfly_mount")
+    inst:AddTag("adult")
     inst:AddTag("flying")
 
     --saddleable (from rideable component) added to pristine state for optimization
@@ -379,7 +429,7 @@ local function fn()
     end
 
     inst:AddComponent("inspectable")
-    inst.components.inspectable.getstatus = describe
+    inst.components.inspectable.getstatus = GetStage
 
     local combat = inst:AddComponent("combat")
     local groundpounder = inst:AddComponent("groundpounder")
