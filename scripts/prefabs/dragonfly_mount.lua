@@ -348,7 +348,7 @@ end
 local SoundLookup = {
     BABY = {
         ["dontstarve_DLC001/creatures/dragonfly/angry"] = "dragonfly_mount/baby/angry",
-        ["dontstarve_DLC001/creatures/dragonfly/blink"] = "dragonfly_mount/baby/blink",
+        -- ["dontstarve_DLC001/creatures/dragonfly/blink"] = "dragonfly_mount/baby/blink",
         ["dontstarve_DLC001/creatures/dragonfly/death"] = "dragonfly_mount/baby/death",
         ["dontstarve_DLC001/creatures/dragonfly/swipe"] = "dragonfly_mount/baby/swipe",
     },

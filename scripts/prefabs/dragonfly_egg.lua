@@ -2,6 +2,7 @@ local assets =
 {
     Asset("ATLAS", "images/inventoryimages/dragonfly_egg.xml"),
     Asset("ANIM", "anim/dragonfly_egg.zip"),
+    Asset("ANIM", "anim/dragonfly_mount_baby.zip"),
 }
 
 local loot_cold =
@@ -13,25 +14,32 @@ local function PlaySound(inst, sound)
     inst.SoundEmitter:PlaySound(sound)
 end
 
-local function SpawnBell(inst)
+local function SpawnBabyDragonfly(inst)
     if inst.components.lootdropper == nil then
         inst:AddComponent("lootdropper")
     end
+
     local bell = inst.components.lootdropper:SpawnLootPrefab("dragonfly_bell")
-    if bell ~= nil then
-        bell:SpawnBabyDragonfly()
-    end
+
+    local baby = SpawnPrefab("dragonfly_mount")
+    baby.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    baby.components.growable:SetStage(1)
+    baby.components.growable:StartGrowing()
+
+    bell.components.useabletargeteditem:StartUsingItem(baby, nil)
+
     inst:Remove()
 end
 
 local function StartSpawn(inst)
     inst.components.inventoryitem.canbepickedup = false
+    inst.AnimState:AddOverrideBuild("dragonfly_mount_baby_build")
     inst.AnimState:PlayAnimation("hatch")
 
     inst:DoTaskInTime(34 * FRAMES, PlaySound, "dontstarve/creatures/together/lavae/egg_bounce")
     inst:DoTaskInTime(44 * FRAMES, PlaySound, "dontstarve/creatures/together/lavae/egg_hatch")
 
-    inst:ListenForEvent("animover", SpawnBell)
+    inst:ListenForEvent("animover", SpawnBabyDragonfly)
 end
 
 local function DropLoot(inst)
@@ -175,7 +183,8 @@ local function common_fn(anim)
     inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
 
     inst.OnLoadPostPass = OnLoadPostPass
-    inst.SpawnBell = SpawnBell
+    inst.StartSpawn = StartSpawn
+    inst.SpawnBabyDragonfly = SpawnBabyDragonfly
 
     return inst
 end
