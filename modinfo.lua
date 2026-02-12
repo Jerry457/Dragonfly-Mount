@@ -32,6 +32,7 @@ icon = "modicon.tex"
 
 -- The mod's tags displayed on the server list
 server_filter_tags = {  --服务器标签
+    "dragonfly_mount",
 }
 
 configuration_options = {} --mod设置
