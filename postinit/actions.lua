@@ -55,3 +55,9 @@ ACTIONS.SADDLE.pre_action_cb = function(act)
     TryDragonflyGotoPlayer(act)
     return SADDLE_pre_action_cb(act)
 end
+
+local GIVE_pre_action_cb = ACTIONS.GIVE.pre_action_cb or function() end
+ACTIONS.GIVE.pre_action_cb = function(act)
+    TryDragonflyGotoPlayer(act)
+    return GIVE_pre_action_cb(act)
+end
