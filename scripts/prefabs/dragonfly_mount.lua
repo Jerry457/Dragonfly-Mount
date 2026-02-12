@@ -391,6 +391,49 @@ local function HookSoundEmitter(inst)
     end
 end
 
+local function OnStarving(inst, dt)
+    -- apply no health damage; the stomach is just used by domesticatable
+    -- inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_STARVE_OBEDIENCE * dt)
+    --inst.components.domesticatable:DeltaDomestication(TUNING.BEEFALO_DOMESTICATION_STARVE_DOMESTICATION * dt)
+    print("OnStarving")
+end
+
+local function OnEat(inst, food, feeder)
+    -- local full = inst.components.hunger:GetPercent() >= 1
+    -- if not full then
+    --     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_FEED_OBEDIENCE)
+
+    --     inst.components.domesticatable:TryBecomeDomesticated()
+    -- else
+    --     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_OVERFEED_OBEDIENCE)
+    --     inst.components.domesticatable:DeltaDomestication(TUNING.BEEFALO_DOMESTICATION_OVERFEED_DOMESTICATION, feeder)
+    --     inst.components.domesticatable:DeltaTendency(TENDENCY.PUDGY, TUNING.BEEFALO_PUDGY_OVERFEED)
+    -- end
+    -- inst:PushEvent("eat", { full = full, food = food })
+    -- inst.components.knownlocations:RememberLocation("loiteranchor", inst:GetPosition())
+    print("OnEat")
+end
+
+local function ShouldAcceptItem(inst, item, giver, count)
+    return inst.components.eater:CanEat(item) and not inst.components.combat:HasTarget()
+end
+
+local function OnGetItemFromPlayer(inst, giver, item)
+    if inst.components.eater:CanEat(item) then
+        inst.components.eater:Eat(item, giver)
+
+        if item:IsValid() then -- HACK: For the case of tea which can be eaten multiple times
+            Launch2(item, inst, 1, 1, .1, .1)
+        end
+    end
+end
+
+local function OnRefuseItem(inst, giver, item)
+    -- inst.sg:GoToState("refuse")
+    print("OnRefuseItem")
+end
+
+
 local function fn()
     local inst = CreateEntity()
 
@@ -412,6 +455,9 @@ local function fn()
     inst:AddTag("dragonfly_mount")
     inst:AddTag("adult")
     inst:AddTag("flying")
+
+    --trader (from trader component) added to pristine state for optimization
+    inst:AddTag("trader")
 
     --saddleable (from rideable component) added to pristine state for optimization
     inst:AddTag("saddleable")
@@ -473,6 +519,23 @@ local function fn()
     health:SetMaxHealth(DRAGONFLY_HEALTH)
     health.nofadeout = true --Handled in death state instead
     health.fire_damage_scale = 0 -- Take no damage from fire
+
+    inst:AddComponent("hunger")
+    inst.components.hunger:SetMax(TUNING.BEEFALO_HUNGER)
+    inst.components.hunger:SetRate(TUNING.BEEFALO_HUNGER_RATE)
+    inst.components.hunger:SetPercent(0)
+    inst.components.hunger:SetOverrideStarveFn(OnStarving)
+
+    inst:AddComponent("eater")
+    inst.components.eater:SetDiet({ FOODTYPE.MEAT }, { FOODTYPE.MEAT })
+    inst.components.eater:SetAbsorptionModifiers(4,1,1)
+    inst.components.eater:SetOnEatFn(OnEat)
+
+    inst:AddComponent("trader")
+    inst.components.trader:SetAcceptTest(ShouldAcceptItem)
+    inst.components.trader.onaccept = OnGetItemFromPlayer
+    inst.components.trader.onrefuse = OnRefuseItem
+    inst.components.trader.deleteitemonaccept = false
 
     inst:AddComponent("lootdropper")
 
