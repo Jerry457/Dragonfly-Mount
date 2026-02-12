@@ -5,6 +5,7 @@ local assets =
     Asset("ANIM", "anim/dragonfly_mount.zip"),
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
+    Asset("ANIM", "anim/dragonfly_mount_grow.zip"),
 }
 
 local AnimSet = {
@@ -227,6 +228,7 @@ end
 
 local function GrowTime()
     return 5 * TUNING.TOTAL_DAY_TIME
+    -- return 5
 end
 
 local DRAGONFLY_SCALE = 1
@@ -240,7 +242,11 @@ local DRAGONFLY_HEALTH = 5500
 local DRAGONFLY_WALK_SPEED = 6
 local DRAGONFLY_RUN_SPEED = 8
 
-local function BabyStage(inst)
+local function Grow(inst)
+    inst.sg:GoToState("grow_pre")
+end
+
+local function SetBaby(inst)
     local mult = 0.35
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
@@ -270,7 +276,7 @@ local function BabyStage(inst)
     inst:RemoveTag("adult")
 end
 
-local function TeenStage(inst)
+local function SetTeen(inst)
     local mult = 0.65
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
@@ -300,7 +306,9 @@ local function TeenStage(inst)
     inst:RemoveTag("adult")
 end
 
-local function AdultStage(inst)
+local function SetAdult(inst)
+    inst.components.growable:StopGrowing()
+
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
     inst.AnimState:SetBuild(AnimSet["adult"].build)
     inst.AnimState:SetBank(AnimSet["adult"].bank)
@@ -329,9 +337,9 @@ end
 
 local dragonfly_stages =
 {
-    { name = "baby", time = GrowTime, fn = BabyStage },
-    { name = "teen", time = GrowTime, fn = TeenStage },
-    { name = "adult", fn = AdultStage },
+    { name = "baby", time = GrowTime, fn = SetBaby },
+    { name = "teen", time = GrowTime, fn = SetTeen, growfn = Grow },
+    { name = "adult", fn = SetAdult, growfn = Grow },
 }
 
 -- client safe
@@ -504,6 +512,7 @@ local function fn()
     inst:AddComponent("growable")
     inst.components.growable.stages = dragonfly_stages
     inst.components.growable:SetStage(3)
+    inst.components.growable.growonly = true -- 转而在SG里成长stage
 
     local propagator = MakeLargePropagator(inst)
     propagator.decayrate = 0
