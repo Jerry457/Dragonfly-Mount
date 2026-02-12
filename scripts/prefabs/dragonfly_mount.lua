@@ -1,10 +1,15 @@
 local assets =
 {
+    -- bank
     Asset("ANIM", "anim/dragonfly_mount_baby.zip"),
     Asset("ANIM", "anim/dragonfly_mount_teen.zip"),
     Asset("ANIM", "anim/dragonfly_mount.zip"),
+    -- build
+    Asset("ANIM", "anim/dragonfly_mount_baby_build.zip"),
+    Asset("ANIM", "anim/dragonfly_mount_teen_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
+    -- extra animation
     Asset("ANIM", "anim/dragonfly_mount_grow.zip"),
 }
 
@@ -353,6 +358,18 @@ local function GetStage(inst)
     end
 end
 
+local function GetStatus(inst)
+    local stage = GetStage(inst)
+    if stage == "ADULT" then
+        return stage
+    end
+    local hungry = inst.components.hunger:GetPercent() <= 0
+    if hungry then
+        return "HUNGRY"
+    end
+    return stage
+end
+
 local SoundLookup = {
     BABY = {
         ["dontstarve_DLC001/creatures/dragonfly/angry"] = "dragonfly_mount/baby/angry",
@@ -392,26 +409,17 @@ local function HookSoundEmitter(inst)
 end
 
 local function OnStarving(inst, dt)
-    -- apply no health damage; the stomach is just used by domesticatable
-    -- inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_STARVE_OBEDIENCE * dt)
-    --inst.components.domesticatable:DeltaDomestication(TUNING.BEEFALO_DOMESTICATION_STARVE_DOMESTICATION * dt)
-    print("OnStarving")
+    if GetStage(inst) ~= "ADULT" then
+        inst.components.growable:Pause("Hungry")
+    end
 end
 
 local function OnEat(inst, food, feeder)
-    -- local full = inst.components.hunger:GetPercent() >= 1
-    -- if not full then
-    --     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_FEED_OBEDIENCE)
-
-    --     inst.components.domesticatable:TryBecomeDomesticated()
-    -- else
-    --     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_OVERFEED_OBEDIENCE)
-    --     inst.components.domesticatable:DeltaDomestication(TUNING.BEEFALO_DOMESTICATION_OVERFEED_DOMESTICATION, feeder)
-    --     inst.components.domesticatable:DeltaTendency(TENDENCY.PUDGY, TUNING.BEEFALO_PUDGY_OVERFEED)
-    -- end
-    -- inst:PushEvent("eat", { full = full, food = food })
-    -- inst.components.knownlocations:RememberLocation("loiteranchor", inst:GetPosition())
-    print("OnEat")
+    local full = inst.components.hunger:GetPercent() >= 1
+    inst:PushEvent("eat", { full = full, food = food })
+    if GetStage(inst) ~= "ADULT" then
+        inst.components.growable:Resume("Hungry")
+    end
 end
 
 local function ShouldAcceptItem(inst, item, giver, count)
@@ -429,10 +437,8 @@ local function OnGetItemFromPlayer(inst, giver, item)
 end
 
 local function OnRefuseItem(inst, giver, item)
-    -- inst.sg:GoToState("refuse")
-    print("OnRefuseItem")
+    inst:PushEvent("refuse")
 end
-
 
 local function fn()
     local inst = CreateEntity()
@@ -483,7 +489,7 @@ local function fn()
     end
 
     inst:AddComponent("inspectable")
-    inst.components.inspectable.getstatus = GetStage
+    inst.components.inspectable.getstatus = GetStatus
 
     local combat = inst:AddComponent("combat")
     local groundpounder = inst:AddComponent("groundpounder")

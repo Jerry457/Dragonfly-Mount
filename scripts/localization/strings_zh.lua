@@ -3,6 +3,7 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
     BABY = "它曾是个可怕的巨兽，现在却是个小小的萌物。",
     TEEN = "它正在成长，力量逐渐显现，但仍带着几分稚气。",
     ADULT = "它已完全成长，威严而可靠，是无可替代的伙伴。",
+    HUNGRY = "它饿了，这样可长不大。",
 }
 
 STRINGS.NAMES.DRAGONFLY_MOUNT_BABY = "龙蝇宝宝"

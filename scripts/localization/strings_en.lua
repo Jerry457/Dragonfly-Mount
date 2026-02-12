@@ -3,6 +3,7 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
     BABY = "It was once a fearsome beast, but now it's just a tiny, adorable creature.",
     TEEN = "It's growing stronger, with its power emerging, yet still a bit immature.",
     ADULT = "It has fully grown, majestic and reliable, an irreplaceable companion.",
+    HUNGRY = "It's hungry, it won't grow like this.",
 }
 
 STRINGS.NAMES.DRAGONFLY_MOUNT_BABY = "baby dragonfly"

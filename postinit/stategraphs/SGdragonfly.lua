@@ -5,6 +5,7 @@ local AddStategraphActionHandler = AddStategraphActionHandler
 GLOBAL.setfenv(1, GLOBAL)
 
 AddStategraphPostInit("dragonfly", function(sg)
+    -- grow
     sg.states.grow_pre = State{
         name = "grow_pre",
         tags = {"busy"},
@@ -33,6 +34,60 @@ AddStategraphPostInit("dragonfly", function(sg)
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("grow_pst")
+        end,
+
+        events =
+        {
+			EventHandler("animover", function(inst)
+			    inst.sg:GoToState("idle")
+            end),
+        },
+    }
+
+    -- eat
+    sg.events.eat = EventHandler("eat", function(inst, data)
+        if not inst.components.health:IsDead()
+            and not inst.sg:HasStateTag("attack")
+            and not inst.sg:HasStateTag("busy") then
+            inst.sg:GoToState("eat", data)
+        end
+    end)
+
+    sg.states.eat = State{
+        name = "eat",
+        tags = {"busy"},
+
+        onenter = function(inst, data)
+            inst.components.locomotor:StopMoving()
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("eat")
+        end,
+
+        events =
+        {
+			EventHandler("animover", function(inst)
+			    inst.sg:GoToState("idle")
+            end),
+        },
+    }
+
+    -- refuse
+    sg.events.refuse = EventHandler("refuse", function(inst)
+        if not inst.components.health:IsDead()
+            and not inst.sg:HasStateTag("attack")
+            and not inst.sg:HasStateTag("busy") then
+            inst.sg:GoToState("refuse")
+        end
+    end)
+
+    sg.states.refuse = State{
+        name = "refuse",
+        tags = {"busy"},
+
+        onenter = function(inst, data)
+            inst.components.locomotor:StopMoving()
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("refuse")
         end,
 
         events =
