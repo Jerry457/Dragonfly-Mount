@@ -409,6 +409,7 @@ local function HookSoundEmitter(inst)
 end
 
 local function OnStarving(inst, dt)
+    inst.hungry_icon:Show()
     if GetStage(inst) ~= "ADULT" then
         inst.components.growable:Pause("Hungry")
     end
@@ -417,6 +418,7 @@ end
 local function OnEat(inst, food, feeder)
     local full = inst.components.hunger:GetPercent() >= 1
     inst:PushEvent("eat", { full = full, food = food })
+    inst.hungry_icon:Hide()
     if GetStage(inst) ~= "ADULT" then
         inst.components.growable:Resume("Hungry")
     end
@@ -487,6 +489,10 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.hungry_icon = SpawnPrefab("emoji_hungry")                              -- layer face
+    inst.hungry_icon.Follower:FollowSymbol(inst.GUID, "dragonfly_head", 0, 0, 0, true, false)
+    inst.hungry_icon:Hide()
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = GetStatus
