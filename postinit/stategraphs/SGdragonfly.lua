@@ -61,6 +61,7 @@ AddStategraphPostInit("dragonfly", function(sg)
             inst.components.locomotor:StopMoving()
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("eat")
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/vomit")
         end,
 
         events =
@@ -88,6 +89,34 @@ AddStategraphPostInit("dragonfly", function(sg)
             inst.components.locomotor:StopMoving()
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("refuse")
+        end,
+
+        events =
+        {
+			EventHandler("animover", function(inst)
+			    inst.sg:GoToState("idle")
+            end),
+        },
+    }
+
+    -- hungry
+    sg.events.hungry = EventHandler("hungry", function(inst)
+        if not inst.components.health:IsDead()
+            and not inst.sg:HasStateTag("attack")
+            and not inst.sg:HasStateTag("busy") then
+            inst.sg:GoToState("hungry")
+        end
+    end)
+
+    sg.states.hungry = State{
+        name = "hungry",
+        tags = {"busy"},
+
+        onenter = function(inst, data)
+            inst.components.locomotor:StopMoving()
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("hungry")
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
         end,
 
         events =

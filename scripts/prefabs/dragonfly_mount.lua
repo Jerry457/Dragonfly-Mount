@@ -413,6 +413,10 @@ local function OnStarving(inst, dt)
     if GetStage(inst) ~= "ADULT" then
         inst.components.growable:Pause("Hungry")
     end
+    if not inst.hungry_played then
+        inst.hungry_played = true
+        inst:PushEvent("hungry")
+    end
 end
 
 local function OnEat(inst, food, feeder)
@@ -422,6 +426,7 @@ local function OnEat(inst, food, feeder)
     if GetStage(inst) ~= "ADULT" then
         inst.components.growable:Resume("Hungry")
     end
+    inst.hungry_played = false
 end
 
 local function ShouldAcceptItem(inst, item, giver, count)
