@@ -408,25 +408,48 @@ local function HookSoundEmitter(inst)
     end
 end
 
-local function OnStarving(inst, dt)
+local function PerformHungry(inst)
+    if inst.hungry_performed then
+        return
+    end
+    inst.hungry_performed = true
+
+    inst:PushEvent("hungry")
+
     inst.hungry_icon:Show()
+    inst.clear_hungry_task = inst:DoTaskInTime(10, function()
+        inst.hungry_icon:Hide()
+        inst.clear_hungry_task = nil
+    end)
+
     if GetStage(inst) ~= "ADULT" then
-        inst.components.growable:Pause("Hungry")
+        inst.components.growable:Pause("hungry")
     end
-    if not inst.hungry_played then
-        inst.hungry_played = true
-        inst:PushEvent("hungry")
+end
+
+local function ClearHungry(inst)
+    inst.hungry_performed = false
+
+    inst.hungry_icon:Hide()
+    if inst.clear_hungry_task then
+        inst.clear_hungry_task:Cancel()
+        inst.clear_hungry_task = nil
     end
+
+    if GetStage(inst) ~= "ADULT" then
+        inst.components.growable:Resume("hungry")
+    end
+end
+
+local function OnStarving(inst, dt)
+    PerformHungry(inst)
 end
 
 local function OnEat(inst, food, feeder)
     local full = inst.components.hunger:GetPercent() >= 1
     inst:PushEvent("eat", { full = full, food = food })
-    inst.hungry_icon:Hide()
-    if GetStage(inst) ~= "ADULT" then
-        inst.components.growable:Resume("Hungry")
-    end
-    inst.hungry_played = false
+
+    ClearHungry(inst)
 end
 
 local function ShouldAcceptItem(inst, item, giver, count)

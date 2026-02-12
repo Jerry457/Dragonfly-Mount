@@ -89,6 +89,7 @@ AddStategraphPostInit("dragonfly", function(sg)
             inst.components.locomotor:StopMoving()
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("refuse")
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
         end,
 
         events =
