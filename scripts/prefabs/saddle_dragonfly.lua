@@ -67,7 +67,7 @@ local function MakeSaddle(name, data)
         inst.SetupSaddler = SetupSaddler
 
         inst:AddComponent("inspectable")
-        
+
         inst:AddComponent("inventoryitem")
         inst.components.inventoryitem.atlasname = "images/inventoryimages/"..name..".xml"
         inst.components.inventoryitem.imagename = name
@@ -102,6 +102,7 @@ local data = {
         foley = "war_foley",
         uses = TUNING.SADDLE_WAR_USES,
         speedmult = (TUNING.SADDLE_WAR_SPEEDMULT + TUNING.SADDLE_RACE_SPEEDMULT) / 2,
+        absorption = TUNING.SADDLE_SHADOW_ABSORPTION,
         floater = {"small", 0.1, 0.7},
         extra_tags = {"combatmount"},
     },

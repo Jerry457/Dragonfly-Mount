@@ -487,7 +487,7 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
     inst.entity:AddMiniMapEntity()
-    inst.entity:AddLight()
+    -- inst.entity:AddLight()
     inst.entity:AddNetwork()
 
     HookSoundEmitter(inst)
