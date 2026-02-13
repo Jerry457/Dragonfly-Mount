@@ -29,10 +29,19 @@ local AnimSet = {
 }
 
 local function PotentialRiderTest(inst, potential_rider)
+    local talker = potential_rider.components.talker
+
     if not inst.components.rideable:IsSaddled() then
-        local talker = potential_rider.components.talker
         if talker then
             talker:Say(GetString(potential_rider, "ANNOUNCE_DRAGONFLY_NEED_SADDLE"))
+        end
+        return false
+    end
+
+    local hungry = inst.components.hunger:GetPercent() <= 0
+    if hungry then
+        if talker then
+            talker:Say(GetString(potential_rider, "ANNOUNCE_DRAGONFLY_NEED_FOOD"))
         end
         return false
     end
