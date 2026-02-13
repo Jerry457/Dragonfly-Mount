@@ -75,7 +75,7 @@ AddPlayerPostInit(function(inst)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, true)
-            EnableLight(inst, true)
+            -- EnableLight(inst, true)
             inst:AddTag("fireimmune")
         end
     end)
@@ -85,7 +85,7 @@ AddPlayerPostInit(function(inst)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, false)
-            EnableLight(inst, false)
+            -- EnableLight(inst, false)
             inst:RemoveTag("fireimmune")
             -- 转而由龙蝇本身播放音效
             inst.SoundEmitter:KillSound("dragonfly_flying")
@@ -120,4 +120,3 @@ AddPlayerPostInit(function(inst)
         end
     end
 end)
-
