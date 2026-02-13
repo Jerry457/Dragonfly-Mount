@@ -568,6 +568,7 @@ local function fn()
     health:SetMaxHealth(DRAGONFLY_HEALTH)
     health.nofadeout = true --Handled in death state instead
     health.fire_damage_scale = 0 -- Take no damage from fire
+    health:StartRegen(TUNING.BEEFALO_HEALTH_REGEN, TUNING.BEEFALO_HEALTH_REGEN_PERIOD)
 
     inst:AddComponent("hunger")
     inst.components.hunger:SetMax(TUNING.BEEFALO_HUNGER)
