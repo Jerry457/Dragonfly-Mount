@@ -163,11 +163,11 @@ emotes = {
     "emote_feet": 1,
     "emote_flex": 2,
     "emote_hands": 2,
-    "emote_happycheer": 2,
+    # "emote_happycheer": 2,
     "emote_hat": 1,
     "emote_hat_tip": 1,
     "emote_impatient": 2,
-    "emote_jumpcheer": 1,
+    # "emote_jumpcheer": 1,
     "emote_laugh": 2,
     "emote_loop_carol": 2,
     # "emote_loop_toast": 1,
@@ -193,7 +193,7 @@ emotes = {
     # "emoteXL_waving2": 1,
     # "emoteXL_waving3": 1,
     # "emoteXL_waving4": 1,
-    "emoteXL_happycheer": 1,
+    # "emoteXL_happycheer": 1,
     "emote_fistshake": 1,
 }
 
