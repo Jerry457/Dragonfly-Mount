@@ -431,7 +431,7 @@ local function PerformHungry(inst)
         inst.clear_hungry_task = nil
     end)
 
-    if GetStage(inst) ~= "ADULT" then
+    if GetStage(inst) ~= "ADULT" and inst.components.growable:IsGrowing() then
         inst.components.growable:Pause("hungry")
     end
 end
@@ -573,7 +573,7 @@ local function fn()
     inst:AddComponent("hunger")
     inst.components.hunger:SetMax(TUNING.BEEFALO_HUNGER)
     inst.components.hunger:SetRate(TUNING.BEEFALO_HUNGER_RATE)
-    inst.components.hunger:SetPercent(0)
+    inst.components.hunger:SetPercent(0.05)
     inst.components.hunger:SetOverrideStarveFn(OnStarving)
 
     inst:AddComponent("eater")
