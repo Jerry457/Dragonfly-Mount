@@ -92,6 +92,7 @@ AddPlayerPostInit(function(inst)
             if not target.SoundEmitter:PlayingSound("flying") then
                 target.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
             end
+            target.Light:Enable(false)
         end
     end)
 
