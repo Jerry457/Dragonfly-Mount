@@ -24,6 +24,7 @@ local AnimSet = {
     },
     adult = {
         build = "dragonfly_mount_build",
+        fire_build = "dragonfly_mount_fire_build",
         bank = "dragonfly_mount"
     }
 }
@@ -55,10 +56,14 @@ local function PotentialRiderTest(inst, potential_rider)
     return (leader_owner == nil or leader_owner == potential_rider)
 end
 
-local override_build = AnimSet["adult"].build
-
-
 local function ApplyBuildOverrides(inst, animstate)
+    local override_build
+    if inst.enraged then
+        override_build = AnimSet["adult"].fire_build
+    else
+        override_build = AnimSet["adult"].build
+    end
+
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(override_build)
@@ -69,6 +74,13 @@ local function ApplyBuildOverrides(inst, animstate)
 end
 
 local function ClearBuildOverrides(inst, animstate)
+    local override_build
+    if inst.enraged then
+        override_build = AnimSet["adult"].fire_build
+    else
+        override_build = AnimSet["adult"].build
+    end
+
     if animstate ~= inst.AnimState then
         animstate:ClearOverrideBuild(override_build)
     end
@@ -474,6 +486,34 @@ local function OnRefuseItem(inst, giver, item)
     inst:PushEvent("refuse")
 end
 
+local function StartTransformFire(inst)
+    if GetStage(inst) ~= "ADULT" then
+        return
+    end
+    inst:PushEvent("transform", {
+        transformstate = "fire"
+    })
+end
+
+local function TransformFire(inst)
+    inst.AnimState:SetBuild(AnimSet["adult"].fire_build)
+    inst.enraged = true
+end
+
+local function StartTransformNormal(inst)
+    if GetStage(inst) ~= "ADULT" then
+        return
+    end
+    inst:PushEvent("transform", {
+        transformstate = "normal"
+    })
+end
+
+local function TransformNormal(inst)
+    inst.AnimState:SetBuild(AnimSet["adult"].build)
+    inst.enraged = false
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -632,6 +672,11 @@ local function fn()
     inst.ClearBuildOverrides = ClearBuildOverrides
     inst.SetDragonflyBellOwner = SetDragonflyBellOwner
     inst.UpdateDomestication = UpdateDomestication
+
+    inst.StartTransformFire = StartTransformFire
+    inst.StartTransformNormal = StartTransformNormal
+    inst.TransformFire = TransformFire
+    inst.TransformNormal = TransformNormal
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
