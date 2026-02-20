@@ -202,7 +202,7 @@ AddStategraphPostInit("wilson_client", function(sg)
             inst.AnimState:PushAnimation("dismount_lag", false)
 
             inst:PerformPreviewBufferedAction()
-            inst.sg:SetTimeout(TIMEOUT)
+            inst.sg:SetTimeout(2)
         end,
 
         onupdate = function(inst)
