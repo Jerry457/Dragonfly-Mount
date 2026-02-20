@@ -75,6 +75,25 @@ AddStategraphPostInit("wilson", function(sg)
         end
     end
 
+    -- 骑乘龙蝇时免疫击飞
+    local knockback_fn = sg.events.knockback.fn
+    sg.events.knockback.fn = function(inst, data)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return knockback_fn(inst, data)
+        end
+
+        local _GoToState = inst.sg.GoToState
+        inst.sg.GoToState = function(self, state, ...)
+            return _GoToState(self, "hit", ...)
+        end
+
+        knockback_fn(inst, data)
+
+        inst.sg.GoToState = _GoToState
+    end
+
     -- dragonfly_mount_run
     sg.states.dragonfly_mount_run_start = State{
         name = "dragonfly_mount_run_start",
