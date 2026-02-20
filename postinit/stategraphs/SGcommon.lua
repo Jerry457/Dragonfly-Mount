@@ -80,6 +80,19 @@ local function SGwilson(sg)
         end
         return castaoe_deststate(inst, action)
     end
+
+    -- 修改ACTIONS.PICKUP的目标状态
+    local pickup_deststate = sg.actionhandlers[ACTIONS.PICKUP].deststate
+    sg.actionhandlers[ACTIONS.PICKUP].deststate = function(inst, action)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if mount and mount:HasTag("dragonfly_mount") then
+            if action.target and action.target:HasTag("heavy") then
+                return "dragonfly_dodismountaction"
+            end
+        end
+        return pickup_deststate(inst, action)
+    end
 end
 
 AddStategraphPostInit("wilson", SGwilson)

@@ -189,4 +189,37 @@ AddStategraphPostInit("wilson_client", function(sg)
         {"doing", "busy"},
         {"dragonfly_taunt_pre", "dragonfly_taunt"}
     )
+
+    -- 修改骑乘时捡重物
+    sg.states.dragonfly_dodismountaction = State{
+        name = "dragonfly_dodismountaction",
+        tags = { "doing", "busy" },
+		server_states = { "dragonfly_dodismountaction" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("dismount")
+            inst.AnimState:PushAnimation("dismount_lag", false)
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+			if inst.sg:ServerStateMatches() then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.AnimState:PlayAnimation("heavy_mount")
+                inst.sg:GoToState("idle", true)
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.AnimState:PlayAnimation("heavy_mount")
+            inst.sg:GoToState("idle", true)
+        end,
+    }
 end)

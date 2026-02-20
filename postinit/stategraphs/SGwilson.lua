@@ -328,4 +328,40 @@ AddStategraphPostInit("wilson", function(sg)
             inst.components.playercontroller:Enable(true)
         end,
     })
+
+    -- 修改骑乘拾取重物
+    -- 等动画播放完再PerformBufferedAction
+    sg.states.dragonfly_dodismountaction = State{
+		--V2C: This is currently used ONLY for heavy pickup while mounted.
+        name = "dragonfly_dodismountaction",
+		tags = { "doing", "busy", "nomorph", "dismounting" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("dismount")
+        end,
+
+        timeline =
+        {
+            TimeEvent(15*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if not inst:PerformBufferedAction() then
+					inst.sg:GoToState("idle")
+				end
+            end),
+        },
+
+        onexit = function(inst)
+			--V2C: Exepcted to trigger PICKUP action => heavylifting_mount_start
+			if not inst.sg.statemem.keepmount then
+				inst.components.rider:ActualDismount()
+			end
+        end,
+    }
 end)
