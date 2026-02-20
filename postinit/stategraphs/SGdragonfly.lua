@@ -118,6 +118,13 @@ AddStategraphPostInit("dragonfly", function(sg)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hungry")
             inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+
+            inst.components.timer:StopTimer("play_hungry_cd")
+            inst.components.timer:StartTimer("play_hungry_cd", 30)
+
+            if inst.ShowHungryIcon then
+                inst:ShowHungryIcon()
+            end
         end,
 
         events =
@@ -127,4 +134,17 @@ AddStategraphPostInit("dragonfly", function(sg)
             end),
         },
     }
+
+    -- 饥饿时在idle中播放hungry
+    local idle_onenter = sg.states.idle.onenter
+    sg.states.idle.onenter = function(inst, ...)
+        if inst:HasTag("dragonfly_mount") then
+            local hungry = inst.components.hunger and inst.components.hunger:GetPercent() <= 0
+            if hungry and not inst.components.timer:TimerExists("play_hungry_cd") then
+                inst.sg:GoToState("hungry")
+                return
+            end
+        end
+        return idle_onenter(inst, ...)
+    end
 end)

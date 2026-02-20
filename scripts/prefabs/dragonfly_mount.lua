@@ -417,52 +417,47 @@ local function HookSoundEmitter(inst)
     end
 end
 
-local function PerformHungry(inst)
-    if inst.hungry_performed then
-        return
-    end
-    inst.hungry_performed = true
-
-    inst:PushEvent("hungry")
-
+local function ShowHungryIcon(inst)
     inst.hungry_icon:Show()
-    inst.clear_hungry_task = inst:DoTaskInTime(10, function()
+
+    if inst.clear_hungry_task then
+        inst.clear_hungry_task:Cancel()
+    end
+
+    inst.clear_hungry_task = inst:DoTaskInTime(8, function()
         inst.hungry_icon:Hide()
         inst.clear_hungry_task = nil
     end)
+end
 
+local function HideHungryIcon(inst)
+    inst.hungry_icon:Hide()
+
+    if inst.clear_hungry_task then
+        inst.clear_hungry_task:Cancel()
+        inst.clear_hungry_task = nil
+    end
+end
+
+local function OnStarving(inst, dt)
     if GetStage(inst) ~= "ADULT" and inst.components.growable:IsGrowing() then
         inst.components.growable:Pause("hungry")
     end
 end
 
-local function ClearHungry(inst)
-    inst.hungry_performed = false
-
-    inst.hungry_icon:Hide()
-    if inst.clear_hungry_task then
-        inst.clear_hungry_task:Cancel()
-        inst.clear_hungry_task = nil
-    end
+local function OnEat(inst, food, feeder)
+    inst:PushEvent("eat", { food = food })
 
     if GetStage(inst) ~= "ADULT" then
         inst.components.growable:Resume("hungry")
     end
-end
 
-local function OnStarving(inst, dt)
-    PerformHungry(inst)
-end
-
-local function OnEat(inst, food, feeder)
-    local full = inst.components.hunger:GetPercent() >= 1
-    inst:PushEvent("eat", { full = full, food = food })
-
-    ClearHungry(inst)
+    inst:HideHungryIcon()
 end
 
 local function ShouldAcceptItem(inst, item, giver, count)
-    return inst.components.eater:CanEat(item) and not inst.components.combat:HasTarget()
+    local full = inst.components.hunger:GetPercent() >= 0.95
+    return not full and inst.components.eater:CanEat(item) and not inst.components.combat:HasTarget()
 end
 
 local function OnGetItemFromPlayer(inst, giver, item)
@@ -490,7 +485,7 @@ local function fn()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
-    HookSoundEmitter(inst)
+    -- HookSoundEmitter(inst)
 
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X, SHADOW_SIZE_Y)
     inst.Transform:SetSixFaced()
@@ -530,6 +525,9 @@ local function fn()
     inst.hungry_icon = SpawnPrefab("emoji_hungry")                              -- layer face
     inst.hungry_icon.Follower:FollowSymbol(inst.GUID, "dragonfly_head", 0, 0, 0, true, false)
     inst.hungry_icon:Hide()
+
+    inst.ShowHungryIcon = ShowHungryIcon
+    inst.HideHungryIcon = HideHungryIcon
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = GetStatus
