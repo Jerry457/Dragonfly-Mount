@@ -108,4 +108,6 @@ local data = {
     },
 }
 
+table.insert(LootTables["dragonfly"], {'saddle_dragonfly_blueprint', 1.00})
+
 return MakeSaddle("saddle_dragonfly", data.war)

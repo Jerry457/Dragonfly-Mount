@@ -19,14 +19,14 @@ local function SpawnBabyDragonfly(inst)
         inst:AddComponent("lootdropper")
     end
 
-    local bell = inst.components.lootdropper:SpawnLootPrefab("dragonfly_bell")
+    -- local bell = inst.components.lootdropper:SpawnLootPrefab("dragonfly_bell")
 
     local baby = SpawnPrefab("dragonfly_mount")
     baby.Transform:SetPosition(inst.Transform:GetWorldPosition())
     baby.components.growable:SetStage(1)
     baby.components.growable:StartGrowing()
 
-    bell.components.useabletargeteditem:StartUsingItem(baby, nil)
+    -- bell.components.useabletargeteditem:StartUsingItem(baby, nil)
 
     inst:Remove()
 end
