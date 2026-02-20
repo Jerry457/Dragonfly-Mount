@@ -1,3 +1,5 @@
+local AddSimPostInit = AddSimPostInit
+
 GLOBAL.setfenv(1, GLOBAL)
 
 local loc = require("languages/loc")
@@ -32,3 +34,8 @@ if language == LANGUAGE.CHINESE_S or language == LANGUAGE.CHINESE_S_RAIL then
 else
     require("localization/strings_en")
 end
+
+AddSimPostInit(function()
+    STRINGS.ACTIONS.USEITEMON.DRAGONFLY_BELL = STRINGS.ACTIONS.USEITEMON.BEEF_BELL
+    STRINGS.ACTIONS.STOPUSINGITEM.DRAGONFLY_BELL = STRINGS.ACTIONS.STOPUSINGITEM.BEEF_BELL
+end)

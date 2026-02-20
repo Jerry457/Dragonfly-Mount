@@ -578,7 +578,7 @@ local function fn()
 
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODTYPE.MEAT, FOODTYPE.BURNT }, { FOODTYPE.BURNT })
-    inst.components.eater:SetAbsorptionModifiers(4,1,1)
+    inst.components.eater:SetAbsorptionModifiers(4,2,1)
     inst.components.eater:SetOnEatFn(OnEat)
 
     inst:AddComponent("trader")
