@@ -12,6 +12,7 @@ local files = {
     "postinit/screens/playerhud.lua",
     "postinit/components/combat.lua",
     "postinit/stategraphs/SGdragonfly.lua",
+    "postinit/widgets/statusdisplays.lua",
 }
 
 for _, file in ipairs(files) do

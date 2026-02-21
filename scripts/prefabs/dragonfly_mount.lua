@@ -226,6 +226,11 @@ end
 
 local function OnRiderChanged(inst, data)
     inst.components.combat:SetTarget(nil)
+
+    local newrider = data.newrider
+    inst.dragonfly_classified:SetTarget(newrider or inst)
+
+    inst._rider:set(newrider)
 end
 
 -- only used for mount
@@ -514,6 +519,30 @@ local function TransformNormal(inst)
     inst.enraged = false
 end
 
+local function AttachClassified(inst, classified)
+    inst.dragonfly_classified = classified
+    inst.ondetachclassified = function() inst:DetachClassified() end
+    inst:ListenForEvent("onremove", inst.ondetachclassified, classified)
+end
+
+local function DetachClassified(inst)
+    inst.dragonfly_classified = nil
+    inst.ondetachclassified = nil
+end
+
+local function OnRemoveEntity(inst)
+    if inst.dragonfly_classified ~= nil then
+        if TheWorld.ismastersim then
+            inst.dragonfly_classified:Remove()
+            inst.dragonfly_classified = nil
+        else
+            inst.dragonfly_classified._parent = nil
+            inst:RemoveEventCallback("onremove", inst.ondetachclassified, inst.dragonfly_classified)
+            inst:DetachClassified()
+        end
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -558,9 +587,22 @@ local function fn()
 
     SetupDragonflyMountSpell(inst)
 
+    inst.AttachClassified = AttachClassified
+    inst.DetachClassified = DetachClassified
+    inst.OnRemoveEntity = OnRemoveEntity
+
+    inst._rider = net_entity(inst.GUID, "dragonfly_mount.rider")
+
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst:AddComponent("dragonfly_anger")
+
+    inst.dragonfly_classified = SpawnPrefab("dragonfly_classified")
+    inst.dragonfly_classified.entity:SetParent(inst.entity)
+    inst.dragonfly_classified._parent = inst
+    inst.dragonfly_classified:SetTarget(inst)
 
     inst.hungry_icon = SpawnPrefab("emoji_hungry")                              -- layer face
     inst.hungry_icon.Follower:FollowSymbol(inst.GUID, "dragonfly_head", 0, 0, 0, true, false)

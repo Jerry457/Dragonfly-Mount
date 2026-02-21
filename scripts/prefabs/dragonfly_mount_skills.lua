@@ -109,6 +109,63 @@ local SKILL_DEFS =
         widget_scale = ICON_SCALE,
         sort_order = 1,
     },
+    TRANSFORM = {
+        label = STRINGS.DRAGONFLY_SKILLS.TRANSFORM,
+        onselect = function(inst)
+            -- 这里写双端内容
+            inst.spell_deststate = function(player, act) -- action对应的sg
+                if TheWorld.ismastersim then
+                    return "dragonfly_taunt_pre"
+                else
+                    return "dragonfly_taunt"
+                end
+            end
+
+            local spellbook = inst.components.spellbook
+            spellbook.closeonexecute = true
+            local aoetargeting = inst.components.aoetargeting
+
+            spellbook:SetSpellName(STRINGS.DRAGONFLY_SKILLS.TRANSFORM)
+
+            aoetargeting:SetRange(8)
+            aoetargeting:SetDeployRadius(0)
+
+            aoetargeting:SetShouldRepeatCastFn(nil)
+            aoetargeting:SetAlwaysValid(true)
+            aoetargeting:SetAllowWater(true)
+            aoetargeting:SetAllowRiding(true)
+
+            aoetargeting.reticule.validcolour = {1, 1, 0, 1}
+            aoetargeting.reticule.invalidcolour = {0.75, 0.15, 0, 1}
+            aoetargeting.reticule.reticuleprefab = "reticulemultitarget"
+            aoetargeting.reticule.pingprefab = "reticulemultitargetping"
+
+            aoetargeting.reticule.mousetargetfn = function(inst) return inst:GetPosition() end
+            aoetargeting.reticule.targetfn = nil
+            aoetargeting.reticule.updatepositionfn = CenterReticuleUpdatePosition
+
+            if TheWorld.ismastersim then
+                -- 这里写主机内容
+                inst.components.aoespell:SetSpellFn(TauntSpell)
+            end
+        end,
+        execute = StartAOETargeting, --按下按钮[客机]立刻执行onselect，并显示范围指示器，确定使用技能后[主机]执行onselect
+		bank = "spell_icons_dragonfly",
+		build = "spell_icons_dragonfly",
+		anims =
+		{
+			idle = { anim = "taunt" },
+			focus = { anim = "taunt_focus", loop = true },
+			down = { anim = "taunt_pressed" },
+			disabled = { anim = "taunt_disabled" },
+			cooldown = { anim = "taunt_cooldown" },
+		},
+		checkenabled = function(player) return true end,
+        checkcooldown = CheckCooldown("dragonfly_taunt"),
+        cooldowncolor = COOLDOWN_COLOR,
+        widget_scale = ICON_SCALE,
+        sort_order = 1,
+    },
 }
 
 local function GetUnlockedSkills(inst)

@@ -6,4 +6,5 @@ PrefabFiles = {
     "staff_fx_dragonfly",
     "dragonfly_egg",
     "emoji_hungry",
+    "dragonfly_classified",
 }
