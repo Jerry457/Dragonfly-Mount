@@ -407,7 +407,7 @@ AddStategraphPostInit("wilson", function(sg)
             inst.components.locomotor:Stop()
             inst.components.playercontroller:Enable(false)
             inst.components.playercontroller:RemotePausePrediction()
-            inst.AnimState:PlayAnimation("bellow")
+            inst.AnimState:PlayAnimation("fire_on")
             inst.sg:SetTimeout(3)
         end,
 

@@ -2,11 +2,27 @@ local Assets = Assets
 GLOBAL.setfenv(1, GLOBAL)
 local fx = require("fx")
 
-local fxs = {}
+local assets = {
+    Asset("ANIM", "anim/dragonfly_mount_fx.zip"),
+}
 
-for _, v in ipairs(fxs) do
+local data = {
+    {
+        name = "dragonfly_mount_attackfire_fx",
+        bank = "dragonfly_mount_fx",
+        build = "dragonfly_mount_fx",
+        anim = "atk",
+        bloom = true,
+        fourfaced = true,
+        fn = function(inst)
+        end,
+    },
+}
+
+for _, v in ipairs(data) do
     table.insert(fx, v)
-    if Settings.last_asset_set ~= nil then
-        table.insert(Assets, Asset("ANIM", "anim/" .. v.build .. ".zip"))
-    end
+end
+
+for _, v in ipairs(assets) do
+    table.insert(Assets, v)
 end

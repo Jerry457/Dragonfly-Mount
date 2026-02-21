@@ -65,7 +65,7 @@ local function SGwilson(sg)
                 return
             end
             if mount.enraged then
-                local attackfx = SpawnPrefab("attackfire_fx")
+                local attackfx = SpawnPrefab("dragonfly_mount_attackfire_fx")
                 attackfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 attackfx.Transform:SetRotation(inst.Transform:GetRotation())
             end
