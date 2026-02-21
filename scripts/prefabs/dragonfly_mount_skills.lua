@@ -135,11 +135,11 @@ local SKILL_DEFS =
 		build = "spell_icons_dragonfly",
 		anims =
 		{
-			idle = { anim = "taunt" },
-			focus = { anim = "taunt_focus", loop = true },
-			down = { anim = "taunt_pressed" },
-			disabled = { anim = "taunt_disabled" },
-			cooldown = { anim = "taunt_cooldown" },
+			idle = { anim = "transform" },
+			focus = { anim = "transform_focus", loop = true },
+			down = { anim = "transform_pressed" },
+			disabled = { anim = "transform_disabled" },
+			cooldown = { anim = "transform_cooldown" },
 		},
 		checkenabled = function(player)
 		    local mount = player.replica.rider and player.replica.rider:GetMount()
