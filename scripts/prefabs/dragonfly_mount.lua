@@ -231,6 +231,19 @@ local function OnRiderChanged(inst, data)
     inst.dragonfly_classified:SetTarget(newrider or inst)
 
     inst._rider:set(newrider)
+
+    if inst.transform_normal_task then
+        inst.transform_normal_task:Cancel()
+        inst.transform_normal_task = nil
+    end
+    if newrider == nil then
+        inst.transform_normal_task = inst:DoTaskInTime(5, function()
+            if not inst.components.rideable:IsBeingRidden() then
+                inst:StartTransformNormal()
+            end
+            inst.transform_normal_task = nil
+        end)
+    end
 end
 
 -- only used for mount
@@ -503,6 +516,12 @@ end
 local function TransformFire(inst)
     inst.AnimState:SetBuild(AnimSet["adult"].fire_build)
     inst.enraged = true
+    inst:AddTag("enraged")
+    if not inst:IsInLimbo() then
+        inst.Light:Enable(true)
+    end
+
+    inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE * 1.5)
 end
 
 local function StartTransformNormal(inst)
@@ -517,6 +536,10 @@ end
 local function TransformNormal(inst)
     inst.AnimState:SetBuild(AnimSet["adult"].build)
     inst.enraged = false
+    inst:RemoveTag("enraged")
+    inst.Light:Enable(false)
+
+    inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE)
 end
 
 local function AttachClassified(inst, classified)

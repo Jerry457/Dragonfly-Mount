@@ -70,12 +70,16 @@ AddPlayerPostInit(function(inst)
         return
     end
 
+    inst.EnableDragonflyLight = EnableLight
+
     -- 骑龙蝇
     inst:ListenForEvent("mounted", function(inst, data)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, true)
-            -- EnableLight(inst, true)
+            if target.enraged then
+                EnableLight(inst, true)
+            end
             inst:AddTag("fireimmune")
         end
     end)
@@ -85,14 +89,16 @@ AddPlayerPostInit(function(inst)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, false)
-            -- EnableLight(inst, false)
+            EnableLight(inst, false)
             inst:RemoveTag("fireimmune")
             -- 转而由龙蝇本身播放音效
             inst.SoundEmitter:KillSound("dragonfly_flying")
             if not target.SoundEmitter:PlayingSound("flying") then
                 target.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
             end
-            target.Light:Enable(false)
+            if not target.enraged then
+                target.Light:Enable(false)
+            end
         end
     end)
 

@@ -190,6 +190,13 @@ AddStategraphPostInit("wilson_client", function(sg)
         {"dragonfly_taunt_pre", "dragonfly_taunt"}
     )
 
+    -- transform技能
+    sg.states.dragonfly_transform_fire = ClientCommonState(
+        "dragonfly_transform_fire",
+        {"doing", "busy"},
+        {"dragonfly_transform_fire_pre", "dragonfly_transform_fire"}
+    )
+
     -- 修改骑乘时捡重物
     sg.states.dragonfly_dodismountaction = State{
         name = "dragonfly_dodismountaction",

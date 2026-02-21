@@ -45,11 +45,31 @@ local function SGwilson(sg)
         end
 
         if TheWorld.ismastersim then
+            local target = inst.bufferedaction and inst.bufferedaction.target
+            if mount.enraged and target and target.components.health and not target.components.health:IsDead() and target:IsValid() then
+                target.components.health:DoFireDamage(30, inst, true)
+            end
             inst:PerformBufferedAction()
         else
             inst:ClearBufferedAction()
         end
         inst.sg:RemoveStateTag("abouttoattack")
+    end))
+
+    -- 添加火龙蝇攻击特效
+    table.insert(attack_timeline, TimeEvent(FRAMES, function(inst)
+        if TheWorld.ismastersim then
+            local rider = inst.replica.rider
+            local mount = rider and rider:GetMount()
+            if not mount or not mount:HasTag("dragonfly_mount") then
+                return
+            end
+            if mount.enraged then
+                local attackfx = SpawnPrefab("attackfire_fx")
+                attackfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+                attackfx.Transform:SetRotation(inst.Transform:GetRotation())
+            end
+        end
     end))
 
     -- 添加骑乘龙蝇攻击音效

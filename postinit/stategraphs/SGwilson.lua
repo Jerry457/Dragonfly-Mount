@@ -383,4 +383,68 @@ AddStategraphPostInit("wilson", function(sg)
 			end
         end,
     }
+
+    -- transform技能
+    sg.states.dragonfly_transform_fire_pre = State({
+        name = "dragonfly_transform_fire_pre",
+        tags = {"doing", "busy", "nopredict", "nointerrupt"},
+
+        onenter = function(inst)
+            inst.sg:SetTimeout(1)
+            inst:PerformBufferedAction()
+        end,
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+    })
+
+    sg.states.dragonfly_transform_fire = State({
+        name = "dragonfly_transform_fire",
+        tags = {"doing", "busy", "nopredict", "nointerrupt"},
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.components.playercontroller:Enable(false)
+            inst.components.playercontroller:RemotePausePrediction()
+            inst.AnimState:PlayAnimation("bellow")
+            inst.sg:SetTimeout(3)
+        end,
+
+        timeline =
+        {
+            TimeEvent(2*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/blink") end),
+            TimeEvent(7*FRAMES, function(inst)
+                local rider = inst.replica.rider
+                local mount = rider and rider:GetMount()
+                if mount and mount:HasTag("dragonfly_mount") then
+                    inst.AnimState:ClearOverrideBuild(mount.AnimState:GetBuild())
+                    mount:TransformFire()
+                    inst.AnimState:AddOverrideBuild(mount.AnimState:GetBuild())
+                    if inst.EnableDragonflyLight then
+                        inst:EnableDragonflyLight(true)
+                    end
+                end
+                inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+                -- inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/firedup", "fireflying")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            inst.components.playercontroller:Enable(true)
+        end,
+    })
 end)

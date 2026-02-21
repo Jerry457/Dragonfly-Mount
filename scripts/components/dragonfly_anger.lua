@@ -24,7 +24,10 @@ nil,
 
 function DragonflyAnger:InitAngerSource()
     self.inst:ListenForEvent("attacked", function(inst, data)
-        self:Delta(TUNING.DRAGONFLY_ANGER_ONHIT_REGEN)
+        local attacker = data.attacker
+        if attacker == nil or not attacker:HasTag("player") then
+            self:Delta(TUNING.DRAGONFLY_ANGER_ONHIT_REGEN)
+        end
     end)
     self.inst:ListenForEvent("onhitother", function(inst, data)
         self:Delta(TUNING.DRAGONFLY_ANGER_ONATTACK_REGEN)

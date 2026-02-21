@@ -39,15 +39,36 @@ end
 
 local function TauntSpell(inst, player, pos)
     local spellbookcooldowns = player.components.spellbookcooldowns
-    if spellbookcooldowns then
-        if spellbookcooldowns:IsInCooldown("dragonfly_taunt") then
-            player.sg:GoToState("idle")
-            return false
+    if spellbookcooldowns and not spellbookcooldowns:IsInCooldown("dragonfly_taunt") then
+        local mount = player.replica.rider and player.replica.rider:GetMount()
+        if mount and mount.components.dragonfly_anger then
+            if mount.components.dragonfly_anger.current >= TUNING.DRAGONFLY_SKILL_COST.TAUNT then
+                spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
+                mount.components.dragonfly_anger:Delta(-TUNING.DRAGONFLY_SKILL_COST.TAUNT)
+                player.sg:GoToState("dragonfly_taunt")
+                return true
+            end
         end
-        spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
     end
-    player.sg:GoToState("dragonfly_taunt")
-    return true
+    player.sg:GoToState("idle")
+    return false
+end
+
+local function TransformSpell(inst, player, pos)
+    local spellbookcooldowns = player.components.spellbookcooldowns
+    if spellbookcooldowns and not spellbookcooldowns:IsInCooldown("dragonfly_transform") then
+        local mount = player.replica.rider and player.replica.rider:GetMount()
+        if mount and mount.components.dragonfly_anger then
+            if mount.components.dragonfly_anger.current >= TUNING.DRAGONFLY_SKILL_COST.TRANSFORM then
+                spellbookcooldowns:RestartSpellCooldown("dragonfly_transform", TUNING.DRAGONFLY_TRANSFORM_SKILL_COOLDOWN)
+                mount.components.dragonfly_anger:Delta(-TUNING.DRAGONFLY_SKILL_COST.TRANSFORM)
+                player.sg:GoToState("dragonfly_transform_fire")
+                return true
+            end
+        end
+    end
+    player.sg:GoToState("idle")
+    return false
 end
 
 local function SpellLabel(key)
@@ -75,9 +96,9 @@ local SKILL_DEFS =
             -- 这里写双端内容
             inst.spell_deststate = function(player, act) -- action对应的sg
                 if TheWorld.ismastersim then
-                    return "dragonfly_taunt_pre"
+                    return "dragonfly_transform_fire_pre"
                 else
-                    return "dragonfly_taunt"
+                    return "dragonfly_transform_fire"
                 end
             end
 
@@ -106,7 +127,7 @@ local SKILL_DEFS =
 
             if TheWorld.ismastersim then
                 -- 这里写主机内容
-                inst.components.aoespell:SetSpellFn(TauntSpell)
+                inst.components.aoespell:SetSpellFn(TransformSpell)
             end
         end,
         execute = StartAOETargeting, --按下按钮[客机]立刻执行onselect，并显示范围指示器，确定使用技能后[主机]执行onselect
@@ -120,7 +141,12 @@ local SKILL_DEFS =
 			disabled = { anim = "taunt_disabled" },
 			cooldown = { anim = "taunt_cooldown" },
 		},
-		checkenabled = CheckAngerVal(TUNING.DRAGONFLY_SKILL_COST.TRANSFORM),
+		checkenabled = function(player)
+		    local mount = player.replica.rider and player.replica.rider:GetMount()
+			if mount and not mount:HasTag("enraged") then
+			    return CheckAngerVal(TUNING.DRAGONFLY_SKILL_COST.TRANSFORM)(player)
+			end
+		end,
         checkcooldown = CheckCooldown("dragonfly_taunt"),
         cooldowncolor = COOLDOWN_COLOR,
         widget_scale = ICON_SCALE,
@@ -177,11 +203,16 @@ local SKILL_DEFS =
 			disabled = { anim = "taunt_disabled" },
 			cooldown = { anim = "taunt_cooldown" },
 		},
-		checkenabled = CheckAngerVal(TUNING.DRAGONFLY_SKILL_COST.TAUNT),
+		checkenabled = function(player)
+		    local mount = player.replica.rider and player.replica.rider:GetMount()
+			if mount and mount:HasTag("enraged") then
+			    return CheckAngerVal(TUNING.DRAGONFLY_SKILL_COST.TAUNT)(player)
+			end
+		end,
         checkcooldown = CheckCooldown("dragonfly_taunt"),
         cooldowncolor = COOLDOWN_COLOR,
         widget_scale = ICON_SCALE,
-        sort_order = 1,
+        sort_order = 2,
     },
 }
 
