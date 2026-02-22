@@ -37,7 +37,7 @@ end
 local function OnEntityReplicated(inst)
     inst._parent = inst.entity:GetParent()
     if inst._parent == nil then
-        print("Unable to initialize classified data for lucy")
+        print("Unable to initialize classified data for dragonfly_mount")
     else
         inst._parent:AttachClassified(inst)
     end
