@@ -31,6 +31,8 @@ end
 
 if language == LANGUAGE.CHINESE_S or language == LANGUAGE.CHINESE_S_RAIL then
     require("localization/strings_zh")
+elseif language == LANGUAGE.POLISH then
+    require("localization/strings_pl")
 else
     require("localization/strings_en")
 end
