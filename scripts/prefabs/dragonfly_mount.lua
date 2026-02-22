@@ -306,6 +306,8 @@ local function SetBaby(inst)
     inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE * mult)
     inst.components.combat:SetRange(DRAGONFLY_ATTACK_RANGE * mult, DRAGONFLY_HIT_RANGE * mult)
 
+    inst.components.health:SetMaxHealth(DRAGONFLY_HEALTH * mult)
+
     local speed_mult = 0.8
     inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED * speed_mult
     inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED * speed_mult
@@ -336,6 +338,8 @@ local function SetTeen(inst)
     inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE * mult)
     inst.components.combat:SetRange(DRAGONFLY_ATTACK_RANGE * mult, DRAGONFLY_HIT_RANGE * mult)
 
+    inst.components.health:SetMaxHealth(DRAGONFLY_HEALTH * mult)
+
     local speed_mult = 0.9
     inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED * speed_mult
     inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED * speed_mult
@@ -365,6 +369,8 @@ local function SetAdult(inst)
 
     inst.components.combat:SetDefaultDamage(DRAGONFLY_DAMAGE)
     inst.components.combat:SetRange(DRAGONFLY_ATTACK_RANGE, DRAGONFLY_HIT_RANGE)
+
+    inst.components.health:SetMaxHealth(DRAGONFLY_HEALTH)
 
     inst.components.locomotor.walkspeed = DRAGONFLY_WALK_SPEED
     inst.components.locomotor.runspeed = DRAGONFLY_RUN_SPEED
