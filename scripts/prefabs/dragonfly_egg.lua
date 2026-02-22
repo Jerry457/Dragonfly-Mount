@@ -233,7 +233,7 @@ end
 RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg.tex")
 RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg_cracked.tex")
 
-table.insert(LootTables["dragonfly"], {'dragonfly_egg', 1.00})
+-- table.insert(LootTables["dragonfly"], {'dragonfly_egg', 1.00})
 
 return Prefab("dragonfly_egg", default, assets),
     Prefab("dragonfly_egg_cracked", cracked, assets)

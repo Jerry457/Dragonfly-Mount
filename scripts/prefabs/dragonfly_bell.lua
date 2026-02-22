@@ -430,6 +430,6 @@ RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_bell.xml", "dragonf
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-table.insert(LootTables["dragonfly"], {'dragonfly_bell_blueprint', 1.00})
+-- table.insert(LootTables["dragonfly"], {'dragonfly_bell_blueprint', 1.00})
 
 return Prefab("dragonfly_bell", RegularFn, assets)
