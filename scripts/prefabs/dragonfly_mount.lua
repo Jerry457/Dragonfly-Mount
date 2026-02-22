@@ -290,8 +290,25 @@ local function Grow(inst)
     inst.sg:GoToState("grow_pre")
 end
 
+local LootSet = {
+    baby = {
+        "meat","meat",
+        "dragon_scales",
+    },
+    teen = {
+        "meat","meat","meat","meat",
+        "dragon_scales","dragon_scales",
+    },
+    adult = {
+        "meat","meat","meat","meat","meat","meat",
+        "dragon_scales","dragon_scales","dragon_scales",
+    }
+}
+
 local function SetBaby(inst)
     local mult = 0.35
+
+    inst.components.lootdropper:SetLoot(LootSet["baby"])
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
     inst.AnimState:SetBuild(AnimSet["baby"].build)
@@ -325,6 +342,8 @@ end
 local function SetTeen(inst)
     local mult = 0.65
 
+    inst.components.lootdropper:SetLoot(LootSet["teen"])
+
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
     inst.AnimState:SetBuild(AnimSet["teen"].build)
     inst.AnimState:SetBank(AnimSet["teen"].bank)
@@ -356,6 +375,8 @@ end
 
 local function SetAdult(inst)
     inst.components.growable:StopGrowing()
+
+    inst.components.lootdropper:SetLoot(LootSet["adult"])
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
     inst.AnimState:SetBuild(AnimSet["adult"].build)
