@@ -124,6 +124,15 @@ end
 
 local OVERSIZED_PHYSICS_RADIUS = 0.1
 
+local function onhammered(inst, worker)
+    DropLoot(inst)
+    inst:Remove()
+end
+
+local function onhit(inst, worker)
+    -- inst.AnimState:PlayAnimation("hit")
+end
+
 local function common_fn(anim)
     local inst = CreateEntity()
 
@@ -141,14 +150,17 @@ local function common_fn(anim)
     inst.AnimState:SetBank("dragonfly_egg")
     inst.AnimState:PlayAnimation(anim)
 
-    -- local scale = 1
-    -- inst.Transform:SetScale(scale, scale, scale)
-
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    inst.components.workable:SetWorkLeft(4)
+    inst.components.workable:SetOnFinishCallback(onhammered)
+    inst.components.workable:SetOnWorkCallback(onhit)
 
     inst:AddComponent("heavyobstaclephysics")
     inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
