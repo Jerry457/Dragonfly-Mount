@@ -7,6 +7,6 @@ AddPrefabPostInit("dragonfly", function(inst)
     if inst.components.lootdropper then
         inst.components.lootdropper:AddChanceLoot('dragonfly_bell_blueprint', 1.00)
         inst.components.lootdropper:AddChanceLoot('saddle_dragonfly_blueprint', 1.00)
-        inst.components.lootdropper:AddChanceLoot('dragonfly_egg', 1.00)
+        inst.components.lootdropper:AddChanceLoot('dragonfly_mount_egg', 1.00)
     end
 end)

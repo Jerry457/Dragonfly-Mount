@@ -1,7 +1,7 @@
 local assets =
 {
-    Asset("ATLAS", "images/inventoryimages/dragonfly_egg.xml"),
-    Asset("ANIM", "anim/dragonfly_egg.zip"),
+    Asset("ATLAS", "images/inventoryimages/dragonfly_mount_egg.xml"),
+    Asset("ANIM", "anim/dragonfly_mount_egg.zip"),
     Asset("ANIM", "anim/dragonfly_mount_baby.zip"),
 }
 
@@ -77,7 +77,7 @@ end
 
 local function OnHatchState(inst, state)
     if state == "crack" then
-        local cracked = SpawnPrefab("dragonfly_egg_cracked")
+        local cracked = SpawnPrefab("dragonfly_mount_egg_cracked")
         cracked.Transform:SetPosition(inst.Transform:GetWorldPosition())
         cracked.AnimState:PlayAnimation("crack")
         inst:DoTaskInTime(14 * FRAMES, PlaySound, "dontstarve/creatures/together/lavae/egg_crack")
@@ -146,8 +146,8 @@ local function common_fn(anim)
     MakeHeavyObstaclePhysics(inst, OVERSIZED_PHYSICS_RADIUS)
     inst:SetPhysicsRadiusOverride(OVERSIZED_PHYSICS_RADIUS)
 
-    inst.AnimState:SetBuild("dragonfly_egg")
-    inst.AnimState:SetBank("dragonfly_egg")
+    inst.AnimState:SetBuild("dragonfly_mount_egg")
+    inst.AnimState:SetBank("dragonfly_mount_egg")
     inst.AnimState:PlayAnimation(anim)
 
     inst.entity:SetPristine()
@@ -166,8 +166,8 @@ local function common_fn(anim)
     inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
 
     inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/dragonfly_egg.xml"
-    inst.components.inventoryitem.imagename = "dragonfly_egg"
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/dragonfly_mount_egg.xml"
+    inst.components.inventoryitem.imagename = "dragonfly_mount_egg"
     inst.components.inventoryitem.cangoincontainer = false
     inst.components.inventoryitem:SetSinks(true)
 
@@ -178,7 +178,7 @@ local function common_fn(anim)
     inst.components.equippable.walkspeedmult = TUNING.HEAVY_SPEED_MULT
 
     inst:AddComponent("symbolswapdata")
-    inst.components.symbolswapdata:SetData("dragonfly_egg", "swap_body")
+    inst.components.symbolswapdata:SetData("dragonfly_mount_egg", "swap_body")
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = describe
@@ -218,8 +218,8 @@ local function cracked()
         return inst
     end
 
-    inst.components.inventoryitem.imagename = "dragonfly_egg_cracked"
-    inst.components.symbolswapdata:SetData("dragonfly_egg", "swap_body_cracked")
+    inst.components.inventoryitem.imagename = "dragonfly_mount_egg_cracked"
+    inst.components.symbolswapdata:SetData("dragonfly_mount_egg", "swap_body_cracked")
 
     inst.components.hatchable.state = "comfy"
 
@@ -230,10 +230,8 @@ local function cracked()
     return inst
 end
 
-RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_egg.xml", "dragonfly_egg_cracked.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_mount_egg.xml", "dragonfly_mount_egg.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_mount_egg.xml", "dragonfly_mount_egg_cracked.tex")
 
--- table.insert(LootTables["dragonfly"], {'dragonfly_egg', 1.00})
-
-return Prefab("dragonfly_egg", default, assets),
-    Prefab("dragonfly_egg_cracked", cracked, assets)
+return Prefab("dragonfly_mount_egg", default, assets),
+    Prefab("dragonfly_mount_egg_cracked", cracked, assets)
