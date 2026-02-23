@@ -103,27 +103,41 @@ AddPlayerPostInit(function(inst)
     end)
 
     -- 加载时检查位置自动骑乘
-    local _OnSave = inst.OnSave or function() end
-    inst.OnSave = function(inst, data, ...)
-        _OnSave(inst, data, ...)
-        local x, y, z = inst.Transform:GetWorldPosition()
-        local over_water = TheWorld.Map:IsInvalidTileAtPoint(x, y, z) or TheWorld.Map:IsOceanTileAtPoint(x, y, z)
-        data.over_water = over_water
+    local function HookTeleport(inst, fn)
+        local new_fn = function(...)
+            local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
+            if not TheWorld.Map:IsPassableAtPoint(my_x, my_y, my_z) then
+                local dragonfly_bell = inst.components.inventory and inst.components.inventory:FindItem(function(item)
+                    return (item:HasTag("dragonfly_bell") and item:GetDragonfly() ~= nil)
+                end)
+                local dragonfly = dragonfly_bell and dragonfly_bell:GetDragonfly()
+                if dragonfly and inst.components.rider then
+                    -- 避免因饥饿无法骑乘
+                    dragonfly.components.hunger:DoDelta(1)
+                    inst.components.rider:Mount(dragonfly, true)
+                    inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "dragonfly_flying")
+                    return
+                end
+            end
+            return fn(...)
+        end
+        return new_fn
     end
 
     local _OnLoad = inst.OnLoad or function() end
     inst.OnLoad = function(inst, data, ...)
-        _OnLoad(inst, data, ...)
-        -- 在被传送到出生点之前触发
-        if data and data.over_water then
-            local dragonfly_bell = inst.components.inventory and inst.components.inventory:FindItem(function(item)
-                return item:HasTag("dragonfly_bell")
-            end)
-            local dragonfly = dragonfly_bell and dragonfly_bell:GetDragonfly()
-            if dragonfly and inst.components.rider then
-                inst.components.rider:Mount(dragonfly, true)
-                inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "dragonfly_flying")
+        local _DoTaskInTime = inst.DoTaskInTime
+        inst.DoTaskInTime = function(inst, time, fn, ...)
+            local info = debug.getinfo(fn, "S")
+            local source = info and info.source or ""
+            if string.find(source, "player_common.lua", 1, true) then
+                fn = HookTeleport(inst, fn)
             end
+            return _DoTaskInTime(inst, time, fn, ...)
         end
+
+        _OnLoad(inst, data, ...)
+
+        inst.DoTaskInTime = _DoTaskInTime
     end
 end)
