@@ -35,4 +35,54 @@ server_filter_tags = {  --服务器标签
     "dragonfly_mount",
 }
 
-configuration_options = {} --mod设置
+local ZH = (locale == "zh" or locale == "zhr")
+
+local function AddSetting(name, label, hover, default, options)
+    return {
+        name = name,
+        label = label,
+        hover = hover,
+        options = options,
+        default = default
+    }
+end
+
+local mult_options = {
+    {description="0.25",data=0.25},
+    {description="0.5",data=0.5},
+    {description="0.75",data=0.75},
+    {description="1.0",data=1.0},
+    {description="1.25",data=1.25},
+    {description="1.5",data=1.5},
+    {description="1.75",data=1.75},
+    {description="2.0",data=2.0},
+}
+
+local grow_days = {
+    {description="1",data=1},
+    {description="3",data=3},
+    {description="5",data=5},
+    {description="7",data=7},
+    {description="9",data=9},
+    {description="11",data=11},
+}
+
+configuration_options = {
+    ZH and
+    AddSetting("damage_mult", "龙蝇伤害系数", "龙蝇伤害系数", 1.0, mult_options)
+    or
+    AddSetting("damage_mult", "Damage Mult", "Damage Mult", 1.0, mult_options)
+    ,
+
+    ZH and
+    AddSetting("health_mult", "龙蝇生命系数", "龙蝇生命系数", 1.0, mult_options)
+    or
+    AddSetting("health_mult", "Health Mult", "Health Mult", 1.0, mult_options)
+    ,
+
+    ZH and
+    AddSetting("grow_days", "成长天数", "成长天数", 5, grow_days)
+    or
+    AddSetting("grow_days", "Grow Days", "Grow Days", 5, grow_days)
+    ,
+}
