@@ -64,7 +64,9 @@ local function SGwilson(sg)
             if not mount or not mount:HasTag("dragonfly_mount") then
                 return
             end
-            if mount.enraged then
+
+            local weapon = inst.components.combat and inst.components.combat:GetWeapon()
+            if weapon == nil and mount.enraged then
                 local attackfx = SpawnPrefab("dragonfly_mount_attackfire_fx")
                 attackfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 attackfx.Transform:SetRotation(inst.Transform:GetRotation())

@@ -35,7 +35,10 @@ function DragonflyAnger:InitAngerSource()
 
     self.rider = nil
     self._OnRiderHitOther = function(rider, data)
-        self:Delta(TUNING.DRAGONFLY_ANGER_ONRIDERATTACK_REGEN)
+        local weapon = data and data.weapon
+        if weapon == nil then
+            self:Delta(TUNING.DRAGONFLY_ANGER_ONRIDERATTACK_REGEN)
+        end
     end
     self.inst:ListenForEvent("riderchanged", function(inst, data)
         local newrider = data.newrider
