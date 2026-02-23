@@ -144,6 +144,25 @@ AddStategraphPostInit("wilson", function(sg)
 
         onupdate = function(inst)
             inst.components.locomotor:RunForward()
+            if inst.components.drownable and inst.components.drownable:IsOverWater() then
+                inst.sg.statemem.spawn_wake = (inst.sg.statemem.spawn_wake and inst.sg.statemem.spawn_wake + 1) or 0
+                if inst.sg.statemem.spawn_wake < 5 then
+                    return
+                end
+
+                local wake = SpawnPrefab("boat_water_fx")
+                local rotation = inst.Transform:GetRotation() - 180
+                local reverse_rot = rotation - math.floor(rotation/360)*360
+
+                local theta = reverse_rot * DEGREES
+                local pos = inst:GetPosition() + (Vector3(math.cos(theta), 0, -math.sin(theta)) * 0.5)
+
+                wake.Transform:SetPosition(pos:Get())
+                wake.Transform:SetRotation(reverse_rot - 90)
+                wake.AnimState:SetScale(0.7, 0.7)
+
+                inst.sg.statemem.spawn_wake = 0
+            end
         end,
 
         timeline =
