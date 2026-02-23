@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "0QsAq0E4l1g",
+	"hash": "HVkL8TgtXjk",
 	"spine": "4.2.43",
 	"x": -296.68,
 	"y": -100.8,
@@ -492,6 +492,53 @@
 		"drawOrder": [
 			{},
 			{ "time": 1.4333 }
+		]
+	},
+	"dragonfly_egg/hit": {
+		"slots": {
+			"layer 9-1": {
+				"attachment": [
+					{ "name": "egg01-0" }
+				]
+			}
+		},
+		"bones": {
+			"root": {
+				"translate": [
+					{}
+				]
+			},
+			"layer 9-1": {
+				"translate": [
+					{ "x": 80.8, "y": 45.02 }
+				]
+			},
+			"layer 9": {
+				"rotate": [
+					{
+						"curve": [ 0.01, 11.55, 0.047, 12.33 ]
+					},
+					{
+						"time": 0.0667,
+						"value": 12.33,
+						"curve": [ 0.093, 12.33, 0.107, -10.07 ]
+					},
+					{
+						"time": 0.1333,
+						"value": -10.07,
+						"curve": [ 0.153, -10.07, 0.18, 12.33 ]
+					},
+					{
+						"time": 0.2,
+						"value": 12.33,
+						"curve": [ 0.256, 12.33, 0.34, -18.69 ]
+					},
+					{ "time": 0.3667 }
+				]
+			}
+		},
+		"drawOrder": [
+			{}
 		]
 	},
 	"dragonfly_egg/idle": {
