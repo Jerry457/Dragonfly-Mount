@@ -15,6 +15,11 @@ local function PlaySound(inst, sound)
 end
 
 local function SpawnBabyDragonfly(inst)
+    if inst.dragonfly_spawned then
+        return
+    end
+    inst.dragonfly_spawned = true
+
     if inst.components.lootdropper == nil then
         inst:AddComponent("lootdropper")
     end
