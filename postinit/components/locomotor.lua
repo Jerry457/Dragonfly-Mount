@@ -18,3 +18,17 @@ function Locomotor:ScanForPlatform(...)
 
     return can_hop, hop_x, hop_z, target_platform, blocked
 end
+
+local _OnUpdate = Locomotor.OnUpdate
+function Locomotor:OnUpdate(...)
+    local rider = self.inst.replica and self.inst.replica.rider
+    local mount = rider and rider:GetMount()
+    if mount == nil or not mount:HasTag("dragonfly_mount") then
+        return _OnUpdate(self, ...)
+    end
+
+    local _enablegroundspeedmultiplier = self.enablegroundspeedmultiplier
+    self.enablegroundspeedmultiplier = false
+    _OnUpdate(self, ...)
+    self.enablegroundspeedmultiplier = _enablegroundspeedmultiplier
+end

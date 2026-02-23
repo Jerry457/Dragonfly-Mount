@@ -21,10 +21,10 @@ local function EnableFlyingMode(inst, enable)
             )
             inst.Physics:Teleport(inst.Transform:GetWorldPosition())
         end
-        inst.components.locomotor:EnableGroundSpeedMultiplier(false)
+        -- inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     elseif inst.components.drownable.enabled == false then
         inst.components.drownable.enabled = true
-        inst.components.locomotor:EnableGroundSpeedMultiplier(true)
+        -- inst.components.locomotor:EnableGroundSpeedMultiplier(true)
         if not inst:HasTag("playerghost") then
             inst.Physics:SetCollisionMask(
                 COLLISION.WORLD,
