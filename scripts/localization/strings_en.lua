@@ -1,4 +1,4 @@
-STRINGS.NAMES.DRAGONFLY_MOUNT = "friendly dragonfly"
+STRINGS.NAMES.DRAGONFLY_MOUNT = "Friendly dragonfly"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
     BABY = "It was once a fearsome beast, but now it's just a tiny, adorable creature.",
     TEEN = "It's growing stronger, with its power emerging, yet still a bit immature.",
@@ -6,21 +6,21 @@ STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
     HUNGRY = "It's hungry, it won't grow like this.",
 }
 
-STRINGS.NAMES.DRAGONFLY_MOUNT_BABY = "baby dragonfly"
-STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN = "teen dragonfly"
+STRINGS.NAMES.DRAGONFLY_MOUNT_BABY = "Baby dragonfly"
+STRINGS.NAMES.DRAGONFLY_MOUNT_TEEN = "Teen dragonfly"
 
-STRINGS.NAMES.DRAGONFLY_BELL = "dragonfly bell"
+STRINGS.NAMES.DRAGONFLY_BELL = "Dragonfly bell"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_BELL = "Making friends is so easy."
 STRINGS.RECIPE_DESC.DRAGONFLY_BELL = "A bell to call your friendly dragonfly."
 
-STRINGS.NAMES.SADDLE_DRAGONFLY = "dragonfly saddle"
+STRINGS.NAMES.SADDLE_DRAGONFLY = "Dragonfly saddle"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.SADDLE_DRAGONFLY = "A saddle fit for a dragonfly."
 STRINGS.RECIPE_DESC.SADDLE_DRAGONFLY = "Saddle up your dragonfly friend."
 
-STRINGS.NAMES.DRAGONFLY_MOUNT_EGG = "dragonfly egg"
+STRINGS.NAMES.DRAGONFLY_MOUNT_EGG = "Dragonfly egg"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT_EGG = "A mysterious dragonfly egg."
 
-STRINGS.NAMES.DRAGONFLY_MOUNT_EGG_CRACKED = "dragonfly egg"
+STRINGS.NAMES.DRAGONFLY_MOUNT_EGG_CRACKED = "Dragonfly egg"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT_EGG_CRACKED = {
     COLD = "It's getting cold, and I don't like it.",
 	COMFY = "I can almost imagine it smiling.",
