@@ -43,7 +43,7 @@ local function TauntSpell(inst, player, pos)
         local mount = player.replica.rider and player.replica.rider:GetMount()
         if mount and mount.components.dragonfly_anger then
             if mount.components.dragonfly_anger.current >= TUNING.DRAGONFLY_SKILL_COST.TAUNT then
-                spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
+                -- spellbookcooldowns:RestartSpellCooldown("dragonfly_taunt", TUNING.DRAGONFLY_TAUNT_SKILL_COOLDOWN)
                 mount.components.dragonfly_anger:Delta(-TUNING.DRAGONFLY_SKILL_COST.TAUNT)
                 player.sg:GoToState("dragonfly_taunt")
                 return true
