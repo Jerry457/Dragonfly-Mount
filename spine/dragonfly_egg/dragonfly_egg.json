@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "HVkL8TgtXjk",
+	"hash": "MqhNBS69OTo",
 	"spine": "4.2.43",
 	"x": -296.68,
 	"y": -100.8,
@@ -498,7 +498,7 @@
 		"slots": {
 			"layer 9-1": {
 				"attachment": [
-					{ "name": "egg01-0" }
+					{ "name": "egg01-1" }
 				]
 			}
 		},
