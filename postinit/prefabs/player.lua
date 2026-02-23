@@ -99,6 +99,9 @@ AddPlayerPostInit(function(inst)
             if not target.enraged then
                 target.Light:Enable(false)
             end
+            -- 避免因碰撞抽搐
+            local x, _, z = inst.Transform:GetWorldPosition()
+            inst.Physics:Teleport(x+0.1, 0, z)
         end
     end)
 
