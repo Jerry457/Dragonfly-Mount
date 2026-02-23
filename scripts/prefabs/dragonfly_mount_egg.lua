@@ -125,12 +125,15 @@ end
 local OVERSIZED_PHYSICS_RADIUS = 0.1
 
 local function onhammered(inst, worker)
-    DropLoot(inst)
-    inst:Remove()
+    inst.AnimState:PlayAnimation("hit_break")
+    inst:ListenForEvent("animover", function()
+        DropLoot(inst)
+        inst:Remove()
+    end)
 end
 
 local function onhit(inst, worker)
-    -- inst.AnimState:PlayAnimation("hit")
+    inst.AnimState:PlayAnimation("hit")
 end
 
 local function common_fn(anim)
@@ -155,12 +158,6 @@ local function common_fn(anim)
     if not TheWorld.ismastersim then
         return inst
     end
-
-    inst:AddComponent("workable")
-    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    inst.components.workable:SetWorkLeft(4)
-    inst.components.workable:SetOnFinishCallback(onhammered)
-    inst.components.workable:SetOnWorkCallback(onhit)
 
     inst:AddComponent("heavyobstaclephysics")
     inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
@@ -207,6 +204,12 @@ local function default()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    inst.components.workable:SetWorkLeft(4)
+    inst.components.workable:SetOnFinishCallback(onhammered)
+    inst.components.workable:SetOnWorkCallback(onhit)
 
     return inst
 end
