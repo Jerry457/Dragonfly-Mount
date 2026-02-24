@@ -466,4 +466,17 @@ AddStategraphPostInit("wilson", function(sg)
             inst.components.playercontroller:Enable(true)
         end,
     })
+
+    -- 骑暴怒龙蝇被电击后恢复光源
+    local electrocute_onexit = sg.states.electrocute.onexit
+    sg.states.electrocute.onexit = function(inst)
+        electrocute_onexit(inst)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if mount and mount:HasTag("dragonfly_mount") and mount.enraged then
+            if inst.EnableDragonflyLight then
+                inst:EnableDragonflyLight(true)
+            end
+        end
+    end
 end)
