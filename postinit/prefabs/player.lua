@@ -14,8 +14,8 @@ local function EnableFlyingMode(inst, enable)
             inst.components.drownable.enabled = false
             inst.Physics:SetCollisionMask(
                 COLLISION.GROUND,
-                COLLISION.OBSTACLES,
-                COLLISION.SMALLOBSTACLES,
+                -- COLLISION.OBSTACLES,
+                -- COLLISION.SMALLOBSTACLES,
                 COLLISION.CHARACTERS,
                 COLLISION.GIANTS
             )
