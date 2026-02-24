@@ -3,28 +3,24 @@ local AddPlayerPostInit = AddPlayerPostInit
 GLOBAL.setfenv(1, GLOBAL)
 
 local function EnableFlyingMode(inst, enable)
-    --V2C: drownable HACKS, using "false" to override "nil" load behaviour
-    --     Please refactor drownable to use POST LOAD timing.
-    if inst.components.drownable == nil then
-        return
-    end
-
     if enable then
-        if inst.components.drownable.enabled ~= false then
+        inst:AddTag("flying")
+        if inst.components.drownable then
             inst.components.drownable.enabled = false
-            inst.Physics:SetCollisionMask(
-                COLLISION.GROUND,
-                -- COLLISION.OBSTACLES,
-                -- COLLISION.SMALLOBSTACLES,
-                COLLISION.CHARACTERS,
-                COLLISION.GIANTS
-            )
-            inst.Physics:Teleport(inst.Transform:GetWorldPosition())
         end
-        -- inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-    elseif inst.components.drownable.enabled == false then
-        inst.components.drownable.enabled = true
-        -- inst.components.locomotor:EnableGroundSpeedMultiplier(true)
+        inst.Physics:SetCollisionMask(
+            COLLISION.GROUND,
+            -- COLLISION.OBSTACLES,
+            -- COLLISION.SMALLOBSTACLES,
+            COLLISION.CHARACTERS,
+            COLLISION.GIANTS
+        )
+        inst.Physics:Teleport(inst.Transform:GetWorldPosition())
+    else
+        inst:RemoveTag("flying")
+        if inst.components.drownable then
+            inst.components.drownable.enabled = true
+        end
         if not inst:HasTag("playerghost") then
             inst.Physics:SetCollisionMask(
                 COLLISION.WORLD,
@@ -36,7 +32,6 @@ local function EnableFlyingMode(inst, enable)
             inst.Physics:Teleport(inst.Transform:GetWorldPosition())
         end
     end
-
 end
 
 local function EnableLight(inst, enable)
