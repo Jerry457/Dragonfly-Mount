@@ -47,7 +47,7 @@ local function PotentialRiderTest(inst, potential_rider)
         return false
     end
 
-    local leader = inst.components.follower:GetLeader()
+    local leader = inst.components.follower.leader -- Getting leader directly special case.
     if leader == nil or leader.components.inventoryitem == nil then
         return true
     end
