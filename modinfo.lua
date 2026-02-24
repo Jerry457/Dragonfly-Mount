@@ -1,6 +1,6 @@
 -- This information tells other players more about the mod
 name = "Move!!Dragonfly"  ---mod名字
-version = "26.02.24" -- mod版本 上传mod需要两次的版本不一样
+version = "26.02.24.1" -- mod版本 上传mod需要两次的版本不一样
 description =""  --mod描述
 author = "WIGFRID、Guto、jerry457" --作者
 
