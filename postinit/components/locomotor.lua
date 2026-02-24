@@ -19,16 +19,26 @@ function Locomotor:ScanForPlatform(...)
     return can_hop, hop_x, hop_z, target_platform, blocked
 end
 
-local _OnUpdate = Locomotor.OnUpdate
-function Locomotor:OnUpdate(...)
+-- 禁用任何地面速度效益
+local _TempGroundSpeedMultiplier = Locomotor.TempGroundSpeedMultiplier
+function Locomotor:TempGroundSpeedMultiplier(...)
     local rider = self.inst.replica and self.inst.replica.rider
     local mount = rider and rider:GetMount()
     if mount == nil or not mount:HasTag("dragonfly_mount") then
-        return _OnUpdate(self, ...)
+        return _TempGroundSpeedMultiplier(self, ...)
     end
 
-    local _enablegroundspeedmultiplier = self.enablegroundspeedmultiplier
-    self.enablegroundspeedmultiplier = false
-    _OnUpdate(self, ...)
-    self.enablegroundspeedmultiplier = _enablegroundspeedmultiplier
+    return 1
+end
+
+local _UpdateGroundSpeedMultiplier = Locomotor.UpdateGroundSpeedMultiplier
+function Locomotor:UpdateGroundSpeedMultiplier(...)
+    local rider = self.inst.replica and self.inst.replica.rider
+    local mount = rider and rider:GetMount()
+    if mount == nil or not mount:HasTag("dragonfly_mount") then
+        return _UpdateGroundSpeedMultiplier(self, ...)
+    end
+
+    self.wasoncreep = false
+    self.groundspeedmultiplier = 1
 end
