@@ -620,6 +620,7 @@ local function fn()
     MakeFlyingGiantCharacterPhysics(inst, 500, DRAGONFLY_RADIUS)
 
     inst:AddTag("dragonfly_mount")
+    inst:AddTag("ignorewalkableplatformdrowning")
     inst:AddTag("adult")
     inst:AddTag("flying")
 
