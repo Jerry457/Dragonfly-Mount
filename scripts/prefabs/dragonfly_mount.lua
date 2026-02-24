@@ -593,6 +593,14 @@ local function OnRemoveEntity(inst)
     end
 end
 
+local function ShouldSleep(inst)
+    return false
+end
+
+local function ShouldWake(inst)
+    return true
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -759,6 +767,17 @@ local function fn()
 
     local propagator = MakeLargePropagator(inst)
     propagator.decayrate = 0
+
+    local freezable = MakeHugeFreezableCharacter(inst)
+    freezable:SetResistance(TUNING.DRAGONFLY_FREEZE_THRESHOLD)
+    freezable.damagetobreak = TUNING.DRAGONFLY_FREEZE_RESIST
+    freezable.diminishingreturns = true
+
+    local sleeper = inst:AddComponent("sleeper")
+    sleeper:SetResistance(4)
+    sleeper:SetSleepTest(ShouldSleep)
+    sleeper:SetWakeTest(ShouldWake)
+    sleeper.diminishingreturns = true
 
     inst.ApplyBuildOverrides = ApplyBuildOverrides
     inst.ClearBuildOverrides = ClearBuildOverrides
