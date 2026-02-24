@@ -8,6 +8,7 @@ local assets =
 local loot_cold =
 {
     "rocks",
+    "dragon_scales",
 }
 
 local function PlaySound(inst, sound)
