@@ -8,6 +8,8 @@ global("DragonflyMountHookOnRemoteLeftClick")
 AddSimPostInit(function()
     if HUA_SKILL_CONSTANTS and HUA_SKILL_CONSTANTS.SKILL_RETICULE_INDEX then
         local notified = false
+        local default = HUA_SKILL_CONSTANTS.SKILL_RETICULE_INDEX["mk_yzqt"] or {}
+
         local mt = {
             __index = function(t, k)
                 if not notified then
@@ -17,7 +19,7 @@ AddSimPostInit(function()
                         TheNet:Announce("[Dragonfly Mount]神话书说模组与轮盘施法不兼容！")
                     end
                 end
-                return HUA_SKILL_CONSTANTS.SKILL_RETICULE_INDEX["mk_yzqt"]
+                return default
             end
         }
         setmetatable(HUA_SKILL_CONSTANTS.SKILL_RETICULE_INDEX, mt)
