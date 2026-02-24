@@ -244,6 +244,12 @@ local function OnRiderChanged(inst, data)
             inst.transform_normal_task = nil
         end)
     end
+
+    if inst.components.health:IsDead() then
+        if inst.sg.currentstate.name ~= "death" then
+            inst.sg:GoToState("death")
+        end
+    end
 end
 
 -- only used for mount
@@ -601,6 +607,17 @@ local function ShouldWake(inst)
     return true
 end
 
+local function OnDeath(inst, data)
+    inst:AddTag("NOCLICK")
+    inst.persists = false
+
+    if inst.components.rideable:IsBeingRidden() then
+        --SG won't handle "death" event while we're being ridden
+        --SG is forced into death state AFTER dismounting (OnRiderChanged)
+        inst.components.rideable:Buck(true)
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -708,6 +725,7 @@ local function fn()
     health.nofadeout = true --Handled in death state instead
     health.fire_damage_scale = 0 -- Take no damage from fire
     health:StartRegen(TUNING.BEEFALO_HEALTH_REGEN, TUNING.BEEFALO_HEALTH_REGEN_PERIOD)
+    inst:ListenForEvent("death", OnDeath) -- need to handle this due to being mountable
 
     inst:AddComponent("hunger")
     inst.components.hunger:SetMax(TUNING.BEEFALO_HUNGER)

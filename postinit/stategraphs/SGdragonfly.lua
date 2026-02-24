@@ -147,4 +147,12 @@ AddStategraphPostInit("dragonfly", function(sg)
         end
         return idle_onenter(inst, ...)
     end
+
+    -- 死亡时如果被骑乘，稍后处理
+    local death_fn = sg.events.death.fn
+    sg.events.death.fn = function(inst, ...)
+        if not inst:HasTag("dragonfly_mount") or inst.components.rideable == nil or not inst.components.rideable:IsBeingRidden() then
+            return death_fn(inst, ...)
+        end
+    end
 end)
