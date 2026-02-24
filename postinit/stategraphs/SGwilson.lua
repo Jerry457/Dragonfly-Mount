@@ -479,4 +479,46 @@ AddStategraphPostInit("wilson", function(sg)
             end
         end
     end
+
+    -- 修改summon_abigail花特效
+    local summon_abigail_timeline = sg.states.summon_abigail.timeline
+    for i, time_event in ipairs(summon_abigail_timeline) do
+        if time_event.time > 50.5 * FRAMES and time_event.time < 51.5 * FRAMES then
+            local time_event_fn = time_event.fn
+            time_event.fn = function(inst, ...)
+                local rider = inst.replica.rider
+                local mount = rider and rider:GetMount()
+                if mount == nil or not mount:HasTag("dragonfly_mount") then
+                    return time_event_fn(inst, ...)
+                end
+                time_event_fn(inst, ...)
+                if inst.sg.statemem.fx then
+                    inst.sg.statemem.fx.AnimState:SetBank("wendy_dragonfly_flower_fx")
+                    inst.sg.statemem.fx.AnimState:PlayAnimation("wendy_mount_dragonfly_channel_flower")
+                end
+            end
+            break
+        end
+    end
+
+    -- 修改unsummon_abigail花特效
+    local unsummon_abigail_timeline = sg.states.unsummon_abigail.timeline
+    for i, time_event in ipairs(unsummon_abigail_timeline) do
+        if time_event.time > 24.5 * FRAMES and time_event.time < 25.5 * FRAMES then
+            local time_event_fn = time_event.fn
+            time_event.fn = function(inst, ...)
+                local rider = inst.replica.rider
+                local mount = rider and rider:GetMount()
+                if mount == nil or not mount:HasTag("dragonfly_mount") then
+                    return time_event_fn(inst, ...)
+                end
+                time_event_fn(inst, ...)
+                if inst.sg.statemem.fx then
+                    inst.sg.statemem.fx.AnimState:SetBank("wendy_dragonfly_flower_fx")
+                    inst.sg.statemem.fx.AnimState:PlayAnimation("wendy_mount_dragonfly_recall_flower")
+                end
+            end
+            break
+        end
+    end
 end)

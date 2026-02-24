@@ -7,4 +7,5 @@ PrefabFiles = {
     "dragonfly_mount_egg",
     "emoji_hungry",
     "dragonfly_classified",
+    -- "wendy_dragonfly_flower_fx",
 }
