@@ -416,17 +416,17 @@ def post_init_shock(wilson_animation):
 
 derive_from_dragonfly_template(
     wilson_animation_name="shock",
-    dragonfly_animation_name="idle",
+    dragonfly_animation_name="shock_loop",
     output_animation_name="shock",
     pre_init_wilson_animation=pre_init_shock,
     post_init_wilson_animation=post_init_shock,
-    animation_length_align=2,
+    dragonfly_animation_repeat=3,
+    animation_length_align=1,
 )
 
 derive_from_dragonfly_template(
     wilson_animation_name="shock_pst",
-    dragonfly_animation_name="idle",
+    dragonfly_animation_name="shock_pst",
     output_animation_name="shock_pst",
-    dragonfly_animation_range=[-2, None],
-    animation_length_align=2,
+    animation_length_align=1,
 )
