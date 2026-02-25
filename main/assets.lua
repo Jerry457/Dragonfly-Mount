@@ -2,6 +2,7 @@ modimport("main/prefab_files")
 
 Assets = {
     Asset("ANIM", "anim/wilsondragonfly.zip"),
+    Asset("ANIM", "anim/wilsondragonfly_teleport.zip"),
     Asset("ANIM", "anim/spell_icons_dragonfly.zip"),
     Asset("ANIM", "anim/status_dragonfly_anger.zip"),
     Asset("ANIM", "anim/wendy_dragonfly_flower_fx.zip"),
