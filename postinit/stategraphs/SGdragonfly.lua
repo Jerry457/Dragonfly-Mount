@@ -156,7 +156,7 @@ AddStategraphPostInit("dragonfly", function(sg)
         end
     end
 
-    -- 被铃铛召回
+    -- 被铃铛收回
     sg.states.bell_recall = State{
         name = "bell_recall",
 		tags = { "flight", "busy", "nosleep", "nofreeze", "noelectrocute" },
@@ -169,6 +169,7 @@ AddStategraphPostInit("dragonfly", function(sg)
 
             inst.AnimState:PlayAnimation("walk_angry_pre")
             inst.AnimState:PushAnimation("walk_angry", true)
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
 
             local x, y, z = 0.5019684438612,12.5216834009827,2.7178563798944
             inst.Physics:SetMotorVel(x, y, z)
@@ -177,7 +178,7 @@ AddStategraphPostInit("dragonfly", function(sg)
         timeline =
         {
             TimeEvent(2.5, function(inst)
-                inst:DoDespawn()
+                inst:DoRecallDespawn()
             end)
         },
 
@@ -185,10 +186,43 @@ AddStategraphPostInit("dragonfly", function(sg)
             --You somehow left this state?! (not supposed to happen).
             --Cancel the action to avoid getting stuck.
             print("Dragonfly left the bell_recall state! How could this happen?!")
-            inst:RestartBrain()
-            inst.components.health:SetInvincible(false)
-            inst:ClearBufferedAction()
+            inst:DoRecallDespawn()
+        end,
+    }
+
+    -- 被铃铛召唤
+    sg.states.bell_summon = State{
+        name = "bell_summon",
+		tags = { "flight", "busy", "noelectrocute" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("walk_angry", true)
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+            inst.Physics:SetMotorVelOverride(0, -11, 0)
+            inst.DynamicShadow:Enable(false)
+        end,
+
+        onupdate = function(inst)
+            inst.Physics:SetMotorVelOverride(0, -15, 0)
+            local x, y, z = inst.Transform:GetWorldPosition()
+            if y < 0.5 or inst:IsAsleep() then
+                inst.Physics:ClearMotorVelOverride()
+                inst.Physics:Stop()
+                inst.Physics:Teleport(x, 0, z)
+                inst.sg:GoToState("idle", { softstop = true })
+            end
+        end,
+
+        onexit = function(inst)
+            local x, y, z = inst.Transform:GetWorldPosition()
+            if y > 0 then
+                inst.Transform:SetPosition(x, 0, z)
+            end
+            inst.Physics:ClearMotorVelOverride()
             inst.DynamicShadow:Enable(true)
+
+            inst.components.timer:StopTimer("play_hungry_cd")
+            inst.components.timer:StartTimer("play_hungry_cd", 5)
         end,
     }
 end)

@@ -33,26 +33,28 @@ end
 
 -- 召回龙蝇
 AddAction(
-    {instant = true, invalid_hold_action = true, priority = 5},
+    {invalid_hold_action = true, priority = 5},
     "RECALL_DRAGONFLY",
     STRINGS.ACTIONS.RECALL_DRAGONFLY,
     function(act)
         if act.doer and act.invobject and act.invobject.RecallDragonfly then
             return act.invobject:RecallDragonfly(act.doer)
         end
-    end
+    end,
+    "use_beef_bell"
 )
 
 -- 召出龙蝇
 AddAction(
-    {instant = true, invalid_hold_action = true, priority = 5},
+    {invalid_hold_action = true, priority = 5},
     "SUMMON_DRAGONFLY",
     STRINGS.ACTIONS.SUMMON_DRAGONFLY,
     function(act)
         if act.doer and act.invobject and act.invobject.SummonDragonfly then
             return act.invobject:SummonDragonfly(act.doer)
         end
-    end
+    end,
+    "use_beef_bell"
 )
 
 local HIGH_ACTION_PRIORITY = 10

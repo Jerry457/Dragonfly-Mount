@@ -606,8 +606,7 @@ local function OnDeath(inst, data)
     end
 end
 
-local function DoDespawn(inst)
-    -- 由铃铛召回时调用
+local function DoRecallDespawn(inst)
     local leader = inst.components.follower and inst.components.follower.leader
     if leader and leader.OnRecallFinished then
         leader:OnRecallFinished(inst)
@@ -808,7 +807,7 @@ local function fn()
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
 
-    inst.DoDespawn = DoDespawn
+    inst.DoRecallDespawn = DoRecallDespawn
 
     inst:ListenForEvent("despawn", OnDespawnRequest)
     inst:ListenForEvent("stopfollowing", ClearBellOwner)

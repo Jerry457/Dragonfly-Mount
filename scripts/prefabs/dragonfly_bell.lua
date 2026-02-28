@@ -290,24 +290,29 @@ local function RecallDragonfly(inst, doer)
         return false
     end
 
+    if dragonfly.components.health:IsDead() then
+        return false
+    end
+
     if dragonfly.components.rideable and dragonfly.components.rideable:IsBeingRidden() then
         return false
     end
 
-    if dragonfly.sg.currentstate.name == "land" then
+    if dragonfly.sg.currentstate.name == "bell_summon" then
         return false
     end
 
     if dragonfly.sg.currentstate.name ~= "bell_recall" then
-        dragonfly.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
         dragonfly.sg:GoToState("bell_recall")
+        return true
     end
-    return true
 end
 
 local function OnRecallFinished(inst, dragonfly)
-    inst.saved_dragonfly = dragonfly:GetSaveRecord()
-    inst:AddTag("dragonfly_saved")
+    inst.saved_dragonfly = dragonfly and dragonfly:GetSaveRecord()
+    if inst.saved_dragonfly then
+        inst:AddTag("dragonfly_saved")
+    end
 end
 
 local function SummonDragonfly(inst, doer)
@@ -327,11 +332,7 @@ local function SummonDragonfly(inst, doer)
         local dist = 8
         local theta = math.random() * 2 * math.pi
         dragonfly.Transform:SetPosition(x + dist * math.cos(theta), 20, z + dist * math.sin(theta))
-
-        dragonfly.sg:GoToState("land")
-        dragonfly.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
-        dragonfly.components.timer:StopTimer("play_hungry_cd")
-        dragonfly.components.timer:StartTimer("play_hungry_cd", 5)
+        dragonfly.sg:GoToState("bell_summon")
 
         inst.components.useabletargeteditem:StartUsingItem(dragonfly)
     end
