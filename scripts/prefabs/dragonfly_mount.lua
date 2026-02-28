@@ -57,31 +57,19 @@ local function PotentialRiderTest(inst, potential_rider)
 end
 
 local function ApplyBuildOverrides(inst, animstate)
-    local override_build
-    if inst.enraged then
-        override_build = AnimSet["adult"].fire_build
-    else
-        override_build = AnimSet["adult"].build
-    end
+    local override_build = inst.AnimState:GetBuild()
 
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(override_build)
-    else
-        animstate:SetBuild(override_build)
     end
 
 end
 
 local function ClearBuildOverrides(inst, animstate)
-    local override_build
-    if inst.enraged then
-        override_build = AnimSet["adult"].fire_build
-    else
-        override_build = AnimSet["adult"].build
-    end
+    local override_build = inst.AnimState:GetBuild()
 
-    if animstate ~= inst.AnimState then
+    if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:ClearOverrideBuild(override_build)
     end
 end

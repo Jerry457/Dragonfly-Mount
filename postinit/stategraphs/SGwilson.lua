@@ -438,8 +438,9 @@ AddStategraphPostInit("wilson", function(sg)
                 local mount = rider and rider:GetMount()
                 if mount and mount:HasTag("dragonfly_mount") then
                     inst.AnimState:ClearOverrideBuild(mount.AnimState:GetBuild())
-                    mount:TransformFire()
+                    mount:TransformFire() -- build changed
                     inst.AnimState:AddOverrideBuild(mount.AnimState:GetBuild())
+
                     if inst.EnableDragonflyLight then
                         inst:EnableDragonflyLight(true)
                     end
