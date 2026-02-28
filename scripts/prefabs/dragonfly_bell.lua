@@ -323,7 +323,7 @@ local function SummonDragonfly(inst, doer)
         dragonfly.sg:GoToState("land")
         dragonfly.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
         dragonfly.components.timer:StopTimer("play_hungry_cd")
-        dragonfly.components.timer:StartTimer("play_hungry_cd", 30)
+        dragonfly.components.timer:StartTimer("play_hungry_cd", 5)
 
         inst.components.useabletargeteditem:StartUsingItem(dragonfly)
     end
