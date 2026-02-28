@@ -28,7 +28,7 @@ AddRecipe2("dragonfly_bell",
 
 AddRecipe2("dragonfly_bell_opal",
     {Ingredient("dragonfly_bell", 1), Ingredient("opalpreciousgem", 1)},
-    TECH.MAGIC_THREE,
+    TECH.SCIENCE_TWO,
     {atlas = "images/inventoryimages/dragonfly_bell.xml", image = "dragonfly_bell.tex"},
     {CRAFTING_FILTERS.RIDING.name})
 
