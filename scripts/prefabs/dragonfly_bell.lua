@@ -344,9 +344,10 @@ local function OpalFn()
         bank  = "dragonfly_bell",
         build = "dragonfly_bell",
         sound = "yotb_2021/common/cow_bell",
+        common_postinit = function(inst)
+            inst:AddTag("dragonfly_bell_opal")
+        end,
     })
-
-    inst:AddTag("dragonfly_bell_opal")
 
     if not TheWorld.ismastersim then
         return inst
