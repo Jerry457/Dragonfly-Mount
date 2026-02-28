@@ -67,14 +67,24 @@ local function GetOtherPlayerLinkedBell(inst, other)
     end
 end
 
+local function DisplayDirty(inst, has_dragonfly)
+    if has_dragonfly then
+        inst.components.inventoryitem:ChangeImageName("dragonfly_bell_linked")
+        inst.AnimState:PlayAnimation("idle2", true)
+    else
+        inst.components.inventoryitem:ChangeImageName("dragonfly_bell")
+        inst.AnimState:PlayAnimation("idle1", false)
+    end
+end
+
 local function CleanUpBell(inst)
     inst:RemoveTag("nobundling")
-
-    inst.components.inventoryitem:ChangeImageName("dragonfly_bell")
-
-    inst.AnimState:PlayAnimation("idle1", false)
     inst.components.inventoryitem.nobounce = false
     inst.components.floater.splash = true
+
+    if inst.saved_dragonfly == nil then
+        DisplayDirty(inst, false)
+    end
 end
 
 local function OnRemoveFollower(inst, dragonfly)
@@ -153,16 +163,13 @@ local function OnUsedOnDragonfly(inst, target, user)
 
     if successful then
         inst:AddTag("nobundling")
-
-        inst.components.inventoryitem:ChangeImageName("dragonfly_bell_linked")
-        inst.AnimState:PlayAnimation("idle2", true)
+        DisplayDirty(inst, true)
     end
 
     return successful, (failreason ~= nil and "BEEF_BELL_"..failreason or nil)
 end
 
 local function OnStopUsing(inst, dragonfly)
-    dragonfly = dragonfly or inst:GetDragonfly()
     inst.components.leader:RemoveAllFollowers()
     inst:CleanUpBell()
 end
@@ -189,6 +196,7 @@ local function OnLoad(inst, data)
             if data.saved_dragonfly then
                 inst.saved_dragonfly = data.saved_dragonfly
                 inst:AddTag("dragonfly_saved")
+                DisplayDirty(inst, true)
             end
         end
     end
