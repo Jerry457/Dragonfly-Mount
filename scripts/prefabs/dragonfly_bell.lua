@@ -75,14 +75,6 @@ local function CleanUpBell(inst)
     inst.AnimState:PlayAnimation("idle1", false)
     inst.components.inventoryitem.nobounce = false
     inst.components.floater.splash = true
-
-    -- if inst.isbonded ~= nil then
-    --     inst.isbonded:set(false)
-
-    --     if not TheNet:IsDedicated() then
-    --         inst:OnIsBondedDirty()
-    --     end
-    -- end
 end
 
 local function OnRemoveFollower(inst, dragonfly)
@@ -148,6 +140,10 @@ local function OnUsedOnDragonfly(inst, target, user)
         return false -- Not loading.
     end
 
+    if inst.saved_dragonfly then
+        return false, "BEEF_BELL_HAS_BEEF_ALREADY"
+    end
+
     -- This may run with a nil user on load.
     if user ~= nil and GetOtherPlayerLinkedBell(inst, user) ~= nil then
         return false, "BEEF_BELL_HAS_BEEF_ALREADY"
@@ -160,17 +156,6 @@ local function OnUsedOnDragonfly(inst, target, user)
 
         inst.components.inventoryitem:ChangeImageName("dragonfly_bell_linked")
         inst.AnimState:PlayAnimation("idle2", true)
-
-        -- if inst.isbonded ~= nil then
-        --     inst.isbonded:set(true)
-
-        --     inst.components.inventoryitem.nobounce = true
-        --     inst.components.floater.splash = false
-
-        --     if not TheNet:IsDedicated() then
-        --         inst:OnIsBondedDirty()
-        --     end
-        -- end
     end
 
     return successful, (failreason ~= nil and "BEEF_BELL_"..failreason or nil)
@@ -178,130 +163,40 @@ end
 
 local function OnStopUsing(inst, dragonfly)
     dragonfly = dragonfly or inst:GetDragonfly()
-
-    -- if dragonfly ~= nil then
-    --     dragonfly:UnSkin() -- Drop skins.
-    -- end
-
     inst.components.leader:RemoveAllFollowers()
     inst:CleanUpBell()
-
-    -- if inst:HasTag("shadowbell") and dragonfly ~= nil and dragonfly.components.health:IsDead() then
-    --     dragonfly.persists = false -- Dragonfly's ClearBellOwner fn makes it persistent.
-
-    --     if dragonfly:HasTag("NOCLICK") then
-    --         return
-    --     end
-
-    --     dragonfly:AddTag("NOCLICK")
-
-    --     RemovePhysicsColliders(dragonfly)
-
-    --     if dragonfly.DynamicShadow ~= nil then
-    --         dragonfly.DynamicShadow:Enable(false)
-    --     end
-
-    --     local multcolor = dragonfly.AnimState:GetMultColour()
-    --     local ticktime = TheSim:GetTickTime()
-
-    --     local erodetime = 5
-
-    --     dragonfly:StartThread(function()
-    --         local ticks = 0
-
-    --         while dragonfly:IsValid() and (ticks * ticktime < erodetime) do
-    --             local n = ticks * ticktime / erodetime
-
-    --             local alpha = easing.inQuad(1 - n, 0, 1, 1)
-    --             local color = 1 - (n * 5)
-
-    --             local color = math.min(multcolor, color)
-
-    --             dragonfly.AnimState:SetErosionParams(n, .05, 1.0)
-    --             dragonfly.AnimState:SetMultColour(color, color, color, math.max(.3, alpha))
-
-    --             ticks = ticks + 1
-    --             Yield()
-    --         end
-
-    --         dragonfly:Remove()
-    --     end)
-    -- end
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 local function OnSave(inst, data)
     local dragonfly = inst:GetDragonfly()
-
-    if dragonfly ~= nil then
-        -- local skinner_dragonfly = dragonfly.components.skinner_dragonfly
-
-        -- data.clothing = skinner_dragonfly ~= nil and skinner_dragonfly.clothing or nil
-        -- local is_riding = dragonfly.components.rideable and dragonfly.components.rideable:IsBeingRidden()
-        -- data.is_riding = is_riding
-        -- print("is_riding", is_riding)
+    if dragonfly then
         data.dragonfly_record = dragonfly:GetSaveRecord()
-        -- print("save dragonfly_record")
+    else
+        data.saved_dragonfly = inst.saved_dragonfly
     end
 end
 
 local function OnLoad(inst, data)
-    if data ~= nil and data.dragonfly_record ~= nil then
-        local dragonfly = SpawnSaveRecord(data.dragonfly_record)
-
-        if dragonfly ~= nil then
-            inst.components.useabletargeteditem:StartUsingItem(dragonfly)
-            -- print("load dragonfly_record")
-
-            -- if data.is_riding then
-            --     local rider = inst.components.inventoryitem:GetGrandOwner()
-            --     print("rider", rider)
-            --     if rider and rider.components.rider then
-            --         rider.components.rider:Mount(dragonfly, true)
-            --         print("load Mount")
-            --     end
-            -- end
-            -- if data.clothing ~= nil then
-            --     dragonfly.components.skinner_dragonfly:reloadclothing(data.clothing)
-            -- end
+    if data then
+        if data.dragonfly_record then
+            local dragonfly = SpawnSaveRecord(data.dragonfly_record)
+            if dragonfly then
+                inst.components.useabletargeteditem:StartUsingItem(dragonfly)
+            end
+        else
+            if data.saved_dragonfly then
+                inst.saved_dragonfly = data.saved_dragonfly
+                inst:AddTag("dragonfly_saved")
+            end
         end
     end
 end
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
--- local function ShadowBell_CanReviveTarget(inst, target, doer)
---     return target.GetBeefBellOwner ~= nil and target:GetBeefBellOwner() == doer
--- end
-
--- local function ShadowBell_ReviveTarget(inst, target, doer)
---     target:OnRevived(inst)
-
---     doer:AddDebuff("shadow_dragonfly_bell_curse", "shadow_dragonfly_bell_curse")
-
---     inst.components.rechargeable:Discharge(TUNING.SHADOW_BEEF_BELL_REVIVE_COOLDOWN)
--- end
-
--- local SHADOW_FLOAT_SCALE_BONDED = { 0, 0, 0 }
 local FLOAT_SCALE = { 1.2, 1, 1.2 }
-
--- local function ShadowBell_OnIsBondedDirty(inst)
---     inst.components.floater:SetScale(inst.isbonded:value() and SHADOW_FLOAT_SCALE_BONDED or FLOAT_SCALE)
-
---     if inst.components.floater:IsFloating() then
---         inst.components.floater:OnNoLongerLandedClient()
---         inst.components.floater:OnLandedClient()
---     end
--- end
-
--- local function ShadowBell_OnDischarged(inst)
---     inst:AddTag("oncooldown")
--- end
-
--- local function ShadowBell_OnCharged(inst)
---     inst:RemoveTag("oncooldown")
--- end
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -381,55 +276,84 @@ local function RegularFn()
     })
 end
 
+local function RecallDragonfly(inst, doer)
+    local dragonfly = inst:GetDragonfly()
+    if not dragonfly then
+        return false
+    end
+
+    if dragonfly.components.rideable and dragonfly.components.rideable:IsBeingRidden() then
+        return false
+    end
+
+    if dragonfly.sg.currentstate.name == "land" then
+        return false
+    end
+
+    if dragonfly.sg.currentstate.name ~= "bell_recall" then
+        dragonfly.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+        dragonfly.sg:GoToState("bell_recall")
+    end
+    return true
+end
+
+local function OnRecallFinished(inst, dragonfly)
+    inst.saved_dragonfly = dragonfly:GetSaveRecord()
+    inst:AddTag("dragonfly_saved")
+end
+
+local function SummonDragonfly(inst, doer)
+    if inst:GetDragonfly() then
+        return false
+    end
+
+    if inst.saved_dragonfly == nil then
+        return false
+    end
+
+    local dragonfly = SpawnSaveRecord(inst.saved_dragonfly)
+    inst.saved_dragonfly = nil
+
+    if dragonfly then
+        local x, _, z = inst.Transform:GetWorldPosition()
+        local dist = 8
+        local theta = math.random() * 2 * math.pi
+        dragonfly.Transform:SetPosition(x + dist * math.cos(theta), 20, z + dist * math.sin(theta))
+
+        dragonfly.sg:GoToState("land")
+        dragonfly.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+        dragonfly.components.timer:StopTimer("play_hungry_cd")
+        dragonfly.components.timer:StartTimer("play_hungry_cd", 30)
+
+        inst.components.useabletargeteditem:StartUsingItem(dragonfly)
+    end
+    inst:RemoveTag("dragonfly_saved")
+    return true
+end
+
+local function OpalFn()
+    local inst = CommonFn({
+        bank  = "dragonfly_bell",
+        build = "dragonfly_bell",
+        sound = "yotb_2021/common/cow_bell",
+    })
+
+    inst:AddTag("dragonfly_bell_opal")
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.RecallDragonfly = RecallDragonfly
+    inst.OnRecallFinished = OnRecallFinished
+
+    inst.SummonDragonfly = SummonDragonfly
+
+    return inst
+end
+
 RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_bell.xml", "dragonfly_bell.tex")
 
--- local function ShadowCommonPostInit(inst, data)
---     inst.entity:AddDynamicShadow()
---     inst.DynamicShadow:SetSize(1.2, .8)
-
---     inst.AnimState:Hide("shadow")
-
---     inst.AnimState:SetLightOverride(0.1)
---     inst.AnimState:SetSymbolLightOverride("red", 0.5)
-
---     -- rechargeable (from rechargeable component) added to pristine state for optimization.
---     inst:AddTag("rechargeable")
-
---     inst:AddTag("shadowbell")
-
---     inst.OnIsBondedDirty = ShadowBell_OnIsBondedDirty
-
---     inst.isbonded = net_bool(inst.GUID, "shadow_dragonfly_bell.isbonded", "isbondeddirty")
--- end
-
--- local function ShadowFn()
---     local inst = CommonFn({
---         bank  = "cowbell_shadow",
---         build = "cowbell_shadow",
---         sound = "rifts4/dragonfly_revive/bell_ring",
---         common_postinit = ShadowCommonPostInit,
---     })
-
---     if not TheWorld.ismastersim then
---         inst:ListenForEvent("isbondeddirty", inst.OnIsBondedDirty)
-
---         return inst
---     end
-
---     inst:AddComponent("tradable")
-
---     inst:AddComponent("rechargeable")
---     inst.components.rechargeable:SetOnDischargedFn(ShadowBell_OnDischarged)
---     inst.components.rechargeable:SetOnChargedFn(ShadowBell_OnCharged)
-
---     inst.CanReviveTarget = ShadowBell_CanReviveTarget
---     inst.ReviveTarget = ShadowBell_ReviveTarget
-
---     return inst
--- end
-
------------------------------------------------------------------------------------------------------------------------------------------
-
--- table.insert(LootTables["dragonfly"], {'dragonfly_bell_blueprint', 1.00})
-
-return Prefab("dragonfly_bell", RegularFn, assets)
+return
+Prefab("dragonfly_bell", RegularFn, assets),
+Prefab("dragonfly_bell_opal", OpalFn, assets)

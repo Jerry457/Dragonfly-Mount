@@ -13,6 +13,10 @@ STRINGS.NAMES.DRAGONFLY_BELL = "Dragonfly bell"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_BELL = "Making friends is so easy."
 STRINGS.RECIPE_DESC.DRAGONFLY_BELL = "A bell to call your friendly dragonfly."
 
+STRINGS.NAMES.DRAGONFLY_BELL_OPAL = "Opal dragonfly bell"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_BELL_OPAL = "Making friends is so easy."
+STRINGS.RECIPE_DESC.DRAGONFLY_BELL_OPAL = "A bell to call your friendly dragonfly."
+
 STRINGS.NAMES.SADDLE_DRAGONFLY = "Dragonfly saddle"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.SADDLE_DRAGONFLY = "A saddle fit for a dragonfly."
 STRINGS.RECIPE_DESC.SADDLE_DRAGONFLY = "Saddle up your dragonfly friend."

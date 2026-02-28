@@ -13,6 +13,10 @@ STRINGS.NAMES.DRAGONFLY_BELL = "Dzwonek Muchosmoka"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_BELL = "Zawieranie przyjaźni bywa zaskakująco proste."
 STRINGS.RECIPE_DESC.DRAGONFLY_BELL = "Dzwonek do przywoływania twojego Muchosmoka."
 
+STRINGS.NAMES.DRAGONFLY_BELL_OPAL = "Dzwonek Muchosmoka"
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_BELL_OPAL = "Zawieranie przyjaźni bywa zaskakująco proste."
+STRINGS.RECIPE_DESC.DRAGONFLY_BELL_OPAL = "Dzwonek do przywoływania twojego Muchosmoka."
+
 STRINGS.NAMES.SADDLE_DRAGONFLY = "Siodło Muchosmoka"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.SADDLE_DRAGONFLY = "Siodło godne Muchosmoka."
 STRINGS.RECIPE_DESC.SADDLE_DRAGONFLY = "Osiodłaj swojego skrzydlatego towarzysza."

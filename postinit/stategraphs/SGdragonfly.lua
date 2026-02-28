@@ -155,4 +155,40 @@ AddStategraphPostInit("dragonfly", function(sg)
             return death_fn(inst, ...)
         end
     end
+
+    -- 被铃铛召回
+    sg.states.bell_recall = State{
+        name = "bell_recall",
+		tags = { "flight", "busy", "nosleep", "nofreeze", "noelectrocute" },
+
+        onenter = function(inst)
+            inst:StopBrain()
+            inst.components.locomotor:Stop()
+            inst.DynamicShadow:Enable(false)
+            inst.components.health:SetInvincible(true)
+
+            inst.AnimState:PlayAnimation("walk_angry_pre")
+            inst.AnimState:PushAnimation("walk_angry", true)
+
+            local x, y, z = 0.5019684438612,12.5216834009827,2.7178563798944
+            inst.Physics:SetMotorVel(x, y, z)
+        end,
+
+        timeline =
+        {
+            TimeEvent(2.5, function(inst)
+                inst:DoDespawn()
+            end)
+        },
+
+        onexit = function(inst)
+            --You somehow left this state?! (not supposed to happen).
+            --Cancel the action to avoid getting stuck.
+            print("Dragonfly left the bell_recall state! How could this happen?!")
+            inst:RestartBrain()
+            inst.components.health:SetInvincible(false)
+            inst:ClearBufferedAction()
+            inst.DynamicShadow:Enable(true)
+        end,
+    }
 end)
