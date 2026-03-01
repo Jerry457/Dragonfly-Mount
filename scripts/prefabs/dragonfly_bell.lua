@@ -3,7 +3,9 @@ local easing = require("easing")
 local assets =
 {
     Asset("ATLAS", "images/inventoryimages/dragonfly_bell.xml"),
+    Asset("ATLAS", "images/inventoryimages/dragonfly_bell_opal.xml"),
     Asset("ANIM", "anim/dragonfly_bell.zip"),
+    Asset("ANIM", "anim/dragonfly_bell_opal.zip"),
 }
 
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -69,10 +71,10 @@ end
 
 local function DisplayDirty(inst, has_dragonfly)
     if has_dragonfly then
-        inst.components.inventoryitem:ChangeImageName("dragonfly_bell_linked")
+        inst.components.inventoryitem:ChangeImageName(inst.prefab.."_linked")
         inst.AnimState:PlayAnimation("idle2", true)
     else
-        inst.components.inventoryitem:ChangeImageName("dragonfly_bell")
+        inst.components.inventoryitem:ChangeImageName(inst.prefab)
         inst.AnimState:PlayAnimation("idle1", false)
     end
 end
@@ -342,8 +344,8 @@ end
 
 local function OpalFn()
     local inst = CommonFn({
-        bank  = "dragonfly_bell",
-        build = "dragonfly_bell",
+        bank  = "dragonfly_bell_opal",
+        build = "dragonfly_bell_opal",
         sound = "yotb_2021/common/cow_bell",
         common_postinit = function(inst)
             inst:AddTag("dragonfly_bell_opal")
@@ -354,6 +356,9 @@ local function OpalFn()
         return inst
     end
 
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/dragonfly_bell_opal.xml"
+    inst.components.inventoryitem.imagename = "dragonfly_bell_opal"
+
     inst.RecallDragonfly = RecallDragonfly
     inst.OnRecallFinished = OnRecallFinished
 
@@ -363,6 +368,7 @@ local function OpalFn()
 end
 
 RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_bell.xml", "dragonfly_bell.tex")
+RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_bell_opal.xml", "dragonfly_bell_opal.tex")
 
 return
 Prefab("dragonfly_bell", RegularFn, assets),

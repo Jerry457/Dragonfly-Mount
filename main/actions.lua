@@ -57,6 +57,15 @@ AddAction(
     "use_beef_bell"
 )
 
+-- 无限距离解除绑定
+AddAction(
+    {invalid_hold_action = true, distance = 9999},
+    "STOPUSINGITEM_DRAGONFLY",
+    STRINGS.ACTIONS.STOPUSINGITEM,
+    ACTIONS.STOPUSINGITEM.fn,
+    "dolongaction"
+)
+
 local HIGH_ACTION_PRIORITY = 10
 local COMPONENT_ACTIONS = GlassicAPI.UpvalueUtil.GetUpvalue(EntityScript.CollectActions, "COMPONENT_ACTIONS")
 local SCENE = COMPONENT_ACTIONS.SCENE
@@ -92,7 +101,7 @@ AddComponentAction("SCENE", "rider", function(inst, doer, actions, right)
     end
 end)
 
--- 召唤和收回龙蝇
+-- 彩虹龙铃 召唤和收回龙蝇
 AddComponentAction("INVENTORY", "useabletargeteditem", function(inst, doer, actions)
     if inst:HasTag("dragonfly_bell_opal") then
         if inst:HasTag("dragonfly_saved") then
@@ -100,5 +109,13 @@ AddComponentAction("INVENTORY", "useabletargeteditem", function(inst, doer, acti
         elseif inst:HasTag("inuse_targeted") then
             table.insert(actions, ACTIONS.RECALL_DRAGONFLY)
         end
+    end
+end)
+
+-- 彩虹龙铃 解除绑定
+AddComponentAction("USEITEM", "useabletargeteditem", function(inst, doer, target, actions)
+    if inst:HasTag("dragonfly_bell_opal") and inst:HasTag("inuse_targeted")
+        and target and target.prefab and inst:HasTag(target.prefab.."_targeter") then
+        table.insert(actions, ACTIONS.STOPUSINGITEM_DRAGONFLY)
     end
 end)
