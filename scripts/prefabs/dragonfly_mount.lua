@@ -249,7 +249,7 @@ local sounds =
 
 local brain = require("brains/dragonfly_mount_brain")
 
-local SetupDragonflyMountSpell = require("prefabs/dragonfly_mount_skills").SetupDragonflyMountSpell
+local SetupDragonflyMountSpell = require("utils/dragonfly_mount_skills").SetupDragonflyMountSpell
 
 local function OnSave(inst, data)
 

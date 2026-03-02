@@ -5,7 +5,7 @@ Assets = {
 }
 
 PrefabFiles = {
-    "skins",
+    "dragonfly_skins",
 }
 
 modimport("main/glassic_api_loader")

@@ -7,7 +7,9 @@ local _assets = Assets
 local _prefabfiles = PrefabFiles
 local _preloadassets = PreloadAssets
 
-MODROOT = MODROOT .. "GlassicAPI/"
+MODROOT = MODROOT .. "GlassicAPI\\"
+GLOBAL.package.path = MODROOT .. "\\scripts\\?.lua;" .. GLOBAL.package.path
+
 Assets = {}
 PrefabFiles = {}
 PreloadAssets = {}

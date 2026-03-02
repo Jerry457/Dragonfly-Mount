@@ -13,8 +13,6 @@ Assets = {
 PreloadAssets = {
 }
 
-modimport("main/anim-assets")
-
 ReloadPreloadAssets()
 
 modimport("main/glassic_api_loader")
