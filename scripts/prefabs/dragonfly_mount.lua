@@ -7,10 +7,6 @@ local assets =
     --
     Asset("ANIM", "anim/dragonfly_mount_grow.zip"),
     -- build
-    Asset("ANIM", "anim/dragonfly_mount_baby_build.zip"),
-    Asset("ANIM", "anim/dragonfly_mount_teen_build.zip"),
-    Asset("ANIM", "anim/dragonfly_mount_build.zip"),
-    Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
     -- symbols: fire_engulf, small_puff_fx
     -- only used for adult state
     Asset("ANIM", "anim/dragonfly_mount_transform_fx.zip"),
@@ -18,14 +14,18 @@ local assets =
 
 local AnimSet = {
     baby = {
+        skin_mode = "baby_skin",
         build = "dragonfly_mount_baby_build",
         bank = "dragonfly_mount_baby"
     },
     teen = {
+        skin_mode = "teen_skin",
         build = "dragonfly_mount_teen_build",
         bank = "dragonfly_mount_teen"
     },
     adult = {
+        skin_mode = "normal_skin",
+        fire_skin_mode = "fire_skin",
         build = "dragonfly_mount_build",
         fire_build = "dragonfly_mount_fire_build",
         bank = "dragonfly_mount"
@@ -300,7 +300,7 @@ local function SetBaby(inst)
     inst.components.lootdropper:SetLoot(LootSet["baby"])
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
-    inst.AnimState:SetBuild(AnimSet["baby"].build)
+    inst.components.skinner:SetSkinMode(AnimSet["baby"].skin_mode, AnimSet["baby"].build)
     inst.AnimState:SetBank(AnimSet["baby"].bank)
     inst.AnimState:ClearOverrideBuild("dragonfly_mount_transform_fx")
 
@@ -335,7 +335,7 @@ local function SetTeen(inst)
     inst.components.lootdropper:SetLoot(LootSet["teen"])
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
-    inst.AnimState:SetBuild(AnimSet["teen"].build)
+    inst.components.skinner:SetSkinMode(AnimSet["teen"].skin_mode, AnimSet["teen"].build)
     inst.AnimState:SetBank(AnimSet["teen"].bank)
     inst.AnimState:ClearOverrideBuild("dragonfly_mount_transform_fx")
 
@@ -370,7 +370,7 @@ local function SetAdult(inst)
     inst.components.lootdropper:SetLoot(LootSet["adult"])
 
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
-    inst.AnimState:SetBuild(AnimSet["adult"].build)
+    inst.components.skinner:SetSkinMode(AnimSet["adult"].skin_mode, AnimSet["adult"].build)
     inst.AnimState:SetBank(AnimSet["adult"].bank)
     inst.AnimState:AddOverrideBuild("dragonfly_mount_transform_fx")
 
@@ -533,7 +533,7 @@ local function StartTransformFire(inst)
 end
 
 local function TransformFire(inst)
-    inst.AnimState:SetBuild(AnimSet["adult"].fire_build)
+    inst.components.skinner:SetSkinMode(AnimSet["adult"].fire_skin_mode, AnimSet["adult"].fire_build)
     inst.enraged = true
     inst:AddTag("enraged")
     if not inst:IsInLimbo() then
@@ -553,7 +553,7 @@ local function StartTransformNormal(inst)
 end
 
 local function TransformNormal(inst)
-    inst.AnimState:SetBuild(AnimSet["adult"].build)
+    inst.components.skinner:SetSkinMode(AnimSet["adult"].skin_mode, AnimSet["adult"].build)
     inst.enraged = false
     inst:RemoveTag("enraged")
     inst.Light:Enable(false)
@@ -610,6 +610,24 @@ local function DoRecallDespawn(inst)
         leader:OnRecallFinished(inst)
     end
     inst:Remove()
+end
+
+local function SkinOnLoad(self, data)
+    if data.skin_name == "NON_PLAYER" then
+		self:SetupNonPlayerData()
+    else
+		local skin_name = self.inst.prefab.."_none"
+		if data.skin_name ~= nil and
+			data.skin_name ~= skin_name and data.skin_name ~= ""
+		then
+			-- load base skin (check that it hasn't been traded away)
+			skin_name = data.skin_name
+		end
+        if self.useskintypeonload then
+            self.skintype = data.skin_mode
+        end
+		self:SetSkinName(skin_name, true)
+	end
 end
 
 local function fn()
@@ -683,6 +701,11 @@ local function fn()
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = GetStatus
+
+    inst.prefab = "dragonfly_mount"
+    inst:AddComponent("skinner")
+    -- inst.components.skinner.useskintypeonload = true
+    inst.components.skinner.OnLoad = SkinOnLoad
 
     local combat = inst:AddComponent("combat")
     local groundpounder = inst:AddComponent("groundpounder")
@@ -775,7 +798,7 @@ local function fn()
 
     inst:AddComponent("growable")
     inst.components.growable.stages = dragonfly_stages
-    inst.components.growable:SetStage(3)
+    inst.components.growable:SetStage(2)
     inst.components.growable.growonly = true -- 转而在SG里成长stage
 
     local propagator = MakeLargePropagator(inst)

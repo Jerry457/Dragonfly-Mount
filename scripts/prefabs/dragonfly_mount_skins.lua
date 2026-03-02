@@ -1,0 +1,53 @@
+local function Init(inst, skin_name)
+    GlassicAPI.BasicInitFn(inst)
+
+    if inst.components.skinner then
+        local skin_name = inst:GetSkinName() or "dragonfly_mount_none"
+        inst.components.skinner:SetSkinName(skin_name)
+    end
+end
+
+local prefabs = {
+    CreatePrefabSkin("dragonfly_mount_none", {
+        base_prefab = "dragonfly_mount",
+        type = "base",
+        rarity = "Reward",
+        assets = {
+            Asset("ANIM", "anim/dragonfly_mount_baby_build.zip"),
+            Asset("ANIM", "anim/dragonfly_mount_teen_build.zip"),
+            Asset("ANIM", "anim/dragonfly_mount_build.zip"),
+            Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
+        },
+        init_fn = Init,
+        skin_tags = { "DRAGONFLY_MOUNT", "BASE" },
+        build_name_override = "dragonfly_mount_build",
+        skins = {
+            baby_skin = "dragonfly_mount_baby_build",
+            teen_skin = "dragonfly_mount_teen_build",
+            normal_skin = "dragonfly_mount_build",
+            fire_skin = "dragonfly_mount_fire_build",
+        },
+        release_group = 87,
+    }),
+    CreatePrefabSkin("dragonfly_mount_yule", {
+        base_prefab = "dragonfly_mount",
+        type = "item",
+        rarity = "Reward",
+        assets = {
+            Asset("ANIM", "anim/dragonfly_yule_build.zip"),
+            Asset("ANIM", "anim/dragonfly_fire_yule_build.zip"),
+        },
+        init_fn = Init,
+        skin_tags = { "DRAGONFLY_MOUNT_YULE" },
+        build_name_override = "dragonfly_yule_build",
+        skins = {
+            baby_skin = "dragonfly_mount_baby_build",
+            teen_skin = "dragonfly_mount_teen_build",
+            normal_skin = "dragonfly_yule_build",
+            fire_skin = "dragonfly_fire_yule_build",
+        },
+        release_group = 87,
+    })
+}
+
+return unpack(prefabs)
