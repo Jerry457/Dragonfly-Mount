@@ -4,13 +4,16 @@ local assets =
     Asset("ANIM", "anim/dragonfly_mount_baby.zip"),
     Asset("ANIM", "anim/dragonfly_mount_teen.zip"),
     Asset("ANIM", "anim/dragonfly_mount.zip"),
+    --
+    Asset("ANIM", "anim/dragonfly_mount_grow.zip"),
     -- build
     Asset("ANIM", "anim/dragonfly_mount_baby_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_teen_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_build.zip"),
     Asset("ANIM", "anim/dragonfly_mount_fire_build.zip"),
-    -- extra animation
-    Asset("ANIM", "anim/dragonfly_mount_grow.zip"),
+    -- symbols: fire_engulf, small_puff_fx
+    -- only used for adult state
+    Asset("ANIM", "anim/dragonfly_mount_transform_fx.zip"),
 }
 
 local AnimSet = {
@@ -62,6 +65,7 @@ local function ApplyBuildOverrides(inst, animstate)
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(override_build)
+        animstate:AddOverrideBuild("dragonfly_mount_transform_fx")
     end
 
 end
@@ -71,6 +75,7 @@ local function ClearBuildOverrides(inst, animstate)
 
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:ClearOverrideBuild(override_build)
+        animstate:ClearOverrideBuild("dragonfly_mount_transform_fx")
     end
 end
 
@@ -80,16 +85,6 @@ local function SetDragonflyBellOwner(inst, bell, bell_user)
     if inst.components.follower:GetLeader() == nil and bell ~= nil and bell.components.leader ~= nil then
         bell.components.leader:AddFollower(inst)
         inst.components.rideable:SetShouldSave(false)
-
-        -- if bell:HasTag("shadowbell") then
-        --     -- NOTES(DiogoW): Removing event callback set by leader:AddFollower
-        --     bell:RemoveEventCallback("death", bell.components.leader._onfollowerdied, inst)
-
-        --     if inst.components.burnable ~= nil then
-        --         inst.components.burnable.nocharring = true
-        --     end
-        -- end
-
         inst:ListenForEvent("onremove", inst._BellRemoveCallback, bell)
 
         inst.persists = false
@@ -307,6 +302,7 @@ local function SetBaby(inst)
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
     inst.AnimState:SetBuild(AnimSet["baby"].build)
     inst.AnimState:SetBank(AnimSet["baby"].bank)
+    inst.AnimState:ClearOverrideBuild("dragonfly_mount_transform_fx")
 
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X * mult, SHADOW_SIZE_Y * mult)
     inst.Physics:SetCapsule(DRAGONFLY_RADIUS * mult, 1)
@@ -341,6 +337,7 @@ local function SetTeen(inst)
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE * mult, DRAGONFLY_SCALE * mult)
     inst.AnimState:SetBuild(AnimSet["teen"].build)
     inst.AnimState:SetBank(AnimSet["teen"].bank)
+    inst.AnimState:ClearOverrideBuild("dragonfly_mount_transform_fx")
 
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X * mult, SHADOW_SIZE_Y * mult)
     inst.Physics:SetCapsule(DRAGONFLY_RADIUS * mult, 1)
@@ -375,6 +372,7 @@ local function SetAdult(inst)
     -- inst.AnimState:SetScale(DRAGONFLY_SCALE, DRAGONFLY_SCALE)
     inst.AnimState:SetBuild(AnimSet["adult"].build)
     inst.AnimState:SetBank(AnimSet["adult"].bank)
+    inst.AnimState:AddOverrideBuild("dragonfly_mount_transform_fx")
 
     inst.DynamicShadow:SetSize(SHADOW_SIZE_X, SHADOW_SIZE_Y)
     inst.Physics:SetCapsule(DRAGONFLY_RADIUS, 1)
