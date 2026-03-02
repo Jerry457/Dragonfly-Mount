@@ -798,8 +798,9 @@ local function fn()
 
     inst:AddComponent("growable")
     inst.components.growable.stages = dragonfly_stages
-    inst.components.growable:SetStage(2)
-    inst.components.growable.growonly = true -- 转而在SG里成长stage
+    -- 默认为成年形态，避免因growable和rideable组建OnLoad顺序问题导致鞍具在加载时被甩下
+    inst.components.growable:SetStage(3)
+    inst.components.growable.growonly = true -- 在SG里设置下一阶段stage
 
     local propagator = MakeLargePropagator(inst)
     propagator.decayrate = 0
