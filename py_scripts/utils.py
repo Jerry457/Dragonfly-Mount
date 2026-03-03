@@ -278,7 +278,7 @@ def remove_beefalo_elements(animation):
 def split_wilson_down_animation(animation):
     front = deepcopy(animation)
 
-    re_str = r"^(headbase|SWAP_FACE|headbase_hat|face|hairfront|HAIR_HAT|hair|BEARD|swap_hat|hand)$"
+    re_str = r"^(headbase|SWAP_FACE|headbase_hat|face|hairfront|HAIR_HAT|hair|BEARD|swap_hat|hand|cheeks|arm_upper|arm_upper_skin)$"
 
     for frame in front["frames"]:
         frame["elements"] = [
