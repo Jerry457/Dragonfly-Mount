@@ -95,6 +95,10 @@ AddPlayerPostInit(function(inst)
                 target.Light:Enable(false)
             end
             -- 避免因碰撞抽搐
+            if inst.components.playercontroller then
+                inst.components.playercontroller:RemotePausePrediction()
+            end
+            inst.components.locomotor:StopMoving()
             local x, _, z = inst.Transform:GetWorldPosition()
             inst.Physics:Teleport(x+0.1, 0, z)
         end
