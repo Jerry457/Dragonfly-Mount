@@ -72,10 +72,11 @@ AddPlayerPostInit(function(inst)
         local target = data.target
         if target and target:HasTag("dragonfly_mount") then
             EnableFlyingMode(inst, true)
+            inst:AddTag("fireimmune")
+            -- 启用人物光源
             if target.enraged then
                 EnableLight(inst, true)
             end
-            inst:AddTag("fireimmune")
         end
     end)
 
@@ -86,21 +87,27 @@ AddPlayerPostInit(function(inst)
             EnableFlyingMode(inst, false)
             EnableLight(inst, false)
             inst:RemoveTag("fireimmune")
-            -- 转而由龙蝇本身播放音效
+            -- 由龙蝇本身播放音效
             inst.SoundEmitter:KillSound("dragonfly_flying")
             if not target.SoundEmitter:PlayingSound("flying") then
                 target.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
             end
+            -- 关闭龙蝇光源
             if not target.enraged then
                 target.Light:Enable(false)
             end
-            -- 避免因碰撞抽搐
+            -- 避免碰撞抽搐
+            local x, _, z = inst.Transform:GetWorldPosition()
             if inst.components.playercontroller then
                 inst.components.playercontroller:RemotePausePrediction()
             end
             inst.components.locomotor:StopMoving()
-            local x, _, z = inst.Transform:GetWorldPosition()
             inst.Physics:Teleport(x+0.1, 0, z)
+            -- 平台更新
+            local platform = TheWorld.Map:GetPlatformAtPoint(x, z)
+            if platform and platform.components.walkableplatform then
+                platform.components.walkableplatform:SetEntitiesOnPlatform()
+        	end
         end
     end)
 

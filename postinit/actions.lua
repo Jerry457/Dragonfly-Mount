@@ -3,16 +3,29 @@ local GetModRPC = GetModRPC
 
 GLOBAL.setfenv(1, GLOBAL)
 
+local DrownCheckClientSafe = function(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    if inst:GetCurrentPlatform() then
+        return false
+    else
+        local platform = TheWorld.Map:GetPlatformAtPoint(x, z)
+        if platform then
+            return false
+    	end
+    end
+
+    if TheWorld.Map:IsOceanTileAtPoint(x, y, z) or TheWorld.Map:IsInvalidTileAtPoint(x, y, z) then
+        return true
+    end
+end
+
 -- 禁止在水面和虚空中下龙蝇
 local DISMOUNT_fn = ACTIONS.DISMOUNT.fn
 ACTIONS.DISMOUNT.fn = function(act)
     local rider = act.doer.components.rider
     local mount = rider and rider:GetMount()
-    if mount and mount:HasTag("dragonfly_mount") then
-        local drownable = act.doer.components.drownable
-        if drownable and (drownable:IsOverWater() or drownable:IsOverVoid()) then
-            return false, "OVERWATER"
-        end
+    if mount and mount:HasTag("dragonfly_mount") and DrownCheckClientSafe(act.doer) then
+        return false, "OVERWATER"
     end
     return DISMOUNT_fn(act)
 end

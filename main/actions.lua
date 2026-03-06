@@ -75,11 +75,16 @@ local EQUIPPED = COMPONENT_ACTIONS.EQUIPPED
 local INVENTORY = COMPONENT_ACTIONS.INVENTORY
 
 local DrownCheckClientSafe = function(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
     if inst:GetCurrentPlatform() then
         return false
+    else
+        local platform = TheWorld.Map:GetPlatformAtPoint(x, z)
+        if platform then
+            return false
+    	end
     end
 
-    local x, y, z = inst.Transform:GetWorldPosition()
     if TheWorld.Map:IsOceanTileAtPoint(x, y, z) or TheWorld.Map:IsInvalidTileAtPoint(x, y, z) then
         return true
     end
