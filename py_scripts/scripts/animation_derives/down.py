@@ -278,6 +278,7 @@ derive_from_dragonfly_template(
 derive_from_dragonfly_template(
     wilson_animation_name="book",
     dragonfly_animation_name="idle",
+    dragonfly_animation_repeat=2,
     output_animation_name="book",
 )
 
