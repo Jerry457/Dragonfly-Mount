@@ -115,6 +115,30 @@ local function SGwilson(sg)
         end
         return pickup_deststate(inst, action)
     end
+
+    -- 修改locomote事件目标state
+    local locomote_fn = sg.events.locomote.fn
+    sg.events.locomote.fn = function(inst, data)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return locomote_fn(inst, data)
+        end
+
+        local _GoToState = inst.sg.GoToState
+        inst.sg.GoToState = function(self, state, ...)
+            if state == "run_start" then
+                state = "dragonfly_mount_run_start"
+            elseif state == "run_stop" then
+                state = "dragonfly_mount_run_stop"
+            end
+            return _GoToState(self, state, ...)
+        end
+
+        locomote_fn(inst, data)
+
+        inst.sg.GoToState = _GoToState
+    end
 end
 
 AddStategraphPostInit("wilson", SGwilson)

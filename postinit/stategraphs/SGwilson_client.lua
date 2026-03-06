@@ -8,26 +8,6 @@ GLOBAL.setfenv(1, GLOBAL)
 local actionhandlers = {
 }
 
-local states = {
-}
-
-for _, state in ipairs(states) do
-    AddStategraphState("wilson_client", state)
-end
-
-for _, actionhandler in ipairs(actionhandlers) do
-    AddStategraphActionHandler("wilson_client", actionhandler)
-end
-
-local function ConfigureRunState(inst)
-    inst.sg.statemem.riding = true
-    if inst:HasTag("groggy") then
-        inst.sg.statemem.groggy = true
-    else
-        inst.sg.statemem.normalriding = true
-    end
-end
-
 local function ClientCommonState(name, tags, server_states)
     return State({
         name = name,
@@ -58,47 +38,17 @@ local function ClientCommonState(name, tags, server_states)
     })
 end
 
-AddStategraphPostInit("wilson_client", function(sg)
-    -- 修改locomote事件目标state
-    local locomote_fn = sg.events.locomote.fn
-    sg.events.locomote.fn = function(inst, data)
-        local rider = inst.replica.rider
-        local mount = rider and rider:GetMount()
-        if not mount or not mount:HasTag("dragonfly_mount") then
-            return locomote_fn(inst, data)
-        end
-
-		if (inst.sg:HasStateTag("busy") or inst:HasTag("busy")) and
-			not (inst.sg:HasStateTag("boathopping") or inst:HasTag("boathopping")) then
-			return
-		elseif inst.sg:HasStateTag("overridelocomote") then
-			return
-		end
-
-        local is_moving = inst.sg:HasStateTag("moving")
-        local should_move = inst.components.locomotor:WantsToMoveForward()
-
-        if not inst.entity:CanPredictMovement() then
-            if not inst.sg:HasStateTag("idle") then
-                inst.sg:GoToState("idle")
-            end
-        elseif is_moving and not should_move then
-            inst.sg:GoToState("dragonfly_mount_run_stop")
-        elseif not is_moving and should_move then
-			--V2C: Added "dir" param so we don't have to add "canrotate" to all interruptible states
-			if data and data.dir then
-				if inst.components.locomotor then
-					inst.components.locomotor:SetMoveDir(data.dir)
-				else
-					inst.Transform:SetRotation(data.dir)
-				end
-			end
-            inst.sg:GoToState("dragonfly_mount_run_start")
-        end
+local function ConfigureRunState(inst)
+    inst.sg.statemem.riding = true
+    if inst:HasTag("groggy") then
+        inst.sg.statemem.groggy = true
+    else
+        inst.sg.statemem.normalriding = true
     end
+end
 
-    -- dragonfly_mount_run
-    sg.states.dragonfly_mount_run_start = State{
+local states = {
+    State{
         name = "dragonfly_mount_run_start",
         tags = { "moving", "running", "canrotate" },
 
@@ -115,10 +65,6 @@ AddStategraphPostInit("wilson_client", function(sg)
             inst.components.locomotor:RunForward()
         end,
 
-        timeline =
-        {
-        },
-
         events =
         {
             EventHandler("animover", function(inst)
@@ -127,9 +73,8 @@ AddStategraphPostInit("wilson_client", function(sg)
                 end
             end),
         },
-    }
-
-    sg.states.dragonfly_mount_run = State{
+    },
+    State{
         name = "dragonfly_mount_run",
         tags = { "moving", "running", "canrotate" },
 
@@ -149,16 +94,11 @@ AddStategraphPostInit("wilson_client", function(sg)
             inst.components.locomotor:RunForward()
         end,
 
-        timeline =
-        {
-        },
-
         ontimeout = function(inst)
             inst.sg:GoToState("dragonfly_mount_run")
         end,
-    }
-
-    sg.states.dragonfly_mount_run_stop = State{
+    },
+    State{
         name = "dragonfly_mount_run_stop",
         tags = { "canrotate", "idle" },
 
@@ -169,10 +109,6 @@ AddStategraphPostInit("wilson_client", function(sg)
 			inst.AnimState:PlayAnimation(anim.."_pst")
         end,
 
-        timeline =
-        {
-        },
-
         events =
         {
             EventHandler("animover", function(inst)
@@ -181,24 +117,8 @@ AddStategraphPostInit("wilson_client", function(sg)
                 end
             end),
         },
-    }
-
-    -- taunt技能
-    sg.states.dragonfly_taunt = ClientCommonState(
-        "dragonfly_taunt",
-        {"doing", "busy"},
-        {"dragonfly_taunt_pre", "dragonfly_taunt"}
-    )
-
-    -- transform技能
-    sg.states.dragonfly_transform_fire = ClientCommonState(
-        "dragonfly_transform_fire",
-        {"doing", "busy"},
-        {"dragonfly_transform_fire_pre", "dragonfly_transform_fire"}
-    )
-
-    -- 修改骑乘时捡重物
-    sg.states.dragonfly_dodismountaction = State{
+    },
+    State{
         name = "dragonfly_dodismountaction",
         tags = { "doing", "busy" },
 		server_states = { "dragonfly_dodismountaction" },
@@ -228,5 +148,27 @@ AddStategraphPostInit("wilson_client", function(sg)
             inst.AnimState:PlayAnimation("heavy_mount")
             inst.sg:GoToState("idle", true)
         end,
-    }
+    },
+    ClientCommonState(
+        "dragonfly_taunt",
+        {"doing", "busy"},
+        {"dragonfly_taunt_pre", "dragonfly_taunt"}
+    ),
+    ClientCommonState(
+        "dragonfly_transform_fire",
+        {"doing", "busy"},
+        {"dragonfly_transform_fire_pre", "dragonfly_transform_fire"}
+    ),
+}
+
+for _, state in ipairs(states) do
+    AddStategraphState("wilson_client", state)
+end
+
+for _, actionhandler in ipairs(actionhandlers) do
+    AddStategraphActionHandler("wilson_client", actionhandler)
+end
+
+AddStategraphPostInit("wilson_client", function(sg)
+
 end)

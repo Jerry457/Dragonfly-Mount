@@ -14,17 +14,6 @@ local actionhandlers = {
     -- end),
 }
 
-local states = {
-}
-
-for _, state in ipairs(states) do
-    AddStategraphState("wilson", state)
-end
-
-for _, actionhandler in ipairs(actionhandlers) do
-    AddStategraphActionHandler("wilson", actionhandler)
-end
-
 local function ConfigureRunState(inst)
     inst.sg.statemem.riding = true
     if inst:HasTag("groggy") then
@@ -47,55 +36,8 @@ local function GroundPound(inst)
     inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/buttstomp_voice")
 end
 
-AddStategraphPostInit("wilson", function(sg)
-    -- 修改locomote事件目标state
-    local locomote_fn = sg.events.locomote.fn
-    sg.events.locomote.fn = function(inst, data)
-        local rider = inst.replica.rider
-        local mount = rider and rider:GetMount()
-        if not mount or not mount:HasTag("dragonfly_mount") then
-            return locomote_fn(inst, data)
-        end
-
-        if inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("overridelocomote") then
-            return
-        end
-
-        local is_moving = inst.sg:HasStateTag("moving")
-        local should_move = inst.components.locomotor:WantsToMoveForward()
-
-        if is_moving and not should_move then
-            inst.sg:GoToState("dragonfly_mount_run_stop")
-        elseif not is_moving and should_move then
-			--V2C: Added "dir" param so we don't have to add "canrotate" to all interruptible states
-			if data and data.dir then
-				inst.components.locomotor:SetMoveDir(data.dir)
-			end
-            inst.sg:GoToState("dragonfly_mount_run_start")
-        end
-    end
-
-    -- 骑乘龙蝇时免疫击飞
-    local knockback_fn = sg.events.knockback.fn
-    sg.events.knockback.fn = function(inst, data)
-        local rider = inst.replica.rider
-        local mount = rider and rider:GetMount()
-        if not mount or not mount:HasTag("dragonfly_mount") then
-            return knockback_fn(inst, data)
-        end
-
-        local _GoToState = inst.sg.GoToState
-        inst.sg.GoToState = function(self, state, ...)
-            return _GoToState(self, "hit", ...)
-        end
-
-        knockback_fn(inst, data)
-
-        inst.sg.GoToState = _GoToState
-    end
-
-    -- dragonfly_mount_run
-    sg.states.dragonfly_mount_run_start = State{
+local states = {
+    State{
         name = "dragonfly_mount_run_start",
         tags = { "moving", "running", "canrotate", "autopredict" },
 
@@ -112,10 +54,6 @@ AddStategraphPostInit("wilson", function(sg)
             inst.components.locomotor:RunForward()
         end,
 
-        timeline =
-        {
-        },
-
         events =
         {
 			EventHandler("animover", function(inst)
@@ -124,9 +62,8 @@ AddStategraphPostInit("wilson", function(sg)
                 end
             end),
         },
-    }
-
-    sg.states.dragonfly_mount_run = State{
+    },
+    State{
         name = "dragonfly_mount_run",
         tags = { "moving", "running", "canrotate", "autopredict" },
 
@@ -165,16 +102,11 @@ AddStategraphPostInit("wilson", function(sg)
             -- end
         end,
 
-        timeline =
-        {
-        },
-
         ontimeout = function(inst)
             inst.sg:GoToState("dragonfly_mount_run")
         end,
-    }
-
-    sg.states.dragonfly_mount_run_stop = State{
+    },
+    State{
         name = "dragonfly_mount_run_stop",
         tags = { "canrotate", "idle", "autopredict" },
 
@@ -185,10 +117,6 @@ AddStategraphPostInit("wilson", function(sg)
 			inst.AnimState:PlayAnimation(anim.."_pst")
         end,
 
-        timeline =
-        {
-        },
-
         events =
         {
             EventHandler("animover", function(inst)
@@ -197,20 +125,8 @@ AddStategraphPostInit("wilson", function(sg)
                 end
             end),
         },
-    }
-
-    -- dragonfly_mount
-    local mount_onenter = sg.states.mount.onenter
-    sg.states.mount.onenter = function(inst, ...)
-        local dragonfly = inst.components.rider.target_mount and inst.components.rider.target_mount:HasTag("dragonfly_mount")
-        if dragonfly then
-            inst.sg:GoToState("dragonfly_mount")
-        else
-            return mount_onenter(inst, ...)
-        end
-    end
-
-    sg.states.dragonfly_mount = State{
+    },
+    State{
         name = "dragonfly_mount",
         tags = { "doing", "busy", "nomorph", "nopredict" },
 
@@ -273,41 +189,8 @@ AddStategraphPostInit("wilson", function(sg)
                 inst.components.playercontroller:Enable(true)
             end
         end,
-    }
-
-    -- dragonfly_dismount
-    local dismount_onenter = sg.states.dismount.onenter
-    sg.states.dismount.onenter = function(inst, ...)
-        local dragonfly = inst.components.rider.mount and inst.components.rider.mount:HasTag("dragonfly_mount")
-        if dragonfly then
-            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
-            -- 停止飞行音效
-            inst.SoundEmitter:KillSound("dragonfly_flying")
-        end
-        return dismount_onenter(inst, ...)
-    end
-
-    -- castspell
-    local castspell_onenter = sg.states.castspell.onenter
-    sg.states.castspell.onenter = function(inst, ...)
-        castspell_onenter(inst, ...)
-        local rider = inst.replica.rider
-        local mount = rider and rider:GetMount()
-        if mount and mount:HasTag("dragonfly_mount") then
-            if inst.sg.statemem.stafffx then
-                inst.sg.statemem.stafffx:Remove()
-            end
-            -- 替换spell特效
-            local staff = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-            local colour = staff ~= nil and staff.fxcolour or { 1, 1, 1 }
-            inst.sg.statemem.stafffx = SpawnPrefab("staffcastfx_dragonfly")
-            inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
-            inst.sg.statemem.stafffx:SetUp(colour)
-        end
-    end
-
-    -- taunt技能
-    sg.states.dragonfly_taunt_pre = State({
+    },
+    State{
         name = "dragonfly_taunt_pre",
         tags = {"doing", "busy", "nopredict", "nointerrupt"},
 
@@ -319,9 +202,8 @@ AddStategraphPostInit("wilson", function(sg)
         ontimeout = function(inst)
             inst.sg:GoToState("idle")
         end,
-    })
-
-    sg.states.dragonfly_taunt = State({
+    },
+    State{
         name = "dragonfly_taunt",
         tags = {"doing", "busy", "nopredict", "nointerrupt"},
 
@@ -365,11 +247,8 @@ AddStategraphPostInit("wilson", function(sg)
         onexit = function(inst)
             inst.components.playercontroller:Enable(true)
         end,
-    })
-
-    -- 修改骑乘拾取重物
-    -- 等动画播放完再PerformBufferedAction
-    sg.states.dragonfly_dodismountaction = State{
+    },
+    State{
 		--V2C: This is currently used ONLY for heavy pickup while mounted.
         name = "dragonfly_dodismountaction",
 		tags = { "doing", "busy", "nomorph", "dismounting" },
@@ -401,10 +280,8 @@ AddStategraphPostInit("wilson", function(sg)
 				inst.components.rider:ActualDismount()
 			end
         end,
-    }
-
-    -- transform技能
-    sg.states.dragonfly_transform_fire_pre = State({
+    },
+    State{
         name = "dragonfly_transform_fire_pre",
         tags = {"doing", "busy", "nopredict", "nointerrupt"},
 
@@ -416,9 +293,8 @@ AddStategraphPostInit("wilson", function(sg)
         ontimeout = function(inst)
             inst.sg:GoToState("idle")
         end,
-    })
-
-    sg.states.dragonfly_transform_fire = State({
+    },
+    State{
         name = "dragonfly_transform_fire",
         tags = {"doing", "busy", "nopredict", "nointerrupt"},
 
@@ -466,7 +342,78 @@ AddStategraphPostInit("wilson", function(sg)
         onexit = function(inst)
             inst.components.playercontroller:Enable(true)
         end,
-    })
+    },
+}
+
+for _, state in ipairs(states) do
+    AddStategraphState("wilson", state)
+end
+
+for _, actionhandler in ipairs(actionhandlers) do
+    AddStategraphActionHandler("wilson", actionhandler)
+end
+
+AddStategraphPostInit("wilson", function(sg)
+    -- 骑乘龙蝇时免疫击飞
+    local knockback_fn = sg.events.knockback.fn
+    sg.events.knockback.fn = function(inst, data)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if not mount or not mount:HasTag("dragonfly_mount") then
+            return knockback_fn(inst, data)
+        end
+
+        local _GoToState = inst.sg.GoToState
+        inst.sg.GoToState = function(self, state, ...)
+            return _GoToState(self, "hit", ...)
+        end
+
+        knockback_fn(inst, data)
+
+        inst.sg.GoToState = _GoToState
+    end
+
+    -- dragonfly_mount
+    local mount_onenter = sg.states.mount.onenter
+    sg.states.mount.onenter = function(inst, ...)
+        local dragonfly = inst.components.rider.target_mount and inst.components.rider.target_mount:HasTag("dragonfly_mount")
+        if dragonfly then
+            inst.sg:GoToState("dragonfly_mount")
+        else
+            return mount_onenter(inst, ...)
+        end
+    end
+
+    -- dragonfly_dismount
+    local dismount_onenter = sg.states.dismount.onenter
+    sg.states.dismount.onenter = function(inst, ...)
+        local dragonfly = inst.components.rider.mount and inst.components.rider.mount:HasTag("dragonfly_mount")
+        if dragonfly then
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
+            -- 停止飞行音效
+            inst.SoundEmitter:KillSound("dragonfly_flying")
+        end
+        return dismount_onenter(inst, ...)
+    end
+
+    -- castspell
+    local castspell_onenter = sg.states.castspell.onenter
+    sg.states.castspell.onenter = function(inst, ...)
+        castspell_onenter(inst, ...)
+        local rider = inst.replica.rider
+        local mount = rider and rider:GetMount()
+        if mount and mount:HasTag("dragonfly_mount") then
+            if inst.sg.statemem.stafffx then
+                inst.sg.statemem.stafffx:Remove()
+            end
+            -- 替换spell特效
+            local staff = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+            local colour = staff ~= nil and staff.fxcolour or { 1, 1, 1 }
+            inst.sg.statemem.stafffx = SpawnPrefab("staffcastfx_dragonfly")
+            inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
+            inst.sg.statemem.stafffx:SetUp(colour)
+        end
+    end
 
     -- 骑暴怒龙蝇被电击后恢复光源
     local electrocute_onexit = sg.states.electrocute.onexit
