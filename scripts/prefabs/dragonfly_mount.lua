@@ -722,6 +722,21 @@ local function fn()
     combat:SetHurtSound("dontstarve_DLC001/creatures/dragonfly/hurt")
     combat:AddNoAggroTag("player")
 
+    local _CanTarget = combat.CanTarget
+    combat.CanTarget = function(self, target, ...)
+        local can = _CanTarget(self, target, ...)
+        if not can then
+            return false
+        end
+        if target then
+            local leader = self.inst.components.follower and self.inst.components.follower:GetLeader()
+            if leader and leader.components.combat and leader.components.combat:IsAlly(target) then
+                return false
+            end
+        end
+        return true
+    end
+
     groundpounder:UseRingMode()
     groundpounder.numRings = 3
     groundpounder.initialRadius = 1.5
