@@ -3,11 +3,12 @@ GLOBAL.setfenv(1, GLOBAL)
 
 local Playercontroller = require("components/playercontroller")
 
--- TryAOETargeting 开/关施法轮盘
-local _TryAOETargeting = Playercontroller.TryAOETargeting
-function Playercontroller:TryAOETargeting(...)
-    if TheInput:ControllerAttached() then
-        return _TryAOETargeting(self, ...)
+-- TryAOECharging 开/关施法轮盘
+local _TryAOECharging = Playercontroller.TryAOECharging
+function Playercontroller:TryAOECharging(force_rotation, iscontroller, ...)
+    local v = _TryAOECharging(self, force_rotation, iscontroller, ...)
+    if v or iscontroller then
+        return v
     end
 
     local rider = self.inst.replica.rider
@@ -23,7 +24,7 @@ function Playercontroller:TryAOETargeting(...)
         return true
     end
 
-    return _TryAOETargeting(self, ...)
+    return v
 end
 
 DragonflyMountHookOnRemoteLeftClick = function()
