@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "ZqhMbzu9smQ",
+	"hash": "YYS+9pHgn4U",
 	"spine": "4.2.43",
 	"x": -571,
 	"y": -163.4,
@@ -751,7 +751,7 @@
 			"dragonfly_head-2": {
 				"attachment": [
 					{ "name": "dragonfly_head-0" },
-					{ "time": 0.0333, "name": "dragonfly_head-32" }
+					{ "time": 0.0333, "name": "dragonfly_head-22" }
 				]
 			},
 			"dragonfly_torso-1": {
@@ -2216,8 +2216,7 @@
 			},
 			"dragonfly_head-2": {
 				"scale": [
-					{ "curve": "stepped" },
-					{ "time": 0.0333, "x": -1 }
+					{}
 				]
 			},
 			"torso": {

@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "md+XCZQLAVI",
+	"hash": "2FO1WB/bymY",
 	"spine": "4.2.43",
 	"x": -571,
 	"y": -163.4,
@@ -556,7 +556,7 @@
 	}
 ],
 "animations": {
-	"wilsondragonfly/research": {
+	"research/research": {
 		"slots": {
 			"dragonfly_arm-2": {
 				"attachment": [
@@ -637,7 +637,7 @@
 			"dragonfly_head-2": {
 				"attachment": [
 					{ "name": "dragonfly_head-0" },
-					{ "time": 0.4, "name": "dragonfly_head-28" },
+					{ "time": 0.4, "name": "dragonfly_head-22" },
 					{ "time": 1, "name": "dragonfly_head-0" }
 				]
 			},
@@ -1014,6 +1014,20 @@
 						"curve": [ 1.533, -2.42, 1.6, 0 ]
 					},
 					{ "time": 1.6667 }
+				],
+				"translate": [
+					{
+						"time": 0.2667,
+						"curve": [ 0.344, 0, 0.422, 26.86, 0.344, 0, 0.422, 72.53 ]
+					},
+					{ "time": 0.5, "x": 26.86, "y": 72.53, "curve": "stepped" },
+					{
+						"time": 0.9,
+						"x": 26.86,
+						"y": 72.53,
+						"curve": [ 0.967, 26.86, 1.033, 0, 0.967, 72.53, 1.033, 0 ]
+					},
+					{ "time": 1.1 }
 				]
 			},
 			"bone13": {
@@ -1112,9 +1126,7 @@
 			},
 			"dragonfly_head-2": {
 				"scale": [
-					{ "curve": "stepped" },
-					{ "time": 0.4, "curve": "stepped" },
-					{ "time": 1 }
+					{}
 				]
 			},
 			"bone": {
