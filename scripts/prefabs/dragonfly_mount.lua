@@ -66,6 +66,7 @@ local function ApplyBuildOverrides(inst, animstate)
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(override_build)
         animstate:AddOverrideBuild("dragonfly_mount_transform_fx")
+        inst.AnimState:SetSymbolHue("fire_engulf", inst.fire_engulf_hue or 0)
     end
 
 end

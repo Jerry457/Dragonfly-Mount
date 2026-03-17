@@ -1,4 +1,3 @@
-local SG_COMMON = SG_COMMON
 local AddStategraphState = AddStategraphState
 local AddStategraphPostInit = AddStategraphPostInit
 local AddStategraphActionHandler = AddStategraphActionHandler

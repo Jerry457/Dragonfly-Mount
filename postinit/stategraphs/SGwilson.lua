@@ -1,4 +1,4 @@
-local SG_COMMON = SG_COMMON
+
 local AddStategraphState = AddStategraphState
 local AddStategraphPostInit = AddStategraphPostInit
 local AddStategraphActionHandler = AddStategraphActionHandler
@@ -316,6 +316,7 @@ local states = {
                     inst.AnimState:ClearOverrideBuild(mount.AnimState:GetBuild())
                     mount:TransformFire() -- build changed
                     inst.AnimState:AddOverrideBuild(mount.AnimState:GetBuild())
+                    inst.AnimState:SetSymbolHue("fire_engulf", mount.fire_engulf_hue or 0)
 
                     if inst.EnableDragonflyLight then
                         inst:EnableDragonflyLight(true)
