@@ -218,10 +218,11 @@ local states = {
         timeline =
         {
             TimeEvent(21*FRAMES, function(inst)
+                local mount = inst.replica.rider and inst.replica.rider:GetMount()
                 local tauntfx = SpawnPrefab("dragonfly_mount_tauntfire_fx")
                 tauntfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 tauntfx.Transform:SetRotation(inst.Transform:GetRotation())
-                tauntfx:SetSymbolHue(inst.fire_hue or 0)
+                tauntfx:SetSymbolHue(mount and mount.fire_hue or 0)
                 GroundPound(inst)
             end),
             TimeEvent(30*FRAMES, function(inst)
