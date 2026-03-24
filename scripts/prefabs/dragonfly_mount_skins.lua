@@ -69,6 +69,24 @@ local prefabs = {
             fire_skin = "dragonfly_mount_fire_antlion_build",
         },
     }),
+    CreatePrefabSkin("dragonfly_mount_moonmaw", {
+        base_prefab = "dragonfly_mount",
+        type = "item",
+        rarity = "Reward",
+        assets = {
+            Asset("ANIM", "anim/dragonfly_mount_moonmaw_build.zip"),
+            Asset("ANIM", "anim/dragonfly_mount_fire_moonmaw_build.zip"),
+        },
+        init_fn = MackInit(0),
+        skin_tags = { "DRAGONFLY_MOUNT_MOONMAW" },
+        build_name_override = "dragonfly_mount_moonmaw_build",
+        skins = {
+            baby_skin = "dragonfly_mount_baby_build",
+            teen_skin = "dragonfly_mount_teen_build",
+            normal_skin = "dragonfly_mount_moonmaw_build",
+            fire_skin = "dragonfly_mount_fire_moonmaw_build",
+        },
+    }),
 }
 
 return unpack(prefabs)
