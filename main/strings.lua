@@ -30,11 +30,11 @@ function ModifyTranslatedStrings(path, str)
 end
 
 if language == LANGUAGE.CHINESE_S or language == LANGUAGE.CHINESE_S_RAIL then
-    require("localization/strings_zh")
+    require("localization/dragonfly_mount_strings_zh")
 elseif language == LANGUAGE.POLISH then
-    require("localization/strings_pl")
+    require("localization/dragonfly_mount_strings_pl")
 else
-    require("localization/strings_en")
+    require("localization/dragonfly_mount_strings_en")
 end
 
 AddSimPostInit(function()
