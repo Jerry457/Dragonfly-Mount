@@ -66,7 +66,7 @@ local function ApplyBuildOverrides(inst, animstate)
         animstate:SetBank("wilsondragonfly")
         animstate:AddOverrideBuild(override_build)
         animstate:AddOverrideBuild("dragonfly_mount_transform_fx")
-        inst.AnimState:SetSymbolHue("fire_engulf", inst.fire_engulf_hue or 0)
+        inst.AnimState:SetSymbolHue("fire_engulf", inst.fire_hue or 0)
     end
 
 end
@@ -638,7 +638,7 @@ local function SpawnFireFxHook(fn, self, ...)
     SpawnPrefab = function(name, ...)
         local fx = _SpawnPrefab(name, ...)
         if fx.SetSymbolHue then
-            fx:SetSymbolHue()
+            fx:SetSymbolHue(self.inst.fire_hue or 0)
         end
         return fx
     end
