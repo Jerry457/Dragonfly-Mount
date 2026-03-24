@@ -631,6 +631,34 @@ local function SkinOnLoad(self, data)
 	end
 end
 
+local GroundPounder = require("components/GroundPounder")
+
+local function SpawnFireFxHook(fn, self, ...)
+    local _SpawnPrefab = SpawnPrefab
+    SpawnPrefab = function(name, ...)
+        local fx = _SpawnPrefab(name, ...)
+        if fx.hub_symbols then
+            for _, symbol in ipairs(fx.hub_symbols) do
+                fx.AnimState:SetSymbolHue(symbol, self.inst.fire_engulf_hue or 0)
+            end
+        end
+        return fx
+    end
+    local ret = {fn(self, ...)}
+
+    SpawnPrefab = _SpawnPrefab
+
+    return unpack(ret)
+end
+
+local function DestroyRing(self, ...)
+    return SpawnFireFxHook(GroundPounder.DestroyRing, self, ...)
+end
+
+local function GroundPound(self, ...)
+    return SpawnFireFxHook(GroundPounder.GroundPound, self, ...)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -749,9 +777,11 @@ local function fn()
     groundpounder.fxRings = 2
     groundpounder.fxRadiusOffset = 1.5
     groundpounder.burner = true
-    groundpounder.groundpoundfx = "firesplash_fx"
+    groundpounder.groundpoundfx = "dragonfly_mount_firesplash_fx"
     groundpounder.groundpounddamagemult = 0.5
-    groundpounder.groundpoundringfx = "firering_fx"
+    groundpounder.groundpoundringfx = "dragonfly_mount_firering_fx"
+    groundpounder.DestroyRing = DestroyRing
+    groundpounder.GroundPound = GroundPound
     table.insert(groundpounder.noTags, "player")
 
     health:SetMaxHealth(DRAGONFLY_HEALTH)

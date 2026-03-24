@@ -32,7 +32,6 @@ local prefabs = {
             normal_skin = "dragonfly_mount_build",
             fire_skin = "dragonfly_mount_fire_build",
         },
-        release_group = 87,
     }),
     CreatePrefabSkin("dragonfly_mount_yule", {
         base_prefab = "dragonfly_mount",
@@ -51,7 +50,6 @@ local prefabs = {
             normal_skin = "dragonfly_yule_build",
             fire_skin = "dragonfly_fire_yule_build",
         },
-        release_group = 87,
     }),
     CreatePrefabSkin("dragonfly_mount_antlion", {
         base_prefab = "dragonfly_mount",
@@ -61,7 +59,7 @@ local prefabs = {
             Asset("ANIM", "anim/dragonfly_mount_antlion_build.zip"),
             Asset("ANIM", "anim/dragonfly_mount_fire_antlion_build.zip"),
         },
-        init_fn = MackInit(0.1833),
+        init_fn = MackInit(0),
         skin_tags = { "DRAGONFLY_MOUNT_ANTLION" },
         build_name_override = "dragonfly_mount_antlion_build",
         skins = {
@@ -70,7 +68,6 @@ local prefabs = {
             normal_skin = "dragonfly_mount_antlion_build",
             fire_skin = "dragonfly_mount_fire_antlion_build",
         },
-        release_group = 87,
     }),
 }
 
