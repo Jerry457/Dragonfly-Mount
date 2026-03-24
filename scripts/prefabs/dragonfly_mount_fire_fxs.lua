@@ -7,7 +7,7 @@ local function MakeFx(data)
     local function SetSymbolHue(inst)
         if data.hub_symbols then
             for _, symbol in ipairs(data.hub_symbols) do
-                data.AnimState:SetSymbolHue(symbol, self.inst.fire_engulf_hue or 0)
+                inst.AnimState:SetSymbolHue(symbol, self.inst.fire_engulf_hue or 0)
             end
         end
     end
