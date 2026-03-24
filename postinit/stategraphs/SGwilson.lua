@@ -218,9 +218,10 @@ local states = {
         timeline =
         {
             TimeEvent(21*FRAMES, function(inst)
-                local tauntfx = SpawnPrefab("tauntfire_fx")
+                local tauntfx = SpawnPrefab("dragonfly_mount_tauntfire_fx")
                 tauntfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 tauntfx.Transform:SetRotation(inst.Transform:GetRotation())
+                tauntfx:SetSymbolHue()
                 GroundPound(inst)
             end),
             TimeEvent(30*FRAMES, function(inst)

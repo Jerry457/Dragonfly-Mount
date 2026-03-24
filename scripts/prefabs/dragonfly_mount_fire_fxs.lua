@@ -4,6 +4,14 @@ local function MakeFx(data)
         Asset("ANIM", "anim/" .. data.build .. ".zip"),
     }
 
+    local function SetSymbolHue(inst)
+        if data.hub_symbols then
+            for _, symbol in ipairs(data.hub_symbols) do
+                data.AnimState:SetSymbolHue(symbol, self.inst.fire_engulf_hue or 0)
+            end
+        end
+    end
+
     local function fn()
         local inst = CreateEntity()
         inst.entity:AddTransform()
@@ -17,8 +25,6 @@ local function MakeFx(data)
         if data.bloom then
             inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         end
-
-        inst.hub_symbols = data.hub_symbols
 
         inst:AddTag("FX")
 
@@ -35,6 +41,8 @@ local function MakeFx(data)
 
         inst.persists = false
 
+        inst.SetSymbolHue = SetSymbolHue
+
         inst:ListenForEvent("animover", inst.Remove)
 
         return inst
@@ -44,23 +52,38 @@ local function MakeFx(data)
 end
 
 return MakeFx({
+    name = "dragonfly_mount_tauntfire_fx",
+    bank = "dragonfly_fx",
+    build = "dragonfly_fx",
+    anim = "taunt",
+    bloom = true,
+    hub_symbols = { "dragon_fx" },
+    fn = function(inst)
+        inst.Transform:SetFourFaced()
+    end
+}),
+MakeFx({
     name = "dragonfly_mount_attackfire_fx",
     bank = "dragonfly_mount_fx",
     build = "dragonfly_mount_fx",
     anim = "atk",
     bloom = true,
-    hub_symbols = { "dragon_fx" }
+    hub_symbols = { "dragon_fx" },
+    fn = function(inst)
+        inst.Transform:SetFourFaced()
+    end
 }),
-
 MakeFx({
     name = "dragonfly_mount_firesplash_fx",
     bank = "dragonfly_ground_fx",
     build = "dragonfly_ground_fx",
     anim = "idle",
     bloom = true,
-    hub_symbols = { "dragon_fx", "flame" }
+    hub_symbols = { "dragon_fx", "flame" },
+    fn = function(inst)
+        inst.Transform:SetFourFaced()
+    end
 }),
-
 MakeFx({
     name = "dragonfly_mount_firering_fx",
     bank = "dragonfly_ring_fx",

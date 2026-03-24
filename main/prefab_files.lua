@@ -3,7 +3,7 @@ PrefabFiles = {
     "dragonfly_classified",
     "dragonfly_mount",
     "dragonfly_mount_egg",
-    "dragonfly_mount_fire_fx",
+    "dragonfly_mount_fire_fxs",
     "dragonfly_mount_skins",
     "emoji_hungry",
     "saddle_dragonfly",
