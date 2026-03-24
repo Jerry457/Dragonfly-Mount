@@ -4,10 +4,10 @@ local function MakeFx(data)
         Asset("ANIM", "anim/" .. data.build .. ".zip"),
     }
 
-    local function SetSymbolHue(inst)
+    local function SetSymbolHue(inst, hue)
         if data.hub_symbols then
             for _, symbol in ipairs(data.hub_symbols) do
-                inst.AnimState:SetSymbolHue(symbol, self.inst.fire_engulf_hue or 0)
+                inst.AnimState:SetSymbolHue(symbol, hue)
             end
         end
     end

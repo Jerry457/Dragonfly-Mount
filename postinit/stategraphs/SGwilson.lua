@@ -221,7 +221,7 @@ local states = {
                 local tauntfx = SpawnPrefab("dragonfly_mount_tauntfire_fx")
                 tauntfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 tauntfx.Transform:SetRotation(inst.Transform:GetRotation())
-                tauntfx:SetSymbolHue()
+                tauntfx:SetSymbolHue(inst.fire_hue or 0)
                 GroundPound(inst)
             end),
             TimeEvent(30*FRAMES, function(inst)
@@ -317,7 +317,7 @@ local states = {
                     inst.AnimState:ClearOverrideBuild(mount.AnimState:GetBuild())
                     mount:TransformFire() -- build changed
                     inst.AnimState:AddOverrideBuild(mount.AnimState:GetBuild())
-                    inst.AnimState:SetSymbolHue("fire_engulf", mount.fire_engulf_hue or 0)
+                    inst.AnimState:SetSymbolHue("fire_engulf", mount.fire_hue or 0)
 
                     if inst.EnableDragonflyLight then
                         inst:EnableDragonflyLight(true)

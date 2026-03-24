@@ -1,4 +1,4 @@
-local function MackInit(fire_engulf_hue)
+local function MackInit(fire_hue)
     return function (inst, skin_name)
         GlassicAPI.BasicInitFn(inst)
 
@@ -7,8 +7,8 @@ local function MackInit(fire_engulf_hue)
             inst.components.skinner:SetSkinName(skin_name)
         end
 
-        inst.fire_engulf_hue = fire_engulf_hue
-        inst.AnimState:SetSymbolHue("fire_engulf", fire_engulf_hue)
+        inst.fire_hue = fire_hue
+        inst.AnimState:SetSymbolHue("fire_engulf", fire_hue)
     end
 end
 
