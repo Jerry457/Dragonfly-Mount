@@ -631,7 +631,7 @@ local function SkinOnLoad(self, data)
 	end
 end
 
-local GroundPounder = require("components/GroundPounder")
+local GroundPounder = require("components/groundpounder")
 
 local function SpawnFireFxHook(fn, self, ...)
     local _SpawnPrefab = SpawnPrefab
