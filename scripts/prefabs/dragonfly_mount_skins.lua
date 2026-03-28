@@ -1,4 +1,6 @@
-local function MackInit(fire_hue)
+local shift_hue = require("utils/dragonfly_mount_color").shift_hue
+
+local function MackInit(fire_hue, fire_bloom)
     return function (inst, skin_name)
         GlassicAPI.BasicInitFn(inst)
 
@@ -7,8 +9,18 @@ local function MackInit(fire_hue)
             inst.components.skinner:SetSkinName(skin_name)
         end
 
-        inst.fire_hue = fire_hue
-        inst.AnimState:SetSymbolHue("fire_engulf", fire_hue)
+        inst.fire_hue = fire_hue or 0
+        inst.fire_bloom = fire_bloom or false
+
+        inst.AnimState:SetSymbolHue("fire_engulf", inst.fire_hue)
+        if inst.fire_bloom then
+            inst.AnimState:SetSymbolBloom("fire_engulf")
+        else
+            inst.AnimState:ClearSymbolBloom("fire_engulf")
+        end
+
+        local light_color = shift_hue(inst.light_color, inst.fire_hue)
+        inst.Light:SetColour(unpack(light_color))
     end
 end
 
@@ -77,7 +89,7 @@ local prefabs = {
             Asset("ANIM", "anim/dragonfly_mount_moonmaw_build.zip"),
             Asset("ANIM", "anim/dragonfly_mount_fire_moonmaw_build.zip"),
         },
-        init_fn = MackInit(0.42),
+        init_fn = MackInit(0.42, true),
         skin_tags = { "DRAGONFLY_MOUNT_MOONMAW" },
         build_name_override = "dragonfly_mount_moonmaw_build",
         skins = {

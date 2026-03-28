@@ -2,6 +2,8 @@ local AddPlayerPostInit = AddPlayerPostInit
 
 GLOBAL.setfenv(1, GLOBAL)
 
+local shift_hue = require("utils/dragonfly_mount_color").shift_hue
+
 local function EnableFlyingMode(inst, enable)
     if enable then
         inst:AddTag("flying")
@@ -34,7 +36,8 @@ local function EnableFlyingMode(inst, enable)
     end
 end
 
-local function EnableLight(inst, enable)
+local function EnableLight(inst, enable, hue)
+    hue = hue or 0
     if inst.Light == nil then
         return
     end
@@ -43,7 +46,10 @@ local function EnableLight(inst, enable)
         inst.Light:SetRadius(2)
         inst.Light:SetFalloff(0.5)
         inst.Light:SetIntensity(0.75)
-        inst.Light:SetColour(235/255, 121/255, 12/255)
+
+        local light_color = {235/255, 121/255, 12/255} -- 和dragonfly_mount.lua保持一致
+        light_color = shift_hue(light_color, hue)
+        inst.Light:SetColour(unpack(light_color))
     else
         inst.Light:Enable(false)
     end
@@ -75,7 +81,7 @@ AddPlayerPostInit(function(inst)
             inst:AddTag("fireimmune")
             -- 启用人物光源
             if target.enraged then
-                EnableLight(inst, true)
+                EnableLight(inst, true, target.fire_hue)
             end
         end
     end)

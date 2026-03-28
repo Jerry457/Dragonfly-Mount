@@ -68,7 +68,7 @@ local function SGwilson(sg)
                 local attackfx = SpawnPrefab("dragonfly_mount_attackfire_fx")
                 attackfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 attackfx.Transform:SetRotation(inst.Transform:GetRotation())
-                attackfx:SetSymbolHue(mount.fire_hue or 0)
+                attackfx.AnimState:SetHue(mount.fire_hue or 0)
             end
         end
     end))

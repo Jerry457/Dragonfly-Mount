@@ -222,7 +222,7 @@ local states = {
                 local tauntfx = SpawnPrefab("dragonfly_mount_tauntfire_fx")
                 tauntfx.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 tauntfx.Transform:SetRotation(inst.Transform:GetRotation())
-                tauntfx:SetSymbolHue(mount and mount.fire_hue or 0)
+                tauntfx.AnimState:SetHue(mount and mount.fire_hue or 0)
                 GroundPound(inst)
             end),
             TimeEvent(30*FRAMES, function(inst)
@@ -318,10 +318,16 @@ local states = {
                     inst.AnimState:ClearOverrideBuild(mount.AnimState:GetBuild())
                     mount:TransformFire() -- build changed
                     inst.AnimState:AddOverrideBuild(mount.AnimState:GetBuild())
+
                     inst.AnimState:SetSymbolHue("fire_engulf", mount.fire_hue or 0)
+                    if mount.fire_bloom then
+                        inst.AnimState:SetSymbolBloom("fire_engulf")
+                    else
+                        inst.AnimState:ClearSymbolBloom("fire_engulf")
+                    end
 
                     if inst.EnableDragonflyLight then
-                        inst:EnableDragonflyLight(true)
+                        inst:EnableDragonflyLight(true, mount.fire_hue)
                     end
                 end
                 inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/angry")
@@ -426,7 +432,7 @@ AddStategraphPostInit("wilson", function(sg)
         local mount = rider and rider:GetMount()
         if mount and mount:HasTag("dragonfly_mount") and mount.enraged then
             if inst.EnableDragonflyLight then
-                inst:EnableDragonflyLight(true)
+                inst:EnableDragonflyLight(true, mount.fire_hue)
             end
         end
     end

@@ -67,6 +67,11 @@ local function ApplyBuildOverrides(inst, animstate)
         animstate:AddOverrideBuild(override_build)
         animstate:AddOverrideBuild("dragonfly_mount_transform_fx")
         inst.AnimState:SetSymbolHue("fire_engulf", inst.fire_hue or 0)
+        if inst.fire_bloom then
+            inst.AnimState:SetSymbolBloom("fire_engulf")
+        else
+            inst.AnimState:ClearSymbolBloom("fire_engulf")
+        end
     end
 
 end
@@ -694,7 +699,9 @@ local function fn()
     inst.Light:SetRadius(2)
     inst.Light:SetFalloff(0.5)
     inst.Light:SetIntensity(0.75)
-    inst.Light:SetColour(235/255, 121/255, 12/255)
+
+    inst.light_color = {235/255, 121/255, 12/255} -- 和player.lua里面保持一致
+    inst.Light:SetColour(unpack(inst.light_color))
 
     inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/fly", "flying")
 

@@ -4,12 +4,8 @@ local function MakeFx(data)
         Asset("ANIM", "anim/" .. data.build .. ".zip"),
     }
 
-    local function SetSymbolHue(inst, hue)
-        if data.hub_symbols then
-            for _, symbol in ipairs(data.hub_symbols) do
-                inst.AnimState:SetSymbolHue(symbol, hue)
-            end
-        end
+    local function SetHue(inst, hue)
+        inst.AnimState:SetHue(hue)
     end
 
     local function fn()
@@ -41,7 +37,7 @@ local function MakeFx(data)
 
         inst.persists = false
 
-        inst.SetSymbolHue = SetSymbolHue
+        inst.SetHue = SetHue
 
         inst:ListenForEvent("animover", inst.Remove)
 
@@ -57,7 +53,6 @@ return MakeFx({
     build = "dragonfly_fx",
     anim = "taunt",
     bloom = true,
-    hub_symbols = { "dragon_fx" },
     fn = function(inst)
         inst.Transform:SetFourFaced()
     end
@@ -68,9 +63,8 @@ MakeFx({
     build = "dragonfly_mount_fx",
     anim = "atk",
     bloom = true,
-    hub_symbols = { "dragon_fx" },
     fn = function(inst)
-        inst.Transform:SetFourFaced()
+        inst.Transform:SetSixFaced()
     end
 }),
 MakeFx({
@@ -79,7 +73,6 @@ MakeFx({
     build = "dragonfly_ground_fx",
     anim = "idle",
     bloom = true,
-    hub_symbols = { "dragon_fx", "flame" },
     fn = function(inst)
         inst.Transform:SetFourFaced()
     end
@@ -90,7 +83,6 @@ MakeFx({
     build = "dragonfly_ring_fx",
     anim = "idle",
     bloom = true,
-    hub_symbols = { "circle" },
     fn = function(inst)
         inst.AnimState:SetFinalOffset(3)
         inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
