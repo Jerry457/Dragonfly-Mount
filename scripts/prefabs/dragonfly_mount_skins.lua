@@ -77,7 +77,7 @@ local prefabs = {
             Asset("ANIM", "anim/dragonfly_mount_moonmaw_build.zip"),
             Asset("ANIM", "anim/dragonfly_mount_fire_moonmaw_build.zip"),
         },
-        init_fn = MackInit(0.5),
+        init_fn = MackInit(0.42),
         skin_tags = { "DRAGONFLY_MOUNT_MOONMAW" },
         build_name_override = "dragonfly_mount_moonmaw_build",
         skins = {
