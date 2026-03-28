@@ -642,8 +642,8 @@ local function SpawnFireFxHook(fn, self, ...)
     local _SpawnPrefab = SpawnPrefab
     SpawnPrefab = function(name, ...)
         local fx = _SpawnPrefab(name, ...)
-        if fx.SetSymbolHue then
-            fx:SetSymbolHue(self.inst.fire_hue or 0)
+        if fx.SetHue then
+            fx:SetHue(self.inst.fire_hue or 0)
         end
         return fx
     end
