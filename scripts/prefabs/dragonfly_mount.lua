@@ -539,6 +539,12 @@ local function StartTransformFire(inst)
 end
 
 local function TransformFire(inst)
+    local saddle = inst.components.rideable.saddle
+    if saddle then
+        local swapbuild = saddle.components.saddler.swapbuild .. "_fire"
+        inst.AnimState:OverrideSymbol("swap_saddle", swapbuild, saddle.components.saddler.swapsymbol)
+    end
+
     inst.components.skinner:SetSkinMode(AnimSet["adult"].fire_skin_mode, AnimSet["adult"].fire_build)
     inst.enraged = true
     inst:AddTag("enraged")
@@ -559,6 +565,10 @@ local function StartTransformNormal(inst)
 end
 
 local function TransformNormal(inst)
+    local saddle = inst.components.rideable.saddle
+    if saddle then
+        inst.AnimState:OverrideSymbol("swap_saddle", saddle.components.saddler.swapbuild, saddle.components.saddler.swapsymbol)
+    end
     inst.components.skinner:SetSkinMode(AnimSet["adult"].skin_mode, AnimSet["adult"].build)
     inst.enraged = false
     inst:RemoveTag("enraged")

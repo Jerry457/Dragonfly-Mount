@@ -1,7 +1,7 @@
 local shift_hue = require("utils/dragonfly_mount_color").shift_hue
 
 local function MackInit(fire_hue, fire_bloom)
-    return function (inst, skin_name)
+    return function(inst, skin_name)
         GlassicAPI.BasicInitFn(inst)
 
         if inst.components.skinner then

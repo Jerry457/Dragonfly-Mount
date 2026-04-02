@@ -46,7 +46,7 @@ local states = {
 			inst.sg.mem.footsteps = 0
 
             inst.components.locomotor:RunForward()
-			local anim =  "run"
+			local anim = "run"
 			inst.AnimState:PlayAnimation(anim.."_pre")
         end,
 
@@ -315,6 +315,12 @@ local states = {
                 local rider = inst.replica.rider
                 local mount = rider and rider:GetMount()
                 if mount and mount:HasTag("dragonfly_mount") then
+                    local saddle = mount.components.rideable.saddle
+                    if saddle then
+                        local swapbuild = saddle.components.saddler.swapbuild .. "_fire"
+                        inst.AnimState:OverrideSymbol("swap_saddle", swapbuild, saddle.components.saddler.swapsymbol)
+                    end
+
                     inst.AnimState:ClearOverrideBuild(mount.AnimState:GetBuild())
                     mount:TransformFire() -- build changed
                     inst.AnimState:AddOverrideBuild(mount.AnimState:GetBuild())
