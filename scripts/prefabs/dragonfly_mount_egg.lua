@@ -1,6 +1,5 @@
 local assets =
 {
-    Asset("ATLAS", "images/inventoryimages/dragonfly_mount_egg.xml"),
     Asset("ANIM", "anim/dragonfly_mount_egg.zip"),
     Asset("ANIM", "anim/dragonfly_mount_baby.zip"),
 }
@@ -169,8 +168,6 @@ local function common_fn(anim)
     inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
 
     inst:AddComponent("inventoryitem")
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/dragonfly_mount_egg.xml"
-    inst.components.inventoryitem.imagename = "dragonfly_mount_egg"
     inst.components.inventoryitem.cangoincontainer = false
     inst.components.inventoryitem:SetSinks(true)
 
@@ -227,7 +224,6 @@ local function cracked()
         return inst
     end
 
-    inst.components.inventoryitem.imagename = "dragonfly_mount_egg_cracked"
     inst.components.symbolswapdata:SetData("dragonfly_mount_egg", "swap_body_cracked")
 
     inst.components.hatchable.state = "comfy"
@@ -238,9 +234,6 @@ local function cracked()
 
     return inst
 end
-
-RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_mount_egg.xml", "dragonfly_mount_egg.tex")
-RegisterInventoryItemAtlas("images/inventoryimages/dragonfly_mount_egg.xml", "dragonfly_mount_egg_cracked.tex")
 
 return Prefab("dragonfly_mount_egg", default, assets),
     Prefab("dragonfly_mount_egg_cracked", cracked, assets)

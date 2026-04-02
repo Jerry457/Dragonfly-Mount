@@ -26,7 +26,6 @@ end
 local function MakeSaddle(name, data)
     local assets = {
         Asset("ANIM", "anim/"..name..".zip"),
-        Asset("ATLAS", "images/inventoryimages/"..name..".xml"),
     }
 
     local function fn()
@@ -69,8 +68,6 @@ local function MakeSaddle(name, data)
         inst:AddComponent("inspectable")
 
         inst:AddComponent("inventoryitem")
-        inst.components.inventoryitem.atlasname = "images/inventoryimages/"..name..".xml"
-        inst.components.inventoryitem.imagename = name
 
         inst:SetupSaddler()
 
@@ -90,8 +87,6 @@ local function MakeSaddle(name, data)
 
         return inst
     end
-
-    RegisterInventoryItemAtlas("images/inventoryimages/"..name..".xml", name..".tex")
 
     return Prefab(name, fn, assets, data.prefabs)
 end

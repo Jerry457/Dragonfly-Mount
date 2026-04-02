@@ -17,5 +17,5 @@ ReloadPreloadAssets()
 
 modimport("main/glassic_api_loader")
 
--- AddMinimapAtlas("images/gk_minimap.xml")
--- GlassicAPI.RegisterItemAtlas("inventoryimages", Assets)
+-- AddMinimapAtlas("images/dragonfly_mount_inventoryimages.xml")
+GlassicAPI.RegisterItemAtlas("dragonfly_mount_inventoryimages.xml", Assets)

@@ -1,0 +1,19 @@
+<Atlas>
+    <Texture filename="dragonfly_mount_inventoryimages.tex" />
+    <Elements>
+        <Element name="dragonfly_bell.tex" u1="0.0009765625" v1="0.751953125" u2="0.1240234375" v2="0.998046875" />
+        <Element name="dragonfly_bell_linked.tex" u1="0.1259765625" v1="0.751953125" u2="0.2490234375" v2="0.998046875" />
+        <Element name="dragonfly_bell_opal.tex" u1="0.2509765625" v1="0.751953125" u2="0.3740234375" v2="0.998046875" />
+        <Element name="dragonfly_bell_opal_linked.tex" u1="0.3759765625" v1="0.751953125" u2="0.4990234375" v2="0.998046875" />
+        <Element name="dragonfly_mount_egg.tex" u1="0.5009765625" v1="0.751953125" u2="0.6240234375" v2="0.998046875" />
+        <Element name="dragonfly_mount_egg_cracked.tex" u1="0.6259765625" v1="0.751953125" u2="0.7490234375" v2="0.998046875" />
+        <Element name="saddle_dragonfly.tex" u1="0.7509765625" v1="0.751953125" u2="0.8740234375" v2="0.998046875" />
+        <Element name="saddle_dragonfly_antlion.tex" u1="0.8759765625" v1="0.751953125" u2="0.9990234375" v2="0.998046875" />
+        <Element name="saddle_dragonfly_antlion_fire.tex" u1="0.0009765625" v1="0.501953125" u2="0.1240234375" v2="0.748046875" />
+        <Element name="saddle_dragonfly_fire.tex" u1="0.1259765625" v1="0.501953125" u2="0.2490234375" v2="0.748046875" />
+        <Element name="saddle_dragonfly_moonmaw.tex" u1="0.2509765625" v1="0.501953125" u2="0.3740234375" v2="0.748046875" />
+        <Element name="saddle_dragonfly_moonmaw_fire.tex" u1="0.3759765625" v1="0.501953125" u2="0.4990234375" v2="0.748046875" />
+        <Element name="saddle_dragonfly_yule.tex" u1="0.5009765625" v1="0.501953125" u2="0.6240234375" v2="0.748046875" />
+        <Element name="saddle_dragonfly_yule_fire.tex" u1="0.6259765625" v1="0.501953125" u2="0.7490234375" v2="0.748046875" />
+    </Elements>
+</Atlas>
