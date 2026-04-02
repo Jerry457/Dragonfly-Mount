@@ -1,3 +1,7 @@
+STRINGS.SKIN_NAMES.saddle_dragonfly_yule = ""
+STRINGS.SKIN_NAMES.saddle_dragonfly_moonmaw = ""
+STRINGS.SKIN_NAMES.saddle_dragonfly_antlion = ""
+
 STRINGS.NAMES.DRAGONFLY_MOUNT = "友好龙蝇"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
     BABY = "它曾是个可怕的巨兽，现在却是个小小的萌物。",
