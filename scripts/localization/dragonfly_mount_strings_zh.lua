@@ -1,6 +1,6 @@
-STRINGS.SKIN_NAMES.saddle_dragonfly_yule = ""
-STRINGS.SKIN_NAMES.saddle_dragonfly_moonmaw = ""
-STRINGS.SKIN_NAMES.saddle_dragonfly_antlion = ""
+STRINGS.SKIN_NAMES.saddle_dragonfly_yule = "冬季盛宴"
+STRINGS.SKIN_NAMES.saddle_dragonfly_moonmaw = "月光龙蝇"
+STRINGS.SKIN_NAMES.saddle_dragonfly_antlion = "蚁狮"
 
 STRINGS.NAMES.DRAGONFLY_MOUNT = "友好龙蝇"
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.DRAGONFLY_MOUNT = {
