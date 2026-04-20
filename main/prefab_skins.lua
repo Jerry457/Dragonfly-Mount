@@ -2,7 +2,11 @@ local modname = modname
 GLOBAL.setfenv(1, GLOBAL)
 
 dragonfly_mount_clear_fn = function(inst)
-    basic_clear_fn(inst, "dragonfly_mount_build")
+    local build = inst.AnimState:GetBuild()
+    if build ~= "dragonfly_mount_baby_build" and build ~= "dragonfly_mount_teen_build" then
+        build = "dragonfly_mount_build"
+    end
+    basic_clear_fn(inst, build)
     inst.fire_hue = nil
 end
 
