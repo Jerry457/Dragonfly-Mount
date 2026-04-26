@@ -1,7 +1,7 @@
 -- This information tells other players more about the mod
 name = "Move!!Dragonfly"  ---mod名字
 version = "26.04.05" -- mod版本 上传mod需要两次的版本不一样
-description =""  --mod描述
+description ="·在饥荒世界中，挑战并击败强大的BOSS——龙蝇，即可获得珍贵的龙蝇蛋。\n·收集龙蝇蛋后，你可以进行孵化，耐心等待小龙蝇破壳而出。\n·龙蝇孵化后，需要通过喂养使其逐渐成长，待龙蝇完全长大，你将可以骑乘它穿梭于饥荒世界，解锁全新的移动体验！\n󰀀!!!兼容性!!!：\n·模组目前使用了Glassic API来实现龙蝇皮肤，无法兼容使用了Modded API的皮肤模组。"  --mod描述
 author = "WIGFRID、Guto、jerry457" --作者
 
 -- This is the URL name of the mod's thread on the forum; the part after the ? and before the first & in the url
